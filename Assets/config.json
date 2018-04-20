@@ -1,0 +1,9 @@
+{
+	".*": {
+		"writer": [ "file:://myapp.log", "unity://" ],
+		"level": "fatal"
+	},
+	"network.message.*": {
+
+	}
+}
