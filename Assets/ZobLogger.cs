@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using System.Text;
 
 namespace Zob {
 
@@ -24,8 +26,48 @@ namespace Zob {
 
     public interface ILogWriter {
         void Open();
-        void Write(LogEntry entry);
+        void Write(string logEntryContent);
         void Close();
+    }
+
+    public sealed class FileLogWriter : ILogWriter {
+        public FileStream fileStream;
+
+        void ILogWriter.Close() {
+            if (fileStream != null) {
+                fileStream.Close();
+            }
+        }
+
+        void ILogWriter.Open() {
+            string absoluteDirectory = CreateDirectory();
+            OpenLogFile(absoluteDirectory);
+        }
+
+        void ILogWriter.Write(string logEntryContent) {
+            if (fileStream != null) {
+                byte[] data = Encoding.UTF8.GetBytes(logEntryContent);
+                fileStream.Write(data, 0, data.Length);
+            }
+        }
+
+        private string CreateDirectory() {
+            string absoluteDirectory;
+#if UNITY_EDITOR
+            absoluteDirectory = Path.Combine(Application.dataPath, LogSystem.TemporaryFolder);
+#else
+            absoluteDirectory = Path.Combine(Application.persistentDataPath, LogSystem.TemporaryFolder);
+#endif
+            if (!Directory.Exists(absoluteDirectory)) {
+                Directory.CreateDirectory(absoluteDirectory);
+            }
+            return absoluteDirectory;
+        }
+
+        private void OpenLogFile(string absoluteDirectory) {
+            string absolutePath = Path.Combine(absoluteDirectory, "log.txt");
+            fileStream = File.Open(absolutePath, FileMode.Append);
+        }
     }
 
     public sealed class LogHandler {
@@ -134,11 +176,10 @@ namespace Zob {
         {
             get {
                 var model = new LogConfigModel();
-                model.configType = "ahaha";
                 model.filters = new List<LogConfigDomainFilter>();
 
                 var filter = new LogConfigDomainFilter();
-                filter.domainMatch = "/*/";
+                filter.domainMatch = "*";
                 model.filters.Add(filter);
                 return model;
             }
@@ -146,6 +187,10 @@ namespace Zob {
     }
 
     public sealed class LogSystem : LogSingleton<LogSystem> {
+        public const string AssetRootFolder = "ZobLogger";
+        public static string ResourcesFolder { get { return System.IO.Path.Combine(AssetRootFolder, "Resources"); } }
+        public static string TemporaryFolder { get { return System.IO.Path.Combine(AssetRootFolder, "Temporary"); } }
+
         private bool _initialized = false;
         public bool IsInitialized { get { return _initialized; } }
 
