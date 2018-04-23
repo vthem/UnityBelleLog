@@ -96,7 +96,7 @@ namespace Zob
         {
             string absoluteDirectory;
 #if UNITY_EDITOR
-            absoluteDirectory = Path.Combine(Application.dataPath, LogSystem.TemporaryFolder);
+            absoluteDirectory = Path.Combine(Application.dataPath, "~" + LogSystem.TemporaryFolder);
 #else
             absoluteDirectory = Path.Combine(Application.persistentDataPath, LogSystem.TemporaryFolder);
 #endif
