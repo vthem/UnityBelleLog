@@ -8,15 +8,12 @@
         public Logger(string domain)
         {
             _domain = domain;
-            _logSystem = Internal.LogSystem.Instance;
         }
 
         public void Trace()
         {
-            if (!_logSystem.IsInitialized)
-            {
-                return;
-            }
+            InitializeOnce();
+
             Internal.LogEntry entry;
             entry.args = null;
             entry.format = "Trace function";
@@ -28,7 +25,10 @@
 
         private void InitializeOnce()
         {
-
+            if (null == _logSystem)
+            {
+                _logSystem = Internal.LogSystem.Instance;
+            }
         }
     }
 }

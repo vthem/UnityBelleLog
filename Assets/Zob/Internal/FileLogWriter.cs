@@ -7,7 +7,13 @@ namespace Zob.Writer
 {
     public sealed class FileLogWriter : ILogWriter
     {
-        private FileStream fileStream;
+        private FileStream _fileStream;
+        private string _logFilename;
+
+        public FileLogWriter(string logFilename)
+        {
+            _logFilename = logFilename;
+        }
 
         string ILogWriter.Id
         {
@@ -19,9 +25,9 @@ namespace Zob.Writer
 
         void ILogWriter.Close()
         {
-            if (fileStream != null)
+            if (_fileStream != null)
             {
-                fileStream.Close();
+                _fileStream.Close();
             }
         }
 
@@ -34,11 +40,11 @@ namespace Zob.Writer
         void ILogWriter.Write(string logEntryContent)
         {
 
-            if (fileStream != null)
+            if (_fileStream != null)
             {
                 byte[] data = Encoding.UTF8.GetBytes(logEntryContent);
-                fileStream.Write(data, 0, data.Length);
-                fileStream.Flush();
+                _fileStream.Write(data, 0, data.Length);
+                _fileStream.Flush();
             }
         }
 
@@ -60,8 +66,8 @@ namespace Zob.Writer
 
         private void OpenLogFile(string absoluteDirectory)
         {
-            string logFilePath = Path.Combine(absoluteDirectory, "default.log");
-            fileStream = File.Open(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+            string logFilePath = Path.Combine(absoluteDirectory, _logFilename);
+            _fileStream = File.Open(logFilePath, FileMode.Append, FileAccess.Write, FileShare.Read);
         }
     }
 }
