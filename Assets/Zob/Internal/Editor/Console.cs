@@ -15,6 +15,8 @@ namespace Zob.Internal.Editor
 
         float _rowHeight = 30f;
 
+        Texture2D _greyTex;
+
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
         static void Init()
@@ -25,6 +27,10 @@ namespace Zob.Internal.Editor
             windowRef._window.titleContent = new GUIContent("ZobConsole");
             windowRef._window.Show();
             //windowRef.wantsMouseMove = true;
+            windowRef._greyTex = new Texture2D(1, 1);
+            windowRef._greyTex.SetPixel(0, 0, Color.cyan);
+            windowRef._greyTex.Apply();
+            Debug.Log("open zop console window");
         }
 
         void OnGUI()
@@ -49,10 +55,13 @@ namespace Zob.Internal.Editor
             //EditorGUILayout.RectField("position", _window.position);
             //EditorGUILayout.Vector2Field("mouse", Event.current.mousePosition);
             //EditorGUILayout.Vector2Field("delta", Event.current.delta);
-            for (int i = 0; i < 10; ++i)
-            {
-                GUI.DrawTexture(new Rect(0, i * _rowHeight, _window.position.width - GUI.skin.verticalScrollbar.fixedWidth, _rowHeight), Texture2D.whiteTexture);
-            }
+            //for (int i = 0; i < 10; ++i)
+            //{
+            //    GUI.DrawTexture(new Rect(0, i * _rowHeight, _window.position.width - GUI.skin.verticalScrollbar.fixedWidth, _rowHeight), Texture2D.whiteTexture);
+            //}
+            GUI.DrawTexture(new Rect(0, 50, _window.position.width, 1), _greyTex);
+            // EditorGUIUtility.AddCursorRect
+
             _scrollValue = GUI.VerticalScrollbar(
                 new Rect(_window.position.width - GUI.skin.verticalScrollbar.fixedWidth, 0, GUI.skin.verticalScrollbar.fixedWidth, _window.position.height),
                 _scrollValue, 1, 0, 10);
