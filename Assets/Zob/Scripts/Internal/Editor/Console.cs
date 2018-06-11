@@ -12,14 +12,16 @@ namespace Zob.Internal.Editor
         private int texSize = 10;
         private Rect _rect;
         private float _scrollValue;
-        private float _rowHeight = 30f;
+        private float _rowHeight = 20f;
         private bool _initialized = false;
         private ConsoleConfig _config;
 
         private Texture2D _row1;
         private Texture2D _row2;
 
+
         private List<LogEntry> _logEntries = new List<LogEntry>();
+        private Dictionary<string, string> _debug = new Dictionary<string, string>();
 
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
@@ -30,6 +32,7 @@ namespace Zob.Internal.Editor
             console.InitializeOnce();
             console.Show();
             Debug.Log("open zop console window");
+            Debug.Log("open zop console window x2");
         }
 
         private void InitializeOnce()
@@ -43,11 +46,11 @@ namespace Zob.Internal.Editor
             _config = ConsoleConfig.Load();
             _initialized = true;
             _row1 = new Texture2D(1, 1);
-            _row1.SetPixel(0, 0, new Color32(220, 220, 220, 255));
+            _row1.SetPixel(0, 0, new Color32(55, 55, 55, 255));
             _row1.Apply();
 
             _row2 = new Texture2D(1, 1);
-            _row2.SetPixel(0, 0, new Color32(200, 200, 200, 255));
+            _row2.SetPixel(0, 0, new Color32(60, 60, 60, 255));
             _row2.Apply();
 
             for (int i = 0; i < 100; ++i)
@@ -55,7 +58,7 @@ namespace Zob.Internal.Editor
                 var entry = new LogEntry();
                 entry.args = null;
                 entry.domain = "log-console";
-                entry.format = "this is a log entry " + UnityEngine.Random.Range(0, 10000);
+                entry.format = "this is a log entry [" + i + "]";
                 entry.level = LogLevel.Info;
                 entry.timestamp = DateTime.Now;
                 _logEntries.Add(entry);
@@ -67,20 +70,38 @@ namespace Zob.Internal.Editor
             InitializeOnce();
             var logEntryPosition = new Rect(0, 50, position.width, position.height - 100);
             RenderLogEntries(logEntryPosition);
+            foreach (var kv in _debug)
+            {
+                EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
+            }
         }
 
         void RenderLogEntries(Rect position)
         {
+            int rowCount = Mathf.RoundToInt(position.height / _rowHeight);
+            _debug["rowCount"] = rowCount.ToString();
             var scrollbarPosition = new Rect(position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth, position.y, GUI.skin.verticalScrollbar.fixedWidth, position.height);
-            _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 10f, 0f);
-            for (int i = 0; i < 2; ++i)
+            _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, _logEntries.Count - rowCount);
+            _debug["scroll"] = _scrollValue.ToString();
+
+            int max = (int)_scrollValue + rowCount + 1;
+            int i = (int)_scrollValue;
+            int rowIndex = 0;
+            for (; i < max; ++i, ++rowIndex)
             {
                 Texture2D rowText = _row1;
                 if (i % 2 == 0)
                 {
                     rowText = _row2;
                 }
-                GUI.DrawTexture(new Rect(position.x, position.y + i * 20f, position.width - GUI.skin.verticalScrollbar.fixedWidth, 20f), rowText);
+                Rect rowRect = new Rect(position.x, position.y + rowIndex * _rowHeight, position.width - GUI.skin.verticalScrollbar.fixedWidth, _rowHeight);
+
+                if (rowIndex >= rowCount) // last raw
+                {
+                    rowRect.height = _rowHeight - (position.height - (rowCount * _rowHeight));
+                }
+                GUI.DrawTexture(rowRect, rowText);
+                EditorGUI.LabelField(rowRect, _logEntries[i].format);
             }
         }
     }
