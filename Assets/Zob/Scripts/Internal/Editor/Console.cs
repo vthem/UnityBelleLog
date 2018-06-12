@@ -74,6 +74,11 @@ namespace Zob.Internal.Editor
             {
                 EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
             }
+            if (Event.current.keyCode == KeyCode.Space && Event.current.type == EventType.KeyDown)
+            {
+                _scrollValue += 5;
+                Repaint();
+            }
         }
 
         void RenderLogEntries(Rect position)
@@ -84,24 +89,25 @@ namespace Zob.Internal.Editor
             _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, _logEntries.Count - rowCount);
             _debug["scroll"] = _scrollValue.ToString();
 
-            int max = (int)_scrollValue + rowCount + 1;
-            int i = (int)_scrollValue;
-            int rowIndex = 0;
-            for (; i < max; ++i, ++rowIndex)
+            for (int rowIndex = 0; rowIndex <= rowCount; ++rowIndex)
             {
-                Texture2D rowText = _row1;
-                if (i % 2 == 0)
+                Texture2D rowTexture = _row1;
+                if (((int)_scrollValue + rowIndex) % 2 == 0)
                 {
-                    rowText = _row2;
+                    rowTexture = _row2;
                 }
                 Rect rowRect = new Rect(position.x, position.y + rowIndex * _rowHeight, position.width - GUI.skin.verticalScrollbar.fixedWidth, _rowHeight);
 
-                if (rowIndex >= rowCount) // last raw
+                if (rowIndex == rowCount - 1) // last raw
                 {
-                    rowRect.height = _rowHeight - (position.height - (rowCount * _rowHeight));
+                    var totalHeight = rowCount * _rowHeight;
+                    if (totalHeight > position.height)
+                    {
+                        rowRect.height = _rowHeight - (totalHeight - position.height);
+                    }
                 }
-                GUI.DrawTexture(rowRect, rowText);
-                EditorGUI.LabelField(rowRect, _logEntries[i].format);
+                GUI.DrawTexture(rowRect, rowTexture);
+                EditorGUI.LabelField(rowRect, _logEntries[(int)_scrollValue + rowIndex].format);
             }
         }
     }
