@@ -18,10 +18,13 @@ namespace Zob.Internal.Editor
 
         private Texture2D _row1;
         private Texture2D _row2;
+        private Texture2D _selectedRow;
 
 
         private List<LogEntry> _logEntries = new List<LogEntry>();
         private Dictionary<string, string> _debug = new Dictionary<string, string>();
+        private List<Rect> _entriesRect = new List<Rect>();
+        private int _selectedRowEntryIndex = -1;
 
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
@@ -53,6 +56,10 @@ namespace Zob.Internal.Editor
             _row2.SetPixel(0, 0, new Color32(60, 60, 60, 255));
             _row2.Apply();
 
+            _selectedRow = new Texture2D(1, 1);
+            _selectedRow.SetPixel(0, 0, Color.blue);
+            _selectedRow.Apply();
+
             for (int i = 0; i < 100; ++i)
             {
                 var entry = new LogEntry();
@@ -65,7 +72,7 @@ namespace Zob.Internal.Editor
             }
         }
 
-        void OnGUI()
+        protected void OnGUI()
         {
             InitializeOnce();
             var logEntryPosition = new Rect(0, 50, position.width, position.height - 100);
@@ -79,9 +86,14 @@ namespace Zob.Internal.Editor
                 _scrollValue += 5;
                 Repaint();
             }
+
+            if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
+            {
+                HandleLeftMouseClick();
+            }
         }
 
-        void RenderLogEntries(Rect position)
+        protected void RenderLogEntries(Rect position)
         {
             int rowCount = Mathf.RoundToInt(position.height / _rowHeight);
             _debug["rowCount"] = rowCount.ToString();
@@ -89,12 +101,17 @@ namespace Zob.Internal.Editor
             _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, _logEntries.Count - rowCount);
             _debug["scroll"] = _scrollValue.ToString();
 
+            _entriesRect.Clear();
             for (int rowIndex = 0; rowIndex <= rowCount; ++rowIndex)
             {
                 Texture2D rowTexture = _row1;
                 if (((int)_scrollValue + rowIndex) % 2 == 0)
                 {
                     rowTexture = _row2;
+                }
+                if (rowIndex == _selectedRowEntryIndex)
+                {
+                    rowTexture = _selectedRow;
                 }
                 Rect rowRect = new Rect(position.x, position.y + rowIndex * _rowHeight, position.width - GUI.skin.verticalScrollbar.fixedWidth, _rowHeight);
 
@@ -106,8 +123,23 @@ namespace Zob.Internal.Editor
                         rowRect.height = _rowHeight - (totalHeight - position.height);
                     }
                 }
+                _entriesRect.Add(rowRect);
                 GUI.DrawTexture(rowRect, rowTexture);
                 EditorGUI.LabelField(rowRect, _logEntries[(int)_scrollValue + rowIndex].format);
+            }
+        }
+
+        protected void HandleLeftMouseClick()
+        {
+            Debug.Log("click=" + Event.current.mousePosition);
+            _selectedRowEntryIndex = -1;
+            for (int i = 0; i < _entriesRect.Count; ++i)
+            {
+                if (_entriesRect[i].Contains(Event.current.mousePosition))
+                {
+                    _selectedRowEntryIndex = i + (int)_scrollValue;
+                    break;
+                }
             }
         }
     }
