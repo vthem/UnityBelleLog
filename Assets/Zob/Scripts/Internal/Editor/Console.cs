@@ -18,15 +18,16 @@ namespace Zob.Internal.Editor
 
         private Texture2D _row1;
         private Texture2D _row2;
-        private Texture2D _selectedRow;
+        private Texture2D _selectedRowTexture;
 
 
         private List<LogEntry> _logEntries = new List<LogEntry>();
         private Dictionary<string, string> _debug = new Dictionary<string, string>();
-        private List<Rect> _entriesRect = new List<Rect>();
-        private int _selectedRowEntryIndex = -1;
-        private UnityEditor.IMGUI.Controls.SearchField _searchField;
-        private string _searchFieldResult = "...";
+        private int _selectedLogEntryIndex = -1;
+        private SearchField _searchField;
+        private LogEntryArray _logEntryArray;
+
+        public ConsoleConfig Config { get { return _config; } }
 
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
@@ -50,20 +51,8 @@ namespace Zob.Internal.Editor
             titleContent = new GUIContent("ZobConsole");
             _config = ConsoleConfig.Load();
             _initialized = true;
-            _row1 = new Texture2D(1, 1);
-            _row1.SetPixel(0, 0, new Color32(155, 155, 155, 255));
-            _row1.Apply();
-
-            _row2 = new Texture2D(1, 1);
-            _row2.SetPixel(0, 0, new Color32(60, 60, 60, 255));
-            _row2.Apply();
-
-            _selectedRow = new Texture2D(1, 1);
-            _selectedRow.SetPixel(0, 0, new Color32(62, 95, 150, 255));
-            _selectedRow.Apply();
-
-            _searchField = new UnityEditor.IMGUI.Controls.SearchField();
-            _searchField.autoSetFocusOnFindCommand = true;
+            _searchField = new SearchField();
+            _logEntryArray = new LogEntryArray(this);
 
             for (int i = 0; i < 100; ++i)
             {
@@ -77,6 +66,8 @@ namespace Zob.Internal.Editor
             }
         }
 
+
+        bool collapse;
         protected void OnGUI()
         {
             InitializeOnce();
@@ -86,75 +77,16 @@ namespace Zob.Internal.Editor
                 EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
             }
 
-            if (Event.current.type != EventType.Layout)
-            {
-                var searchFieldPosition = new Rect(100, 2, position.width - 120, 20f);
-                _searchFieldResult = _searchField.OnToolbarGUI(searchFieldPosition, _searchFieldResult);
+            var toolbarPosition = new Rect(0, 0, position.width, GUI.skin.button.fixedHeight);
+            GUI.BeginGroup(toolbarPosition, EditorStyles.toolbar);
+            collapse = GUILayout.Toggle(collapse, new GUIContent("Collapse"), EditorStyles.toolbarButton, GUILayout.Width(50));
+            GUI.EndGroup();
 
-                var logEntryPosition = new Rect(0, 50, position.width, position.height - 100);
-                RenderLogEntries(logEntryPosition);
-            }
-            if (Event.current.keyCode == KeyCode.Space && Event.current.type == EventType.KeyDown)
-            {
-                _scrollValue += 5;
-                Repaint();
-            }
+            var searchFieldPosition = new Rect(100, 0, position.width - 120, 20f);
+            _selectedLogEntryIndex = _searchField.OnGUI(searchFieldPosition, _selectedLogEntryIndex, _logEntries);
 
-            if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
-            {
-                HandleLeftMouseClick();
-            }
-        }
-
-        protected void RenderLogEntries(Rect position)
-        {
-            int rowCount = Mathf.CeilToInt(position.height / _rowHeight);
-            _debug["rowCount"] = rowCount.ToString();
-            var scrollbarPosition = new Rect(position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth, position.y, GUI.skin.verticalScrollbar.fixedWidth, position.height);
-            _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, _logEntries.Count - rowCount + 1);
-            _debug["scroll"] = _scrollValue.ToString();
-
-            _entriesRect.Clear();
-            for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex)
-            {
-                Texture2D rowTexture = _row1;
-                if (((int)_scrollValue + rowIndex) % 2 == 0)
-                {
-                    rowTexture = _row2;
-                }
-                if (rowIndex + (int)_scrollValue == _selectedRowEntryIndex)
-                {
-                    rowTexture = _selectedRow;
-                }
-                Rect rowRect = new Rect(position.x, position.y + rowIndex * _rowHeight, position.width - GUI.skin.verticalScrollbar.fixedWidth, _rowHeight);
-
-                if (rowIndex == rowCount - 1) // last raw
-                {
-                    var totalHeight = rowCount * _rowHeight;
-                    if (totalHeight > position.height)
-                    {
-                        rowRect.height = _rowHeight - (totalHeight - position.height);
-                    }
-                }
-                _entriesRect.Add(rowRect);
-                GUI.DrawTexture(rowRect, rowTexture);
-                EditorGUI.LabelField(rowRect, _logEntries[(int)_scrollValue + rowIndex].format);
-            }
-        }
-
-        protected void HandleLeftMouseClick()
-        {
-            Debug.Log("click=" + Event.current.mousePosition);
-            _selectedRowEntryIndex = -1;
-            for (int i = 0; i < _entriesRect.Count; ++i)
-            {
-                if (_entriesRect[i].Contains(Event.current.mousePosition))
-                {
-                    _selectedRowEntryIndex = i + (int)_scrollValue;
-                    Repaint();
-                    break;
-                }
-            }
+            var logEntryPosition = new Rect(0, toolbarPosition.height, position.width, position.height - 100);
+            _selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
         }
     }
 }

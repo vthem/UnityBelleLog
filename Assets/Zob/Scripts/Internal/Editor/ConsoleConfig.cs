@@ -5,7 +5,9 @@ namespace Zob.Internal.Editor
 {
     public class ConsoleConfig : ScriptableObject
     {
-        public MouseCursor testCursor;
+        [SerializeField]
+        private float _logEntryArrayRowHeight = 20f;
+        public float LogEntryArrayRowHeight { get { return _logEntryArrayRowHeight; } set { _logEntryArrayRowHeight = value; } }
 
         public static ConsoleConfig Load()
         {
