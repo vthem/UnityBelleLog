@@ -7,7 +7,11 @@ namespace Zob.Internal.Editor
     {
         [SerializeField]
         private float _logEntryArrayRowHeight = 20f;
-        public float LogEntryArrayRowHeight { get { return _logEntryArrayRowHeight; } set { _logEntryArrayRowHeight = value; } }
+        public float LogEntryArrayRowHeight { get { return _logEntryArrayRowHeight; } }
+
+        [SerializeField]
+        private float _debugValue = 20f;
+        public float DebugValue { get { return _debugValue; } }
 
         public static ConsoleConfig Load()
         {

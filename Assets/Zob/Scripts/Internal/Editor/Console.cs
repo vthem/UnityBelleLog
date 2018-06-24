@@ -15,6 +15,7 @@ namespace Zob.Internal.Editor
         private float _rowHeight = 20f;
         private bool _initialized = false;
         private ConsoleConfig _config;
+        private const float TabHeight = 18f;
 
         private Texture2D _row1;
         private Texture2D _row2;
@@ -70,6 +71,8 @@ namespace Zob.Internal.Editor
         bool collapse;
         protected void OnGUI()
         {
+            GUI.DrawTexture(new Rect(0, 0, position.width, 50), Texture2D.whiteTexture);
+
             InitializeOnce();
 
             foreach (var kv in _debug)
@@ -77,16 +80,27 @@ namespace Zob.Internal.Editor
                 EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
             }
 
-            var toolbarPosition = new Rect(0, 0, position.width, GUI.skin.button.fixedHeight);
+            var toolbarPosition = new Rect(0, 0, position.width, TabHeight);
             GUI.BeginGroup(toolbarPosition, EditorStyles.toolbar);
-            collapse = GUILayout.Toggle(collapse, new GUIContent("Collapse"), EditorStyles.toolbarButton, GUILayout.Width(50));
+
+            var clearPosition = toolbarPosition;
+            clearPosition.width = 40f;
+            clearPosition.x = 5f;
+            if (GUI.Button(clearPosition, "Clear", EditorStyles.toolbarButton))
+            {
+            }
+
+            var collapsePostion = clearPosition;
+            collapsePostion.x = clearPosition.x + clearPosition.width + 5f;
+            collapsePostion.width = 60f;
+            collapse = EditorGUI.Toggle(collapsePostion, new GUIContent("Collapse"), collapse, EditorStyles.miniButton);
             GUI.EndGroup();
 
-            var searchFieldPosition = new Rect(100, 0, position.width - 120, 20f);
-            _selectedLogEntryIndex = _searchField.OnGUI(searchFieldPosition, _selectedLogEntryIndex, _logEntries);
+            //var searchFieldPosition = new Rect(100, 0, position.width - 120, 20f);
+            //_selectedLogEntryIndex = _searchField.OnGUI(searchFieldPosition, _selectedLogEntryIndex, _logEntries);
 
-            var logEntryPosition = new Rect(0, toolbarPosition.height, position.width, position.height - 100);
-            _selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
+            //var logEntryPosition = new Rect(0, toolbarPosition.height, position.width, position.height - 100);
+            //_selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
         }
     }
 }
