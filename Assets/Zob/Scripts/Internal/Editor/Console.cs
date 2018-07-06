@@ -132,7 +132,7 @@ namespace Zob.Internal.Editor
 
         protected void OnGUI()
         {
-            _separationBar.Render(position.width, position.height);
+            _separationBar.Render(this);
         }
     }
 }
