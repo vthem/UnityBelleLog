@@ -13,33 +13,28 @@ namespace Zob.Internal.Editor
             _searchField.autoSetFocusOnFindCommand = true;
         }
 
-        public int OnGUI(Rect position, int logEntryIndex, List<LogEntry> entries)
+        public int OnGUI(int logEntryIndex, List<LogEntry> entries)
         {
-            if (Event.current.type != EventType.Layout)
+            var newSearchFieldResult = _searchField.OnToolbarGUI(_searchFieldResult);
+            if (newSearchFieldResult != _searchFieldResult)
             {
-                var searchFieldPosition = new Rect(100, 2, position.width - 120, 20f);
-
-                var newSearchFieldResult = _searchField.OnToolbarGUI(searchFieldPosition, _searchFieldResult);
-                if (newSearchFieldResult != _searchFieldResult)
+                _searchFieldResult = newSearchFieldResult;
+                int start = logEntryIndex;
+                if (start == -1)
                 {
-                    _searchFieldResult = newSearchFieldResult;
-                    int start = logEntryIndex;
-                    if (start == -1)
+                    start = 0;
+                }
+                bool loop = false;
+                int cur = start;
+                while (!loop)
+                {
+                    if (entries[cur].format.Contains(_searchFieldResult))
                     {
-                        start = 0;
+                        logEntryIndex = cur;
+                        break;
                     }
-                    bool loop = false;
-                    int cur = start;
-                    while (!loop)
-                    {
-                        if (entries[cur].format.Contains(_searchFieldResult))
-                        {
-                            logEntryIndex = cur;
-                            break;
-                        }
-                        cur = (cur + 1) % entries.Count;
-                        loop = cur == start;
-                    }
+                    cur = (cur + 1) % entries.Count;
+                    loop = cur == start;
                 }
             }
             return logEntryIndex;

@@ -65,42 +65,74 @@ namespace Zob.Internal.Editor
                 entry.timestamp = DateTime.Now;
                 _logEntries.Add(entry);
             }
+
+            _separationBar = new SeparationBarGUI(2 / 3f);
         }
 
+        private bool _collapse;
+        private bool _clearOnPlay;
+        private bool _errorPause;
+        private bool _showFilter;
 
-        bool collapse;
+        private SeparationBarGUI _separationBar;
+
+        //protected void OnGUI()
+        //{
+        //    InitializeOnce();
+
+        //    foreach (var kv in _debug)
+        //    {
+        //        EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
+        //    }
+
+        //    var toolbarPosition = new Rect(0, 0, position.width, TabHeight);
+        //    GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+
+        //    var clearPosition = toolbarPosition;
+        //    clearPosition.width = 40f;
+        //    clearPosition.x = 5f;
+        //    if (GUILayout.Button("Clear", new GUIStyle("ToolbarButton")))
+        //    {
+        //    }
+
+        //    EditorGUILayout.Space();
+
+        //    var collapsePostion = clearPosition;
+        //    collapsePostion.x = clearPosition.x + clearPosition.width + 5f;
+        //    collapsePostion.width = 60f;
+        //    collapse = GUILayout.Toggle(collapse, "Collapse", new GUIStyle("ToolbarButton"));
+        //    clearOnPlay = GUILayout.Toggle(clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
+        //    errorPause = GUILayout.Toggle(errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
+        //    GUILayout.FlexibleSpace();
+        //    showFilter = GUILayout.Toggle(showFilter, "Show filter", new GUIStyle("ToolbarButton"));
+        //    GUILayout.EndHorizontal();
+
+        //    //GUILayout.BeginHorizontal();
+        //    GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+        //    _selectedLogEntryIndex = _searchField.OnGUI(_selectedLogEntryIndex, _logEntries);
+        //    GUILayout.Space(5f);
+        //    var maxWidth = GUILayout.MaxWidth(20);
+        //    if (GUILayout.Button("<", new GUIStyle("ToolbarButton"), maxWidth))
+        //    {
+        //    }
+        //    if (GUILayout.Button(">", new GUIStyle("ToolbarButton"), maxWidth))
+        //    {
+        //    }
+        //    GUILayout.EndHorizontal();
+
+
+        //    //var searchFieldPosition = new Rect(100, 0, position.width - 120, 20f);
+
+        //    //var logEntryPosition = new Rect(0, toolbarPosition.height, position.width, position.height - 100);
+        //    var logEntryPosition = GUILayoutUtility.GetRect(position.width, position.height - 100);
+        //    _selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
+
+
+        //}
+
         protected void OnGUI()
         {
-            GUI.DrawTexture(new Rect(0, 0, position.width, 50), Texture2D.whiteTexture);
-
-            InitializeOnce();
-
-            foreach (var kv in _debug)
-            {
-                EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
-            }
-
-            var toolbarPosition = new Rect(0, 0, position.width, TabHeight);
-            GUI.BeginGroup(toolbarPosition, EditorStyles.toolbar);
-
-            var clearPosition = toolbarPosition;
-            clearPosition.width = 40f;
-            clearPosition.x = 5f;
-            if (GUI.Button(clearPosition, "Clear", EditorStyles.toolbarButton))
-            {
-            }
-
-            var collapsePostion = clearPosition;
-            collapsePostion.x = clearPosition.x + clearPosition.width + 5f;
-            collapsePostion.width = 60f;
-            collapse = EditorGUI.Toggle(collapsePostion, new GUIContent("Collapse"), collapse, EditorStyles.miniButton);
-            GUI.EndGroup();
-
-            //var searchFieldPosition = new Rect(100, 0, position.width - 120, 20f);
-            //_selectedLogEntryIndex = _searchField.OnGUI(searchFieldPosition, _selectedLogEntryIndex, _logEntries);
-
-            //var logEntryPosition = new Rect(0, toolbarPosition.height, position.width, position.height - 100);
-            //_selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
+            _separationBar.Render(position.width, position.height);
         }
     }
 }
