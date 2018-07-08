@@ -13,7 +13,6 @@ namespace Zob.Internal.Editor
         private Rect _rect;
         private float _scrollValue;
         private float _rowHeight = 20f;
-        private bool _initialized = false;
         private ConsoleConfig _config;
         private const float TabHeight = 18f;
 
@@ -23,7 +22,6 @@ namespace Zob.Internal.Editor
 
 
         private List<LogEntry> _logEntries = new List<LogEntry>();
-        private Dictionary<string, string> _debug = new Dictionary<string, string>();
         private int _selectedLogEntryIndex = -1;
         private SearchField _searchField;
         private LogEntryArray _logEntryArray;
@@ -36,22 +34,16 @@ namespace Zob.Internal.Editor
         {
             // Get existing open window or if none, make a new one:
             var console = (Console)EditorWindow.GetWindow(typeof(Console));
-            console.InitializeOnce();
             console.Show();
             Debug.Log("open zop console window");
             Debug.Log("open zop console window x2");
         }
 
-        private void InitializeOnce()
+        private void Awake()
         {
-            if (_initialized)
-            {
-                return;
-            }
+            Debug.Log("Awake!!");
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            _config = ConsoleConfig.Load();
-            _initialized = true;
             _searchField = new SearchField();
             _logEntryArray = new LogEntryArray(this);
 
@@ -67,6 +59,7 @@ namespace Zob.Internal.Editor
             }
 
             _separationBar = new SeparationBarGUI(2 / 3f, this);
+
         }
 
         private bool _collapse;
@@ -76,13 +69,29 @@ namespace Zob.Internal.Editor
 
         private SeparationBarGUI _separationBar;
 
+        private bool LoadConfig()
+        {
+            if (_config == null)
+            {
+                try
+                {
+                    _config = ConsoleConfig.Load();
+                    return true;
+                }
+                catch (System.Exception ex)
+                {
+                    EditorGUILayout.LabelField("Fail to load configuration, exception: " + ex.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         protected void OnGUI()
         {
-            InitializeOnce();
-
-            foreach (var kv in _debug)
+            if (!LoadConfig())
             {
-                EditorGUILayout.LabelField(kv.Key + "=" + kv.Value);
+                return;
             }
 
             var toolbarPosition = new Rect(0, 0, position.width, TabHeight);
