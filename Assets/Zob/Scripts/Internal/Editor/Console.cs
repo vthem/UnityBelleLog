@@ -20,11 +20,16 @@ namespace Zob.Internal.Editor
         private Texture2D _row2;
         private Texture2D _selectedRowTexture;
 
-
         private List<LogEntry> _logEntries = new List<LogEntry>();
         private int _selectedLogEntryIndex = -1;
         private SearchField _searchField;
         private LogEntryArray _logEntryArray;
+        private bool _initialized = false;
+        private bool _collapse;
+        private bool _clearOnPlay;
+        private bool _errorPause;
+        private bool _showFilter;
+        private SeparationBarGUI _separationBar;
 
         public ConsoleConfig Config { get { return _config; } }
 
@@ -36,16 +41,35 @@ namespace Zob.Internal.Editor
             var console = (Console)EditorWindow.GetWindow(typeof(Console));
             console.Show();
             Debug.Log("open zop console window");
-            Debug.Log("open zop console window x2");
         }
 
-        private void Awake()
+        public Console()
         {
-            Debug.Log("Awake!!");
+
+            Debug.Log("Console " + _initialized + " id=" + GetInstanceID());
+        }
+
+        void OnEnable()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            Debug.Log("InitializeOnce " + _initialized + " id=" + GetInstanceID());
+            if (_initialized)
+            {
+                return;
+            }
+            _initialized = true;
+            Debug.Log("InitializeOnce...");
+            _config = ConsoleConfig.Load();
+
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            _searchField = new SearchField();
             _logEntryArray = new LogEntryArray(this);
+            _separationBar = new SeparationBarGUI(2 / 3f, this);
+            _searchField = new SearchField();
 
             for (int i = 0; i < 100; ++i)
             {
@@ -57,43 +81,16 @@ namespace Zob.Internal.Editor
                 entry.timestamp = DateTime.Now;
                 _logEntries.Add(entry);
             }
-
-            _separationBar = new SeparationBarGUI(2 / 3f, this);
-
-        }
-
-        private bool _collapse;
-        private bool _clearOnPlay;
-        private bool _errorPause;
-        private bool _showFilter;
-
-        private SeparationBarGUI _separationBar;
-
-        private bool LoadConfig()
-        {
-            if (_config == null)
-            {
-                try
-                {
-                    _config = ConsoleConfig.Load();
-                    return true;
-                }
-                catch (System.Exception ex)
-                {
-                    EditorGUILayout.LabelField("Fail to load configuration, exception: " + ex.Message);
-                    return false;
-                }
-            }
-            return true;
+            Debug.Log("InitializeOnce... complete");
         }
 
         protected void OnGUI()
         {
-            if (!LoadConfig())
+            if (!_initialized)
             {
+                EditorGUILayout.LabelField("Not properly initialized");
                 return;
             }
-
             var toolbarPosition = new Rect(0, 0, position.width, TabHeight);
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 
@@ -104,6 +101,8 @@ namespace Zob.Internal.Editor
             {
             }
 
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
             EditorGUILayout.Space();
 
             //var collapsePostion = clearPosition;

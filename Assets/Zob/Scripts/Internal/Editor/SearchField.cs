@@ -5,11 +5,12 @@ namespace Zob.Internal.Editor
 {
     public class SearchField
     {
-        private UnityEditor.IMGUI.Controls.SearchField _searchField = new UnityEditor.IMGUI.Controls.SearchField();
+        private UnityEditor.IMGUI.Controls.SearchField _searchField;
         private string _searchFieldResult;
 
         public SearchField()
         {
+            _searchField = new UnityEditor.IMGUI.Controls.SearchField();
             _searchField.autoSetFocusOnFindCommand = true;
         }
 
