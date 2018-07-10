@@ -13,7 +13,6 @@ namespace Zob.Internal.Editor
         private Rect _rect;
         private float _scrollValue;
         private float _rowHeight = 20f;
-        private ConsoleConfig _config;
         private const float TabHeight = 18f;
 
         private Texture2D _row1;
@@ -30,8 +29,6 @@ namespace Zob.Internal.Editor
         private bool _errorPause;
         private bool _showFilter;
         private SeparationBarGUI _separationBar;
-
-        public ConsoleConfig Config { get { return _config; } }
 
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
@@ -54,6 +51,11 @@ namespace Zob.Internal.Editor
             Initialize();
         }
 
+        void OnDisable()
+        {
+            _initialized = false;
+        }
+
         private void Initialize()
         {
             Debug.Log("InitializeOnce " + _initialized + " id=" + GetInstanceID());
@@ -63,13 +65,16 @@ namespace Zob.Internal.Editor
             }
             _initialized = true;
             Debug.Log("InitializeOnce...");
-            _config = ConsoleConfig.Load();
 
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
+            Debug.Log("InitializeOnce...");
             _logEntryArray = new LogEntryArray(this);
+            Debug.Log("InitializeOnce...");
             _separationBar = new SeparationBarGUI(2 / 3f, this);
+            Debug.Log("InitializeOnce...");
             _searchField = new SearchField();
+            Debug.Log("InitializeOnce...");
 
             for (int i = 0; i < 100; ++i)
             {
@@ -82,10 +87,15 @@ namespace Zob.Internal.Editor
                 _logEntries.Add(entry);
             }
             Debug.Log("InitializeOnce... complete");
+
+            Repaint();
+
         }
 
         protected void OnGUI()
         {
+            EditorGUILayout.LabelField("It works!");
+
             if (!_initialized)
             {
                 EditorGUILayout.LabelField("Not properly initialized");

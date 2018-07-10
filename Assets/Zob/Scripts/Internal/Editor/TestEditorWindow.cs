@@ -7,6 +7,7 @@ namespace Zob.Internal.Editor
 {
     public class TestEditorWindow : EditorWindow
     {
+
         private int value = 0;
 
         // Add menu named "My Window" to the Window menu

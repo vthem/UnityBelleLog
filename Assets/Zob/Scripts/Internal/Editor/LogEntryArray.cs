@@ -14,6 +14,8 @@ namespace Zob.Internal.Editor
         private Texture2D _rowTexture2;
         private Texture2D _selectedRowTexture;
 
+        private const float _rowHeight = 20f;
+
         public LogEntryArray(Console console)
         {
             _console = console;
@@ -35,7 +37,7 @@ namespace Zob.Internal.Editor
         {
             if (Event.current.type != EventType.Layout)
             {
-                int rowCount = Mathf.CeilToInt(position.height / _console.Config.LogEntryArrayRowHeight);
+                int rowCount = Mathf.CeilToInt(position.height / _rowHeight);
                 var scrollbarPosition = new Rect(
                     position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth,
                     position.y,
@@ -45,7 +47,7 @@ namespace Zob.Internal.Editor
 
                 _entriesRect.Clear();
                 float delta = 0f;
-                var totalHeight = rowCount * _console.Config.LogEntryArrayRowHeight;
+                var totalHeight = rowCount * _rowHeight;
                 if (totalHeight > position.height)
                 {
                     delta = totalHeight - position.height;
@@ -64,9 +66,9 @@ namespace Zob.Internal.Editor
                     }
                     Rect rowRect = new Rect(
                         position.x,
-                        position.y + rowIndex * _console.Config.LogEntryArrayRowHeight,
+                        position.y + rowIndex * _rowHeight,
                         position.width - GUI.skin.verticalScrollbar.fixedWidth,
-                        _console.Config.LogEntryArrayRowHeight);
+                        _rowHeight);
                     if (rowCount + (int)_scrollValue == logEntries.Count)
                     {
                         // scroll cursor is at the bottom
