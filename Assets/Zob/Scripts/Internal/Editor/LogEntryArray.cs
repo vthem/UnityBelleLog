@@ -96,16 +96,17 @@ namespace Zob.Internal.Editor
                     GUI.DrawTexture(rowRect, rowTexture);
                     EditorGUI.LabelField(rowRect, logEntries[(int)_scrollValue + rowIndex].format);
                 }
-                if (Event.current.type == EventType.ScrollWheel)
+            }
+
+            if (Event.current.type == EventType.ScrollWheel)
+            {
+                float step = Event.current.delta.y;
+                if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
                 {
-                    var multiplier = 1f;
-                    if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
-                    {
-                        multiplier = 2f;
-                    }
-                    _scrollValue = Mathf.FloorToInt(Mathf.Clamp(_scrollValue + Event.current.delta.y * multiplier, 0f, logEntries.Count));
-                    _console.Repaint();
+                    step = Mathf.Sign(step) * logEntries.Count * 0.05f;
                 }
+                _scrollValue = Mathf.FloorToInt(Mathf.Clamp(_scrollValue + step, 0f, logEntries.Count));
+                _console.Repaint();
             }
 
             if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
