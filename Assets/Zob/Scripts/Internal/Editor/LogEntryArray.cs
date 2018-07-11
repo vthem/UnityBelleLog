@@ -33,8 +33,11 @@ namespace Zob.Internal.Editor
             _selectedRowTexture.Apply();
         }
 
+        int count = 0;
+
         public int OnGUI(Rect position, int selectedLogEntryIndex, List<LogEntry> logEntries)
         {
+            GUILayout.Label("scroll=" + _scrollValue.ToString());
             if (Event.current.type != EventType.Layout)
             {
                 int rowCount = Mathf.CeilToInt(position.height / _rowHeight);
@@ -92,6 +95,16 @@ namespace Zob.Internal.Editor
                     _entriesRect.Add(rowRect);
                     GUI.DrawTexture(rowRect, rowTexture);
                     EditorGUI.LabelField(rowRect, logEntries[(int)_scrollValue + rowIndex].format);
+                }
+                if (Event.current.type == EventType.ScrollWheel)
+                {
+                    var multiplier = 1f;
+                    if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
+                    {
+                        multiplier = 2f;
+                    }
+                    _scrollValue = Mathf.FloorToInt(Mathf.Clamp(_scrollValue + Event.current.delta.y * multiplier, 0f, logEntries.Count));
+                    _console.Repaint();
                 }
             }
 
