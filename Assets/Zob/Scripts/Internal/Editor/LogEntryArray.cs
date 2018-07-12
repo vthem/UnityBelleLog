@@ -37,7 +37,6 @@ namespace Zob.Internal.Editor
 
         public int OnGUI(Rect position, int selectedLogEntryIndex, List<LogEntry> logEntries)
         {
-            GUILayout.Label("scroll=" + _scrollValue.ToString());
             if (Event.current.type != EventType.Layout)
             {
                 int rowCount = Mathf.CeilToInt(position.height / _rowHeight);

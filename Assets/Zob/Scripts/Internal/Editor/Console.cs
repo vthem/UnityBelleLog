@@ -30,6 +30,8 @@ namespace Zob.Internal.Editor
         private bool _showFilter;
         private SeparationBarGUI _separationBar;
 
+        private Texture2D _text;
+
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
         static void Init()
@@ -88,6 +90,10 @@ namespace Zob.Internal.Editor
             }
             Debug.Log("InitializeOnce... complete");
 
+            _text = new Texture2D(1, 1);
+            _text.SetPixel(0, 0, Color.magenta);
+            _text.Apply();
+
             Repaint();
 
         }
@@ -130,15 +136,28 @@ namespace Zob.Internal.Editor
             GUILayout.EndHorizontal();
 
             var cur = GUILayoutUtility.GetRect(0, 0, 0, 0);
-            var logEntryPosition = GUILayoutUtility.GetRect(position.width, _separationBar.Y);
+            DebugConsole.SetValue("cur ", cur.ToString());
+            var logEntryArrayHeight = _separationBar.Y - cur.y;
+            DebugConsole.SetValue("height rq ", logEntryArrayHeight.ToString());
+            var logEntryPosition = GUILayoutUtility.GetRect(position.width, logEntryArrayHeight);
             logEntryPosition.height = logEntryPosition.height - cur.y;
-            _selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
-            _separationBar.Render(position.width, cur.y, position.height);
+            DebugConsole.SetValue("logEntryPosition ", logEntryPosition.ToString());
+            //_selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
+            //_separationBar.Render(position.width, cur.y, position.height);
+            //GUI.DrawTexture(logEntryPosition, _text);
 
-            if (_selectedLogEntryIndex != -1)
-            {
-                EditorGUILayout.SelectableLabel(_logEntries[_selectedLogEntryIndex].format);
-            }
+            var labelPos = GUILayoutUtility.GetRect(100, 100);
+            DebugConsole.SetValue("labelPos ", labelPos.ToString());
+            GUI.DrawTexture(labelPos, Texture2D.whiteTexture);
+            //if (_selectedLogEntryIndex != -1)
+            //{
+            //    var style = new GUIStyle();
+            //    style.alignment = TextAnchor.UpperRight;
+            //    style.fontSize = 16;
+            //    EditorGUILayout.SelectableLabel(_logEntries[_selectedLogEntryIndex].format, style);
+            //}
+
+            DebugConsole.SetValue("mouse ", Event.current.mousePosition.ToString());
         }
     }
 }
