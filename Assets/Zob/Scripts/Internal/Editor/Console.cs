@@ -160,57 +160,29 @@ namespace Zob.Internal.Editor
         //    DebugConsole.SetValue("mouse ", Event.current.mousePosition.ToString());
         //}
 
-        float _height = -1;
-        Rect _colliderRect;
-        bool _mouseDown;
-        float _mouseY;
-        float _heightStart;
+        VerticalSplit _split1;
+        VerticalSplit _split2;
 
         protected void OnGUI()
         {
-            if (_height == -1)
+            if (_split1 == null)
             {
-                _height = position.height * 0.6f;
+                _split1 = new VerticalSplit(this, 0);
+            }
+            if (_split2 == null)
+            {
+                _split2 = new VerticalSplit(this, 20);
             }
 
-            var first = GUILayoutUtility.GetRect(0, 35);
-            var second = GUILayoutUtility.GetRect(0, _height);
-            var third = GUILayoutUtility.GetRect(0, 50);
+            _split1.OnGUI();
+            _split2.OnGUI();
 
+            var third = GUILayoutUtility.GetRect(0, 50);
             if (Event.current.type == EventType.Repaint)
             {
-                first.width = 10;
-                GUI.DrawTexture(first, Texture2D.whiteTexture);
-                second.width = 10;
-                second.x = 10;
-                GUI.DrawTexture(second, Texture2D.whiteTexture);
                 third.width = 10;
-                third.x = 20;
+                third.x = 50;
                 GUI.DrawTexture(third, Texture2D.whiteTexture);
-
-                _colliderRect.x = 0;
-                _colliderRect.y = third.y;
-                _colliderRect.width = position.width;
-                _colliderRect.height = 5;
-                EditorGUIUtility.AddCursorRect(_colliderRect, MouseCursor.ResizeVertical);
-            }
-
-
-            if (Event.current.type == EventType.mouseDown && _colliderRect.Contains(Event.current.mousePosition))
-            {
-                _mouseY = Event.current.mousePosition.y;
-                _heightStart = second.height;
-                _mouseDown = true;
-            }
-            if (_mouseDown && Event.current.type == EventType.MouseUp)
-            {
-                _mouseDown = false;
-            }
-            if (Event.current.type == EventType.MouseDrag && _mouseDown)
-            {
-                var delta = _mouseY - Event.current.mousePosition.y;
-                _height = _heightStart - delta;
-                Repaint();
             }
         }
     }
