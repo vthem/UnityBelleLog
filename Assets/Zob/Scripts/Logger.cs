@@ -20,6 +20,7 @@
             entry.level = Internal.LogLevel.Trace;
             entry.domain = _domain;
             entry.timestamp = System.DateTime.Now;
+            entry.stackTrace = null;
             _logSystem.Log(entry);
         }
 

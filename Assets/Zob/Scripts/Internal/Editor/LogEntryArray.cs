@@ -6,39 +6,55 @@ namespace Zob.Internal.Editor
 {
     public class LogEntryArray
     {
-        private Console _console;
+        private EditorWindow _parent;
+        private GUIStyles _styles;
         private float _scrollValue;
         private List<Rect> _entriesRect = new List<Rect>();
 
-        private Texture2D _rowTexture1;
-        private Texture2D _rowTexture2;
-        private Texture2D _selectedRowTexture;
+        //private Texture2D _rowTexture1;
+        //private Texture2D _rowTexture2;
+        //private Texture2D _selectedRowTexture;
+        private Texture2D _bottomBarTexture;
+        private VerticalSplit _split;
+
 
         private const float _rowHeight = 20f;
 
-        public LogEntryArray(Console console)
+        public LogEntryArray(EditorWindow parent, GUIStyles styles)
         {
-            _console = console;
+            _parent = parent;
+            _styles = styles;
 
-            _rowTexture1 = new Texture2D(1, 1);
-            _rowTexture1.SetPixel(0, 0, new Color32(55, 125, 55, 255));
-            _rowTexture1.Apply();
+            //_rowTexture1 = new Texture2D(1, 1);
+            //_rowTexture1.SetPixel(0, 0, new Color32(55, 125, 55, 255));
+            //_rowTexture1.Apply();
 
-            _rowTexture2 = new Texture2D(1, 1);
-            _rowTexture2.SetPixel(0, 0, new Color32(120, 60, 60, 255));
-            _rowTexture2.Apply();
+            //_rowTexture2 = new Texture2D(1, 1);
+            //_rowTexture2.SetPixel(0, 0, new Color32(120, 60, 60, 255));
+            //_rowTexture2.Apply();
 
-            _selectedRowTexture = new Texture2D(1, 1);
-            _selectedRowTexture.SetPixel(0, 0, new Color32(62, 95, 150, 255));
-            _selectedRowTexture.Apply();
+            //_selectedRowTexture = new Texture2D(1, 1);
+            //_selectedRowTexture.SetPixel(0, 0, new Color32(62, 95, 150, 255));
+            //_selectedRowTexture.Apply();
+
+            _bottomBarTexture = new Texture2D(1, 1);
+            _bottomBarTexture.SetPixel(0, 0, new Color32(23, 23, 23, 255));
+            _bottomBarTexture.Apply();
         }
 
         int count = 0;
 
-        public int OnGUI(Rect position, int selectedLogEntryIndex, List<LogEntry> logEntries)
+        public int OnGUI(int selectedLogEntryIndex, List<LogEntry> logEntries)
         {
+            if (null == _split)
+            {
+                _split = new VerticalSplit(_parent);
+            }
+            _split.OnGUI();
+
             if (Event.current.type != EventType.Layout)
             {
+                Rect position = _split.Position;
                 int rowCount = Mathf.CeilToInt(position.height / _rowHeight);
                 var scrollbarPosition = new Rect(
                     position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth,
@@ -57,15 +73,15 @@ namespace Zob.Internal.Editor
 
                 for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex)
                 {
-                    Texture2D rowTexture = _rowTexture1;
-                    if (((int)_scrollValue + rowIndex) % 2 == 0)
-                    {
-                        rowTexture = _rowTexture2;
-                    }
-                    if (rowIndex + (int)_scrollValue == selectedLogEntryIndex)
-                    {
-                        rowTexture = _selectedRowTexture;
-                    }
+                    //Texture2D rowTexture = _rowTexture1;
+                    //if (((int)_scrollValue + rowIndex) % 2 == 0)
+                    //{
+                    //    rowTexture = _rowTexture2;
+                    //}
+                    //if (rowIndex + (int)_scrollValue == selectedLogEntryIndex)
+                    //{
+                    //    rowTexture = _selectedRowTexture;
+                    //}
                     Rect rowRect = new Rect(
                         position.x,
                         position.y + rowIndex * _rowHeight,
@@ -92,7 +108,13 @@ namespace Zob.Internal.Editor
                     }
 
                     _entriesRect.Add(rowRect);
-                    GUI.DrawTexture(rowRect, rowTexture);
+                    //                    GUI.DrawTexture(rowRect, rowTexture);
+                    int index = ((int)_scrollValue + rowIndex);
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
+                        s.Draw(rowRect, false, false, selectedLogEntryIndex == index, false);
+                    }
                     EditorGUI.LabelField(rowRect, logEntries[(int)_scrollValue + rowIndex].format);
                 }
             }
@@ -105,21 +127,26 @@ namespace Zob.Internal.Editor
                     step = Mathf.Sign(step) * logEntries.Count * 0.05f;
                 }
                 _scrollValue = Mathf.FloorToInt(Mathf.Clamp(_scrollValue + step, 0f, logEntries.Count));
-                _console.Repaint();
+                _parent.Repaint();
             }
 
             if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
             {
-                selectedLogEntryIndex = -1;
                 for (int i = 0; i < _entriesRect.Count; ++i)
                 {
                     if (_entriesRect[i].Contains(Event.current.mousePosition))
                     {
                         selectedLogEntryIndex = i + (int)_scrollValue;
-                        _console.Repaint();
+                        _parent.Repaint();
                         break;
                     }
                 }
+            }
+
+            var bottomBarPosition = GUILayoutUtility.GetRect(0, 2);
+            if (Event.current.type == EventType.Repaint)
+            {
+                GUI.DrawTexture(bottomBarPosition, _bottomBarTexture);
             }
 
             return selectedLogEntryIndex;

@@ -7,18 +7,20 @@ namespace Zob.Internal.Editor
 {
     public class VerticalSplit
     {
-        float _height = -1;
-        Rect _colliderRect;
-        bool _mouseDown;
-        float _mouseY;
-        float _heightStart;
-        EditorWindow _window;
-        float _x;
+        public Rect Position { get { return _position; } set { _position = value; } }
 
-        public VerticalSplit(EditorWindow window, float x)
+        private Rect _colliderRect;
+        private Rect _position;
+        private bool _mouseDown;
+        private float _mouseY;
+        private float _heightStart;
+        private float _height;
+        private EditorWindow _window;
+
+        public VerticalSplit(EditorWindow window)
         {
             _window = window;
-            _x = x;
+            _height = -1;
         }
 
         public void OnGUI()
@@ -28,26 +30,29 @@ namespace Zob.Internal.Editor
                 _height = _window.position.height * 0.3f;
             }
 
-            var second = GUILayoutUtility.GetRect(0, _height);
+            _position = GUILayoutUtility.GetRect(0, _height);
 
             if (Event.current.type == EventType.Repaint)
             {
-                second.width = 10;
-                second.x = _x;
-                GUI.DrawTexture(second, Texture2D.whiteTexture);
-
                 _colliderRect.x = 0;
-                _colliderRect.y = second.y + second.height;
+                _colliderRect.y = _position.y + _position.height;
                 _colliderRect.width = _window.position.width;
-                _colliderRect.height = 5;
+                _colliderRect.height = 2;
                 EditorGUIUtility.AddCursorRect(_colliderRect, MouseCursor.ResizeVertical);
             }
+            if (Event.current.type == EventType.Repaint)
+            {
+                Debug.Log("event=" + Event.current.type + " rect=" + _colliderRect + " mpos=" + Event.current.mousePosition);
+            }
+            if (Event.current.type == EventType.MouseDown)
+            {
+                Debug.Log("event=" + Event.current.type + " rect=" + _colliderRect + " mpos=" + Event.current.mousePosition);
+            }
 
-
-            if (Event.current.type == EventType.mouseDown && _colliderRect.Contains(Event.current.mousePosition))
+            if (Event.current.type == EventType.MouseDown && _colliderRect.Contains(Event.current.mousePosition))
             {
                 _mouseY = Event.current.mousePosition.y;
-                _heightStart = second.height;
+                _heightStart = _height;
                 _mouseDown = true;
             }
             if (_mouseDown && Event.current.type == EventType.MouseUp)

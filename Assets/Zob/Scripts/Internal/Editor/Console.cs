@@ -23,14 +23,23 @@ namespace Zob.Internal.Editor
         private int _selectedLogEntryIndex = -1;
         private SearchField _searchField;
         private LogEntryArray _logEntryArray;
+        private LogEntryContent _logEntryContent;
+        private LogEntryStackTrace _logEntryStackTrace;
         private bool _initialized = false;
+        private bool _onGUIInitialized = false;
         private bool _collapse;
         private bool _clearOnPlay;
         private bool _errorPause;
         private bool _showFilter;
-        private SeparationBarGUI _separationBar;
-
+        private GUIStyles _guiStyles;
+        private BottomMode _bottomMode = BottomMode.LogContent;
         private Texture2D _text;
+
+        private enum BottomMode
+        {
+            LogContent,
+            StackTrace
+        }
 
         // Add menu named "My Window" to the Window menu
         [MenuItem("Window/ZobConsole")]
@@ -56,39 +65,45 @@ namespace Zob.Internal.Editor
         void OnDisable()
         {
             _initialized = false;
+            _onGUIInitialized = false;
         }
 
         private void Initialize()
         {
-            Debug.Log("InitializeOnce " + _initialized + " id=" + GetInstanceID());
             if (_initialized)
             {
                 return;
             }
             _initialized = true;
-            Debug.Log("InitializeOnce...");
+            _onGUIInitialized = false;
 
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            Debug.Log("InitializeOnce...");
-            _logEntryArray = new LogEntryArray(this);
-            Debug.Log("InitializeOnce...");
-            _separationBar = new SeparationBarGUI(2 / 3f, this);
-            Debug.Log("InitializeOnce...");
             _searchField = new SearchField();
-            Debug.Log("InitializeOnce...");
 
+            var entry = new LogEntry();
             for (int i = 0; i < 1000; ++i)
             {
-                var entry = new LogEntry();
                 entry.args = null;
                 entry.domain = "log-console";
                 entry.format = "this is a log entry [" + i + "]";
                 entry.level = LogLevel.Info;
                 entry.timestamp = DateTime.Now;
+                entry.stackTrace = new System.Diagnostics.StackTrace(0, true);
                 _logEntries.Add(entry);
             }
-            Debug.Log("InitializeOnce... complete");
+
+            entry.args = null;
+            entry.domain = "log-console";
+            entry.format = "a very big log";
+            for (int i = 0; i < 1000; ++i)
+            {
+                entry.format += " next [" + i + "]";
+
+            }
+            entry.level = LogLevel.Info;
+            entry.timestamp = DateTime.Now;
+            _logEntries.Add(entry);
 
             _text = new Texture2D(1, 1);
             _text.SetPixel(0, 0, Color.magenta);
@@ -98,92 +113,92 @@ namespace Zob.Internal.Editor
 
         }
 
-        //protected void OnGUI()
-        //{
-        //    if (!_initialized)
-        //    {
-        //        EditorGUILayout.LabelField("Not properly initialized");
-        //        return;
-        //    }
-        //    var toolbarPosition = new Rect(0, 0, position.width, TabHeight);
-        //    GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
-
-        //    if (GUILayout.Button("Clear", new GUIStyle("ToolbarButton")))
-        //    {
-        //    }
-
-        //    EditorGUILayout.Space();
-        //    EditorGUILayout.Space();
-        //    EditorGUILayout.Space();
-
-        //    _collapse = GUILayout.Toggle(_collapse, "Collapse", new GUIStyle("ToolbarButton"));
-        //    _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
-        //    _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
-        //    GUILayout.FlexibleSpace();
-        //    _showFilter = GUILayout.Toggle(_showFilter, "Show filter", new GUIStyle("ToolbarButton"));
-        //    GUILayout.EndHorizontal();
-
-        //    GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
-        //    _selectedLogEntryIndex = _searchField.OnGUI(_selectedLogEntryIndex, _logEntries);
-        //    GUILayout.Space(5f);
-        //    var maxWidth = GUILayout.MaxWidth(20);
-        //    if (GUILayout.Button("<", new GUIStyle("ToolbarButton"), maxWidth))
-        //    {
-        //    }
-        //    if (GUILayout.Button(">", new GUIStyle("ToolbarButton"), maxWidth))
-        //    {
-        //    }
-        //    GUILayout.EndHorizontal();
-
-        //    var cur = GUILayoutUtility.GetRect(0, 0, 0, 0);
-        //    DebugConsole.SetValue("cur ", cur.ToString());
-        //    var logEntryArrayHeight = _separationBar.Y - cur.y;
-        //    DebugConsole.SetValue("height rq ", logEntryArrayHeight.ToString());
-        //    var logEntryPosition = GUILayoutUtility.GetRect(position.width, logEntryArrayHeight);
-        //    logEntryPosition.height = logEntryPosition.height - cur.y;
-        //    DebugConsole.SetValue("logEntryPosition ", logEntryPosition.ToString());
-        //    //_selectedLogEntryIndex = _logEntryArray.OnGUI(logEntryPosition, _selectedLogEntryIndex, _logEntries);
-        //    //_separationBar.Render(position.width, cur.y, position.height);
-        //    //GUI.DrawTexture(logEntryPosition, _text);
-
-        //    var labelPos = GUILayoutUtility.GetRect(100, 100);
-        //    DebugConsole.SetValue("labelPos ", labelPos.ToString());
-        //    GUI.DrawTexture(labelPos, Texture2D.whiteTexture);
-        //    //if (_selectedLogEntryIndex != -1)
-        //    //{
-        //    //    var style = new GUIStyle();
-        //    //    style.alignment = TextAnchor.UpperRight;
-        //    //    style.fontSize = 16;
-        //    //    EditorGUILayout.SelectableLabel(_logEntries[_selectedLogEntryIndex].format, style);
-        //    //}
-
-        //    DebugConsole.SetValue("mouse ", Event.current.mousePosition.ToString());
-        //}
-
-        VerticalSplit _split1;
-        VerticalSplit _split2;
+        protected void OnGUIInitialize()
+        {
+            if (_onGUIInitialized)
+            {
+                return;
+            }
+            _onGUIInitialized = true;
+            Debug.Log("initialize! ref=" + GetInstanceID());
+            // Initialize things that need to be initialize in OnGUI
+            _guiStyles = new GUIStyles();
+            _logEntryContent = new LogEntryContent(this, _guiStyles);
+            _logEntryStackTrace = new LogEntryStackTrace(this);
+            _logEntryArray = new LogEntryArray(this, _guiStyles);
+        }
 
         protected void OnGUI()
         {
-            if (_split1 == null)
+            OnGUIInitialize();
+
+            if (!_initialized)
             {
-                _split1 = new VerticalSplit(this, 0);
+                EditorGUILayout.LabelField("Not properly initialized");
+                return;
             }
-            if (_split2 == null)
+            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+
+            if (GUILayout.Button("Clear", new GUIStyle("ToolbarButton")))
             {
-                _split2 = new VerticalSplit(this, 20);
+                Debug.Log("--clear--");
             }
 
-            _split1.OnGUI();
-            _split2.OnGUI();
+            EditorGUILayout.Space();
 
-            var third = GUILayoutUtility.GetRect(0, 50);
-            if (Event.current.type == EventType.Repaint)
+            _collapse = GUILayout.Toggle(_collapse, "Collapse", new GUIStyle("ToolbarButton"));
+            _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
+            GUILayout.FlexibleSpace();
+            _showFilter = GUILayout.Toggle(_showFilter, "Show filter", new GUIStyle("ToolbarButton"));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+            _selectedLogEntryIndex = _searchField.OnGUI(_selectedLogEntryIndex, _logEntries);
+            GUILayout.Space(5f);
+            var maxWidth = GUILayout.MaxWidth(20);
+            if (GUILayout.Button("<", new GUIStyle("ToolbarButton"), maxWidth))
             {
-                third.width = 10;
-                third.x = 50;
-                GUI.DrawTexture(third, Texture2D.whiteTexture);
             }
+            if (GUILayout.Button(">", new GUIStyle("ToolbarButton"), maxWidth))
+            {
+            }
+            GUILayout.EndHorizontal();
+
+            _selectedLogEntryIndex = _logEntryArray.OnGUI(_selectedLogEntryIndex, _logEntries);
+
+            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+
+            if (GUILayout.Toggle(_bottomMode == BottomMode.LogContent, "Content", new GUIStyle("ToolbarButton")))
+            {
+                _bottomMode = BottomMode.LogContent;
+            }
+            if (GUILayout.Toggle(_bottomMode == BottomMode.StackTrace, "Stack trace", new GUIStyle("ToolbarButton")))
+            {
+                _bottomMode = BottomMode.StackTrace;
+            }
+            GUILayout.EndHorizontal();
+
+            if (_bottomMode == BottomMode.LogContent)
+            {
+                string label = string.Empty;
+                if (_selectedLogEntryIndex != -1)
+                {
+                    label = _logEntries[_selectedLogEntryIndex].format;
+                }
+                _logEntryContent.OnGUI(label);
+            }
+            else if (_bottomMode == BottomMode.StackTrace)
+            {
+                LogEntry logEntry;
+                if (_selectedLogEntryIndex != -1)
+                {
+                    logEntry = _logEntries[_selectedLogEntryIndex];
+                    _logEntryStackTrace.OnGUI(logEntry);
+                }
+            }
+
+            DebugConsole.SetValue("mouse ", Event.current.mousePosition.ToString());
         }
     }
 }
