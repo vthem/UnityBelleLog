@@ -22,34 +22,34 @@ namespace Zob.Internal
         public List<LogConfigDomainFilter> filters;
     }
 
-    public class LogConfig : LogSingleton<LogConfig>
-    {
-        private LogConfigModel _model;
+    //public class LogConfig : LogSingleton<LogConfig>
+    //{
+    //    private LogConfigModel _model;
 
-        public LogConfig()
-        {
-        }
+    //    public LogConfig()
+    //    {
+    //    }
 
-        public LogConfigEntry GetEntry(string domain)
-        {
-            LogConfigEntry entry;
-            entry.isEnable = false;
-            entry.minLogLevel = LogLevel.Fatal;
-            return entry;
-        }
+    //    public LogConfigEntry GetEntry(string domain)
+    //    {
+    //        LogConfigEntry entry;
+    //        entry.isEnable = false;
+    //        entry.minLogLevel = LogLevel.Fatal;
+    //        return entry;
+    //    }
 
-        public static LogConfigModel DefaultModel
-        {
-            get
-            {
-                var model = new LogConfigModel();
-                model.filters = new List<LogConfigDomainFilter>();
+    //    public static LogConfigModel DefaultModel
+    //    {
+    //        get
+    //        {
+    //            var model = new LogConfigModel();
+    //            model.filters = new List<LogConfigDomainFilter>();
 
-                var filter = new LogConfigDomainFilter();
-                filter.domainMatch = "*";
-                model.filters.Add(filter);
-                return model;
-            }
-        }
-    }
+    //            var filter = new LogConfigDomainFilter();
+    //            filter.domainMatch = "*";
+    //            model.filters.Add(filter);
+    //            return model;
+    //        }
+    //    }
+    //}
 }

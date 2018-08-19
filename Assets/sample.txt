@@ -1,0 +1,1031 @@
+HFConfiguration - loading configuration file path=C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\network-6.json
+Cannot load configuration file: network.json
+File C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\network-6.json has been saved.
+HFSnapButtonView > SetState --> GuestReplaceAnchorBtn - Default
+HFSnapButtonView > SetState --> GuestConfirmAnchorsBtn - Default
+HFSnapButtonView > SetState --> NextGalleryButton - Default
+HFSnapButtonView > SetState --> PreviousGalleryButton - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState --> TakePhotoOfStreamButton - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState --> DoseBarToggleButton - Default
+HFSnapButtonView > SetState --> DoseBarToggleButton - Default
+HFSnapButtonView > SetState --> DoseBarToggleButton - Default
+HFSnapButtonView > SetState --> DoseBarToggleButton - Default
+HFSnapButtonView > SetState --> ShareVideoButton - Default
+HFSnapButtonView > SetState --> ShareVideoButton - Default
+HFSnapButtonView > SetState --> QuitSharingBtn - Default
+HFSnapButtonView > SetState --> ReplaceAnchorBtn - Default
+HFSnapButtonView > SetState --> ConfirmAnchorsBtn - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState --> SettingsButton - Default
+HFSnapButtonView > SetState --> WifiButton - Default
+HFSnapButtonView > SetState --> HeatmapButton - Default
+HFSnapButtonView > SetState --> HeatmapButton - Default
+HFSnapButtonView > SetState --> MinimizeButton - Default
+HFSnapButtonView > SetState --> NotificationButton - Default
+HFSnapButtonView > SetState --> ErrorButton - Default
+StreamerDebugUI - enable UI
+HFNetworkManager - clientGUID=f4839adc-d4c6-400a-96ac-1b41b9b99788
+HFNetworkManager - serverGUID=90417a94-d46c-4a06-bfe7-8e12bfecbb8b
+HFSharedBehaviour name=H2VRoot Start()
+HFMaster - Start()
+HFSharedBehaviour name=TrackerManager Start()
+OnPlaySpacePositionsUpdated for object:  ScreenshotAnchor
+HFSharedBehaviour name=ScreenshotAnchor Start()
+HFSnapButtonView > SetState --> ShareVideoButton - Deactivated
+HFSnapButtonView > SetState --> MinimizeButton - Deactivated
+OnPlaySpacePositionsUpdated for object:  MarkLightUI
+HFSharedBehaviour name=Status Start()
+AddUserRights VoiceControllerRights to 
+HFSharedBehaviour name=Engine Start()
+StartFlow:H2VConfigurationFlow
+HFConfiguration - loading configuration file path=C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\H2V-5.json
+Cannot load configuration file: H2V.json
+File C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\H2V-5.json has been saved.
+HFConfiguration - loading configuration file path=C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\streamer-9.json
+Cannot load configuration file: streamer.json
+File C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\streamer-9.json has been saved.
+HFStreamerNetworkController - Start discovery service to find server
+HFDiscoveryService : Starting discovery  with ApplicationID:2017 on port 33615
+HFStreamerNetworkController - Waiting for discovery service ...
+HFStreamer.dll - NFO DLL logger initialized to level:TRC
+HFSharedBehaviour name=ScreenshotManager Start()
+EndFlow:H2VConfigurationFlow
+StartFlow:VerificationFlow
+Dosimeter data : WIFI
+HFConfiguration - loading configuration file path=C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\AudioManager-1.json
+Cannot load configuration file: AudioManager.json
+File C:\Data\Users\guill\AppData\Local\Packages\H2VOperator_a142ngqmh40v8\LocalState\AudioManager-1.json has been saved.
+Play sound: Research_loop
+VerificationFlow > Change connection state: INVALID -> SEARCH_SERVER
+Detected ground not valid. Distance to camera: 0.06577304
+Added serverIP 10.0.0.6  nbConnectedPlayer: 1, nbConnectedFacilitator 0
+HFStreamerNetworkController - Found server 10.0.0.6
+HFDiscoveryService: Stop Discovering ...
+HFStreamerNetworkController - Connecting to server 10.0.0.6
+HFNetworkManager.ClientConnect - ClientConnect 10.0.0.6:33614
+HFUserRightManager has been dettached from network, state=NOT_READY
+HFSharedBehaviour name=Network Start()
+VerificationFlow > Change connection state: SEARCH_SERVER -> CONNECTING
+HFStreamerNetworkController - connected to server
+HFStreamerEntityManager Name=' OperatorStreamerSystem'OnConnectedToHFServer - enter
+HFStreamerEntityManager Name=' OperatorStreamerSystem'creating local entity
+HFStreamerEntity Local Id=f4839adc-d4c6-400a-96ac-1b41b9b99788 - IsNetworkingLayerReady False => True
+HFStreamerEntity Local Id=f4839adc-d4c6-400a-96ac-1b41b9b99788 - StreamingLayerReadyCount 0 => 0
+HFSharedBehaviour name=OperatorInfo:f4839adc-d4c6-400a-96ac-1b41b9b99788 Start()
+Detected ground not valid. Distance to camera: 0.1425547
+Hololens Instantiating SupervisorInfo (HoloForge.Streamer.HFStreamerEntity)
+HFStreamerEntity Remote Id=e16acce4-76e9-4f41-8a3c-a4af427b267c - IsNetworkingLayerReady False => True
+HFStreamerEntity Remote Id=e16acce4-76e9-4f41-8a3c-a4af427b267c - StreamingLayerReadyCount 0 => 0
+HFStreamerHelloSequence - AddInstanceCount count=1 ref=SupervisorInfo:e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerEntityManager Name=' OperatorStreamerSystem'added remote entity - Id=e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerEntityManager - remote Entity not ready yet, remoteId=e16acce4-76e9-4f41-8a3c-a4af427b267c
+No UserRights on Network : syncing local rights with network
+AddUserRights VoiceControllerRights to 
+AddUserRights VoiceControllerRights to 
+HFStreamerEntityManager Name=' OperatorStreamerSystem'initialize local entity name=OperatorInfo:f4839adc-d4c6-400a-96ac-1b41b9b99788 type=Hololens id=f4839adc-d4c6-400a-96ac-1b41b9b99788
+HFStreamerEntityManager Name=' OperatorStreamerSystem'Created local entity name=OperatorInfo:f4839adc-d4c6-400a-96ac-1b41b9b99788 | Type=Hololens | Id=f4839adc-d4c6-400a-96ac-1b41b9b99788
+HFSharedBehaviour name=SupervisorInfo:e16acce4-76e9-4f41-8a3c-a4af427b267c Start()
+SupervisorInfo > ScreenshotNameArray is dirty
+HFStreamerEntityLinkManager - initializing remote entity - Id=e16acce4-76e9-4f41-8a3c-a4af427b267c isServer=True
+HFStreamerEntityLinkManager - objectReadyHandler link name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c isServer=true, object not ready
+HFSharedBehaviour name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c Start()
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - start listener
+NetworkComponent[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c]Listener(), state=IDLE
+NetworkComponent[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c]NetworkComponent::Initialize(), state=IDLE
+NetworkComponent[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c]StartAsync() 33990, state=INITIALIZING
+NetworkComponent[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c]listenStarted() 33990, state=INITIALIZING
+HFStreamer.dll - DBG AddModule handle:569c7e8
+NetworkComponent[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c]OnStarted=0, state=INITIALIZING
+HFStreamerEntityLinkManager - created server link name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerListener - started on port=33990 requested=33990
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - listener started on port=33990
+HFStreamer.dll - DBG AddModule handle:da59f08
+Connection[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c] CreateConnection() 2991, state=IDLE
+Connection[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c] Initialize() 2991, state=IDLE
+Connection[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c] exAddDisconnected 2991, state=IDLE
+Connection - id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c IDLE => CONNECTED
+HFStreamerListener - remote connected
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - stream connected id=
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - IsStreamLayerReady False => True
+HFStreamerSession - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c - created
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - send event HFStreamerSystem.SendNewStreamerSessionEvent
+GuestScreenshotManager > OnNewStreamerSession: f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c is type of Remote
+PlaybackEngineState NOT_INITIALIZED => CREATING id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamer.dll - DBG NetworkMediaSourceImpl::UpdateStatus state=MEDIASOURCE_REQUESTING_DESCRIBE
+HFStreamer.dll - DBG send bundle payloadType=PayloadType_Request_CaptureMediaDescription
+HFStreamer.dll - NFO DACACF0 PlaybackEngineImpl::SetStatus value=PlaybackEngineState_Created
+HFStreamer.dll - DBG AddModule handle:dacad04
+OperatorStatus - Start session time coroutine
+HFSnapButtonView > SetState --> ShareVideoButton - Default
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_Request_CaptureMediaDescription
+HFSnapButtonView > SetState --> MinimizeButton - Default
+HFStreamerSession - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c - StartWebCamCapture - mode=AudioVideo
+### CaptureEngineState CREATING, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamer.dll - NFO DA603D0 CaptureEngineImpl::SetStatus state=CaptureEngineState_Creating
+HFStreamer.dll - NFO FindDeviceId
+HFStreamer.dll - NFO Name of the capture peripheral: mn34150
+HFStreamer.dll - NFO FindDeviceId
+HFStreamer.dll - NFO Name of the capture peripheral: microphone (intel sst audio device (wdm))
+HFStreamerSession - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c - SetVideoScreen name=VideoStream (SupervisorVideoStream)
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c AddVideoScreen name=VideoStream (SupervisorVideoStream)
+HFStreamerScreen - IsPlayingVideo False => False
+PlayingVideoChangedHandler on GameObject VideoStream (SupervisorVideoStream) ImageRef=VideoStream (SupervisorVideoStream) state=False
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+HFStreamerEntity Remote Id=e16acce4-76e9-4f41-8a3c-a4af427b267c - StreamingLayerReadyCount 0 => 1
+HFStreamerEntityManager Name=' OperatorStreamerSystem'EntityLayerUpdated Id=e16acce4-76e9-4f41-8a3c-a4af427b267c discard because both remote and local network layer are ready
+HFStreamerEntity Local Id=f4839adc-d4c6-400a-96ac-1b41b9b99788 - StreamingLayerReadyCount 0 => 1
+HFStreamerEntityManager Name=' OperatorStreamerSystem'EntityLayerUpdated Id=f4839adc-d4c6-400a-96ac-1b41b9b99788 discard because no link found
+Play sound: Connection_ok
+VerificationFlow > Change connection state: CONNECTING -> FULLY_CONNECTED
+PlaybackEngineState CREATING => WAITINGFORCAPTURE id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c NOT_INITIALIZED => WAITINGFORCAPTURE
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+HFStreamer.dll - NFO da603d0 VideoResolution 1280 x 720
+HFStreamer.dll - NFO da603d0 VideoResolution 896 x 504
+HFStreamer.dll - NFO da603d0 VideoResolution 1344 x 756
+HFStreamer.dll - NFO da603d0 VideoResolution 1408 x 792
+05h55m21s14 000344 Log: 00:33 HFStreamer.dll - NFO { "videoDevices" : [ { "\\\\?\\DISPLAY#INT22B8#4&27b432bd&0&UID139960#{e5323777-f976-4f5b-9b55-b94699c46e44}\\{CDD6871A-56CA-4386-BAE7-D24B564378A9}": { "name":"MN34150", "videoResolutions":[{"5497558139600":{ 97720":{ "w":896,"h":504} },{"5772436046580":{ "w":1344,"h":756} },{"6047313953560":{ "w":1408,"h":792} }], "photoResolutions" : [] } } ] }  
+HFStreamer.dll - NFO DA603D0 CaptureEngineImpl::SetStatus state=CaptureEngineState_Created
+HFStreamer.dll - DBG AddModule handle:da603d0
+### CaptureEngineState CREATED, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerSession - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c - StartWebCamCapture::Initialize - success=True
+HFStreamerCapture - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c StartCapture
+### CaptureEngineState STARTING, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamer.dll - NFO DA603D0 CaptureEngineImpl::SetStatus state=CaptureEngineState_Starting
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=0 _streamId=1 _fIsVideo=0 dump
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=0 _streamId=0 _fIsVideo=0 dump
+CaptureEngine > CaptureEnginePluginState= 3004, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=1 _streamId=0 _fIsVideo=1 dump
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=1 _streamId=1 _fIsVideo=0 dump
+Detected ground not valid. Distance to camera: 0.251817
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=1 _streamId=0 _fIsVideo=1 dump
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=1 _streamId=1 _fIsVideo=0 dump
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=1 _streamId=0 _fIsVideo=1 dump
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=1 _streamId=1 _fIsVideo=0 dump
+HFStreamer.dll - NFO NetworkSinkImpl::OnClockStart: ts=0
+HFStreamer.dll - DBG send bundle payloadType=PayloadType_State_CaptureStarted
+HFStreamer.dll - NFO da603d0 CaptureEngineImpl::OnStatusChanged MediaSinkStatus==3102
+HFStreamer.dll - NFO DA603D0 CaptureEngineImpl::SetStatus state=CaptureEngineState_Started
+CaptureEngine > CaptureEnginePluginState= 3006, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+### CaptureEngineState STARTED, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerCapture.StartCapture - WorldManager.State: Active
+HFStreamerSession - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c - StartWebCamCapture::StartCapture - success=True
+HFStreamerCapture - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c SwitchStreamingState stream=Audio to state=True
+HFStreamer.dll - DBG  147fba08 - set streaming state state=1 id=1
+HFStreamer.dll - NFO SendCaptureBroadcastStarted payloadType=PayloadType_State_CaptureBroadcastStarted playmode=PlaybackMode_Audio
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_Request_CaptureMediaDescription
+HFStreamer.dll - NFO SendDescription payloadType=PayloadType_SendMediaDescription buffersize=702
+HFStreamer.dll - DBG stream count=2 media type:
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_Request_CaptureStartBroadcast
+HFStreamer.dll - NFO SetConnected start=3626755
+HFStreamer.dll - NFO SetConnected start=3626755
+HFStreamer.dll - NFO da603d0 CaptureEngineImpl::OnStatusChanged MediaSinkStatus==3103
+HFStreamer.dll - NFO DA603D0 CaptureEngineImpl::SetStatus state=CaptureEngineState_Broadcasting
+HFStreamer.dll - NFO SendCaptureBroadcastStarted payloadType=PayloadType_State_CaptureBroadcastStarted playmode=PlaybackMode_Audio
+CaptureEngine > CaptureEnginePluginState= 3009, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+### CaptureEngineState STARTBROADCASTING, f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+Detected ground not valid. Distance to camera: 0.2863332
+HFStreamer.dll - DBG NetworkMediaSinkStreamImpl::SetCurrentMediaType _state=2 _streamId=0 _fIsVideo=1 dump
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+Detected ground not valid. Distance to camera: 0.5594372
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+Detected ground not valid. Distance to camera: 0.5467018
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+*** MemoryUsage = 422MB, Max: 433MB ***
+Detected ground not valid. Distance to camera: 0.5146772
+Detected ground not valid. Distance to camera: 0.5135695
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+Detected ground not valid. Distance to camera: 0.5028296
+Detected ground not valid. Distance to camera: 0.4999626
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+Detected ground not valid. Distance to camera: 0.4973809
+Last screenshot index: -1
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+HFSnapButtonView > SetState -->  - Default
+Last screenshot index: -1
+GalleryView > RemoteSession: f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+GalleryView > SupervisorInfo registering to supervisor info
+GalleryView > SupervisorInfo is ready > Synchronize screenshots
+Last screenshot index: -1
+HFLookAssistFactory > Activate --> FOV - UICanvas (OperatorCanvas)
+EndFlow:VerificationFlow
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+StartFlow:MainFlow
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+HFSnapButtonView > SetState --> ShareVideoButton - Default
+HFSnapButtonView > SetState --> MinimizeButton - Default
+Detected ground not valid. Distance to camera: 0.4979644
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4980931
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+HFSnapButtonView > SetState --> WifiButton - Highlighted
+Play sound: Gaze
+HFSnapButtonView > SetState --> WifiButton - Default
+Detected ground not valid. Distance to camera: 0.517538
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.5057933
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.5001605
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+*** MemoryUsage = 420MB, Max: 433MB ***
+Detected ground not valid. Distance to camera: 0.4850667
+Detected ground not valid. Distance to camera: 0.4831264
+HFSnapButtonView > SetState --> DoseBarToggleButton - Highlighted
+HFSnapButtonView > SetState --> DoseBarToggleButton - Default
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4666279
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4608515
+Detected ground not valid. Distance to camera: 0.4593143
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4397542
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4395609
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_State_CaptureStarted
+HFStreamer.dll - DBG send bundle payloadType=PayloadType_Request_CaptureMediaDescription
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_SendMediaDescription
+HFStreamer.dll - NFO 56efea0 NetworkMediaSourceImpl::ProcessMediaDescription InsertStream=0
+HFStreamer.dll - NFO 56efea0 NetworkMediaSourceImpl::ProcessMediaDescription InsertStream=1
+HFStreamer.dll - NFO 56EFEA0 NetworkMediaSourceImpl::InitPresentationDescription nbStreams=2, success=0
+HFStreamer.dll - DBG NetworkMediaSourceImpl::UpdateStatus state=MEDIASOURCE_PLAYBACK_READY
+HFStreamer.dll - NFO dacacf0 PlaybackEngineImpl::OnStatusChanged state=MEDIASOURCE_PLAYBACK_READY
+HFStreamer.dll - NFO DACACF0 PlaybackEngineImpl::SetStatus value=PlaybackEngineState_CaptureReady
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_State_CaptureBroadcastStarted
+HFStreamer.dll - NFO 56EFEA0 NetworkMediaSourceImpl::ProcessCaptureBroadcastStarted ignoring in state=MEDIASOURCE_PLAYBACK_READY
+PlaybackPluginState 2000 => 2004 id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_State_CaptureBroadcastStarted
+PlaybackEngineState WAITINGFORCAPTURE => CAPTUREREADY id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamer.dll - NFO 56EFEA0 NetworkMediaSourceImpl::ProcessCaptureBroadcastStarted ignoring in state=MEDIASOURCE_PLAYBACK_READY
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c WAITINGFORCAPTURE => CAPTUREREADY
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c StartVideoPlayback()
+HFStreamer.dll - NFO PlaybackEngine::Initialize width=640 height:480
+HFStreamer.dll - NFO DACACF0 PlaybackEngineImpl::StartPlayback _playbackStarted = true
+HFStreamer.dll - NFO DACACF0 PlaybackEngineImpl::SetStatus value=PlaybackEngineState_Play
+HFStreamer.dll - NFO 56EFEA0 NetworkMediaSourceImpl::DoStart
+HFStreamer.dll - NFO 56EFEA0 NetworkMediaSourceImpl::DoStart SourceStreamState_Starting
+HFStreamer.dll - DBG NetworkMediaSourceImpl::UpdateStatus state=MEDIASOURCE_REQUESTING_CAPTURE_BROADCAST_START
+HFStreamer.dll - NFO dacacf0 PlaybackEngineImpl::OnStatusChanged state=MEDIASOURCE_REQUESTING_CAPTURE_BROADCAST_START
+HFStreamer.dll - DBG send bundle payloadType=PayloadType_Request_CaptureStartBroadcast
+HFStreamer.dll - DBG 56EFEA0 NetworkMediaSourceImpl::OnDataReceived PayloadType_State_CaptureBroadcastStarted
+HFStreamer.dll - DBG NetworkMediaSourceImpl::UpdateStatus state=MEDIASOURCE_CAPTURE_BROADCAST_STARTED
+HFStreamer.dll - NFO dacacf0 PlaybackEngineImpl::OnStatusChanged state=MEDIASOURCE_CAPTURE_BROADCAST_STARTED
+PlaybackPluginState 2004 => 2006 id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+PlaybackEngineState CAPTUREREADY => PLAYING id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c CAPTUREREADY => PLAYING
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c IsPlayingAudio False => True
+Detected ground not valid. Distance to camera: 0.4362266
+HFStreamer.dll - NFO PlaybackEngine::OnReadSample width=640 height:480
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c creating texture 640x480
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c texture created
+HFStreamerPlayer - Id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c IsPlayingVideo False => True
+HFStreamerScreen - IsPlayingVideo False => True
+PlayingVideoChangedHandler on GameObject VideoStream (SupervisorVideoStream) ImageRef=VideoStream (SupervisorVideoStream) state=True
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4089918
+Detected ground not valid. Distance to camera: 0.4072568
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+*** MemoryUsage = 437MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.4084616
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4138668
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.435692
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4499649
+Detected ground not valid. Distance to camera: 0.4354891
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4028848
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.3983071
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.430458
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.427294
+Detected ground not valid. Distance to camera: 0.4280826
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+*** MemoryUsage = 433MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.4277152
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4300075
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4530758
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4763483
+Detected ground not valid. Distance to camera: 0.4985622
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4955564
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4828122
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4754594
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4446983
+Detected ground not valid. Distance to camera: 0.4436988
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+HFSnapButtonView > SetState -->  - Highlighted
+Play sound: Gaze
+HFSnapButtonView > SetState -->  - Default
+*** MemoryUsage = 434MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.4529836
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.389928
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.07677445
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.04443556
+Detected ground not valid. Distance to camera: 0.04491997
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.04504831
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.04507455
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02111535
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02125159
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.0212456
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+*** MemoryUsage = 434MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.02129701
+Detected ground not valid. Distance to camera: 0.0248879
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02487984
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02470297
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02502376
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02493554
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02496493
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02504534
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02501675
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02513385
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+*** MemoryUsage = 435MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.02506596
+Detected ground not valid. Distance to camera: 0.05196309
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.05196515
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.05195487
+Detected ground not valid. Distance to camera: 0.05190253
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.698211
+Detected ground not valid. Distance to camera: 0.6982415
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.6982793
+Detected ground not valid. Distance to camera: 0.004268706
+Detected ground not valid. Distance to camera: 0.00425595
+*** MemoryUsage = 434MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.004185617
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02627301
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02623338
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02802949
+Detected ground not valid. Distance to camera: 0.02690655
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.02560759
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4436425
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.4943991
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+Detected ground not valid. Distance to camera: 0.5025116
+Detected ground not valid. Distance to camera: 0.5015783
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+*** MemoryUsage = 436MB, Max: 437MB ***
+Detected ground not valid. Distance to camera: 0.4946896
+Dose sent to supervisor: 0
+DDose sent to supervisor: 0
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+SetDoseFeed: 0 ; isAlarmSet: False
+Alarm is not set
+k layer will still work after application suspends
+Processing with disconnection
+Doing nothing on self disconnect action
+HFStreamerEntity Local Id=f4839adc-d4c6-400a-96ac-1b41b9b99788 - IsNetworkingLayerReady True => False
+HFStreamerEntityManager Name=' OperatorStreamerSystem'EntityLayerUpdated Id=f4839adc-d4c6-400a-96ac-1b41b9b99788 discard because no link found
+HFStreamerEntity Remote Id=e16acce4-76e9-4f41-8a3c-a4af427b267c - IsNetworkingLayerReady True => False
+HFStreamerEntityManager Name=' OperatorStreamerSystem'EntityLayerUpdated Id=e16acce4-76e9-4f41-8a3c-a4af427b267c discard because RemoteEntity.IsOneStreamingLayerReady
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - ShutdownNetwork()
+HFStreamerEntityLink - name=EntityLink:f4839adc-d4c6-400a-96ac-1b41b9b99788:e16acce4-76e9-4f41-8a3c-a4af427b267c - stream disconnected id=
+Connection[f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c] Close(), state=CONNECTED
+Connection - id=f4839adc-d4c6-400a-96ac-1b41b9b99788_e16acce4-76e9-4f41-8a3c-a4af427b267c CONNECTED => CLOSING
+HFStreamer.dll - DBG ReleaseModule handle:da59f08 iter:da59f08 get:da59f08
+HFStreamer.dll - NFO closeable->Close()
+HFStreamer.dll - DBG NetworkMediaSourceImpl::UpdateStatus state=MEDIASOURCE_DISCONNECTED
+HFStreamer.dll - NFO dacacf0 PlaybackEngineImpl::OnStatusChanged state=MEDIASOURCE_DISCONNECTED
+HFStreamer.dll - NFO DACACF0 PlaybackEngineImpl::SetStatus value=PlaybackEngineState_ConnectionDisconnected

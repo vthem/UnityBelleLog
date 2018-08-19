@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    public class SearchField
+    internal class GUISearchField
     {
         private UnityEditor.IMGUI.Controls.SearchField _searchField;
         private string _searchFieldResult;
 
-        public SearchField()
+        public GUISearchField()
         {
-            _searchField = new UnityEditor.IMGUI.Controls.SearchField();
-            _searchField.autoSetFocusOnFindCommand = true;
+            _searchField = new UnityEditor.IMGUI.Controls.SearchField
+            {
+                autoSetFocusOnFindCommand = true
+            };
         }
 
-        public int OnGUI(int logEntryIndex, List<LogEntry> entries)
+        public int OnGUI(int logEntryIndex, ILogEntryContainer entries)
         {
             var newSearchFieldResult = _searchField.OnToolbarGUI(_searchFieldResult);
             if (newSearchFieldResult != _searchFieldResult)

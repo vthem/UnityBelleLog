@@ -2,7 +2,7 @@
 
 namespace Zob.Internal.Editor
 {
-    public class GUIStyles
+    internal class GUIStyles
     {
         public GUIStyle SelectableLabel { get; private set; }
         public GUIStyle OddBackground { get; private set; }

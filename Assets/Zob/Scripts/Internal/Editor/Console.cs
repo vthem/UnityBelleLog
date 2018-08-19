@@ -1,30 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    public class Console : EditorWindow
+    internal class Console : EditorWindow
     {
-        private Vector2 scrollPos;
-        private int count = 0;
-        private int texSize = 10;
         private Rect _rect;
         private float _scrollValue;
-        private float _rowHeight = 20f;
-        private const float TabHeight = 18f;
 
-        private Texture2D _row1;
-        private Texture2D _row2;
-        private Texture2D _selectedRowTexture;
+        private ConsoleLogHandler _logHandler = new ConsoleLogHandler();
+        private ILogEntryContainer _logEntries;
 
-        private List<LogEntry> _logEntries = new List<LogEntry>();
         private int _selectedLogEntryIndex = -1;
-        private SearchField _searchField;
-        private LogEntryArray _logEntryArray;
-        private LogEntryContent _logEntryContent;
-        private LogEntryStackTrace _logEntryStackTrace;
+        private GUISearchField _searchFieldGUI;
+        private GUILogEntryTable _logEntryTableGUI;
+        private GUILogEntryContent _logEntryContentGUI;
+        private GUILogEntryStackTrace _logEntryStackTraceGUI;
+
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
         private bool _collapse;
@@ -48,12 +41,10 @@ namespace Zob.Internal.Editor
             // Get existing open window or if none, make a new one:
             var console = (Console)EditorWindow.GetWindow(typeof(Console));
             console.Show();
-            Debug.Log("open zop console window");
         }
 
         public Console()
         {
-
             Debug.Log("Console " + _initialized + " id=" + GetInstanceID());
         }
 
@@ -79,38 +70,16 @@ namespace Zob.Internal.Editor
 
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            _searchField = new SearchField();
-
-            var entry = new LogEntry();
-            for (int i = 0; i < 1000; ++i)
-            {
-                entry.args = null;
-                entry.domain = "log-console";
-                entry.format = "this is a log entry [" + i + "]";
-                entry.level = LogLevel.Info;
-                entry.timestamp = DateTime.Now;
-                entry.stackTrace = new System.Diagnostics.StackTrace(0, true);
-                _logEntries.Add(entry);
-            }
-
-            entry.args = null;
-            entry.domain = "log-console";
-            entry.format = "a very big log";
-            for (int i = 0; i < 1000; ++i)
-            {
-                entry.format += " next [" + i + "]";
-
-            }
-            entry.level = LogLevel.Info;
-            entry.timestamp = DateTime.Now;
-            _logEntries.Add(entry);
+            _searchFieldGUI = new GUISearchField();
 
             _text = new Texture2D(1, 1);
             _text.SetPixel(0, 0, Color.magenta);
             _text.Apply();
 
-            Repaint();
+            _logEntries = _logHandler;
+            LogSystem.AddHandler(_logHandler);
 
+            Repaint();
         }
 
         protected void OnGUIInitialize()
@@ -120,12 +89,12 @@ namespace Zob.Internal.Editor
                 return;
             }
             _onGUIInitialized = true;
-            Debug.Log("initialize! ref=" + GetInstanceID());
+
             // Initialize things that need to be initialize in OnGUI
             _guiStyles = new GUIStyles();
-            _logEntryContent = new LogEntryContent(this, _guiStyles);
-            _logEntryStackTrace = new LogEntryStackTrace(this);
-            _logEntryArray = new LogEntryArray(this, _guiStyles);
+            _logEntryContentGUI = new GUILogEntryContent(this, _guiStyles);
+            _logEntryStackTraceGUI = new GUILogEntryStackTrace(this);
+            _logEntryTableGUI = new GUILogEntryTable(this, _guiStyles);
         }
 
         protected void OnGUI()
@@ -154,7 +123,7 @@ namespace Zob.Internal.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
-            _selectedLogEntryIndex = _searchField.OnGUI(_selectedLogEntryIndex, _logEntries);
+            _selectedLogEntryIndex = _searchFieldGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
             GUILayout.Space(5f);
             var maxWidth = GUILayout.MaxWidth(20);
             if (GUILayout.Button("<", new GUIStyle("ToolbarButton"), maxWidth))
@@ -165,7 +134,7 @@ namespace Zob.Internal.Editor
             }
             GUILayout.EndHorizontal();
 
-            _selectedLogEntryIndex = _logEntryArray.OnGUI(_selectedLogEntryIndex, _logEntries);
+            _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
 
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 
@@ -184,9 +153,9 @@ namespace Zob.Internal.Editor
                 string label = string.Empty;
                 if (_selectedLogEntryIndex != -1)
                 {
-                    label = _logEntries[_selectedLogEntryIndex].format;
+                    label = _logEntries.Content(_selectedLogEntryIndex);
                 }
-                _logEntryContent.OnGUI(label);
+                _logEntryContentGUI.OnGUI(label);
             }
             else if (_bottomMode == BottomMode.StackTrace)
             {
@@ -194,11 +163,9 @@ namespace Zob.Internal.Editor
                 if (_selectedLogEntryIndex != -1)
                 {
                     logEntry = _logEntries[_selectedLogEntryIndex];
-                    _logEntryStackTrace.OnGUI(logEntry);
+                    _logEntryStackTraceGUI.OnGUI(logEntry);
                 }
             }
-
-            DebugConsole.SetValue("mouse ", Event.current.mousePosition.ToString());
         }
     }
 }

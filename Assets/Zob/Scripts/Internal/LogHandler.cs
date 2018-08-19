@@ -4,15 +4,13 @@ using System.Threading;
 
 namespace Zob.Internal
 {
-    public sealed class LogHandler
+    internal sealed class LogHandler : ILogHandler
     {
         private Queue<LogEntry> entryQueue = new Queue<LogEntry>();
         private AutoResetEvent entryQueueSignal = new System.Threading.AutoResetEvent(false);
         private Thread handlerThread;
-        private List<ILogWriter> writerList = new List<ILogWriter>();
-        private List<ILogFormatter> formatterList = new List<ILogFormatter>();
 
-        public void Enqueue(LogEntry entry)
+        void ILogHandler.Enqueue(LogEntry entry)
         {
             lock (entryQueue)
             {
@@ -21,7 +19,7 @@ namespace Zob.Internal
             }
         }
 
-        public void Start()
+        private void Start()
         {
             handlerThread = new Thread(ThreadLoop);
             handlerThread.Start();
@@ -36,49 +34,33 @@ namespace Zob.Internal
             }
         }
 
-        public void AddWriter(ILogWriter writer)
-        {
-            lock (writerList)
-            {
-                writerList.Add(writer);
-            }
-        }
-
-        public void AddFormatter(ILogFormatter formatter)
-        {
-            lock (writerList)
-            {
-                formatterList.Add(formatter);
-            }
-        }
-
         private void ThreadLoop()
         {
-            while (true)
-            {
-                entryQueueSignal.WaitOne();
-                LogEntry entry;
-                lock (entryQueue)
-                {
-                    if (entryQueue.Count == 0)
-                    {
-                        continue;
-                    }
-                    entry = entryQueue.Dequeue();
-                }
+            //while (true)
+            //{
+            //    entryQueueSignal.WaitOne();
+            //    LogEntry entry;
+            //    lock (entryQueue)
+            //    {
+            //        if (entryQueue.Count == 0)
+            //        {
+            //            continue;
+            //        }
+            //        entry = entryQueue.Dequeue();
+            //    }
 
-                lock (writerList)
-                {
-                    for (int k = 0; k < formatterList.Count; ++k)
-                    {
-                        string content = formatterList[k].Format(entry);
-                        for (int i = 0; i < writerList.Count; ++i)
-                        {
-                            writerList[i].Write(content);
-                        }
-                    }
-                }
-            }
+            //    lock (Writer)
+            //    {
+            //        for (int k = 0; k < Formatter.Count; ++k)
+            //        {
+            //            string content = Formatter[k].Format(entry);
+            //            for (int i = 0; i < Writer.Count; ++i)
+            //            {
+            //                Writer[i].Write(content);
+            //            }
+            //        }
+            //    }
+            //}
         }
     }
 }

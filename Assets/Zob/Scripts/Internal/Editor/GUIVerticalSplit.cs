@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    public class VerticalSplit
+    internal class GUIVerticalSplit
     {
         public Rect Position { get { return _position; } set { _position = value; } }
 
@@ -17,7 +15,7 @@ namespace Zob.Internal.Editor
         private float _height;
         private EditorWindow _window;
 
-        public VerticalSplit(EditorWindow window)
+        public GUIVerticalSplit(EditorWindow window)
         {
             _window = window;
             _height = -1;

@@ -1,26 +1,32 @@
-﻿using Zob.Writer;
+﻿using System.Collections.Generic;
 
 namespace Zob.Internal
 {
-    public sealed class LogSystem : LogSingleton<LogSystem>
+    internal sealed class LogSystem
     {
-        private LogHandler logHandler = new LogHandler();
+        private List<ILogHandler> _handlers = new List<ILogHandler>();
 
-        public void Log(LogEntry entry)
+        public static void Log(LogEntry entry)
         {
-            logHandler.Enqueue(entry);
+            LogSingleton<LogSystem>.Instance.DoLog(entry);
         }
 
-        public LogSystem()
+        public static void AddHandler(ILogHandler handler)
         {
-            ILogWriter writer = new FileLogWriter("default.log");
-            writer.Open();
-            logHandler.AddWriter(writer);
+            LogSingleton<LogSystem>.Instance.DoAddHandler(handler);
+        }
 
-            ILogFormatter formatter = new DefaultLogFormatter();
-            logHandler.AddFormatter(formatter);
+        private void DoLog(LogEntry entry)
+        {
+            for (int i = 0; i < _handlers.Count; ++i)
+            {
+                _handlers[i].Enqueue(entry);
+            }
+        }
 
-            logHandler.Start();
+        private void DoAddHandler(ILogHandler handler)
+        {
+            _handlers.Add(handler);
         }
     }
 }

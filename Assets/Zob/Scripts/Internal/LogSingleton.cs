@@ -1,6 +1,6 @@
 ﻿namespace Zob.Internal
 {
-    public abstract class LogSingleton<T> where T : new()
+    internal sealed class LogSingleton<T> where T : new()
     {
         private static T _instance;
 
