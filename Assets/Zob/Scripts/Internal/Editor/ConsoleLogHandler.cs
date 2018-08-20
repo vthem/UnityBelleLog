@@ -23,6 +23,9 @@ namespace Zob.Internal.Editor
             }
         }
 
+        event System.Action<ILogEntryContainer, LogEntry> ILogEntryContainer.Updated;
+
+
         void ILogEntryContainer.Lock()
         {
             throw new System.NotImplementedException();
@@ -48,6 +51,12 @@ namespace Zob.Internal.Editor
                 throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _contents.Count);
             }
             return _contents[index];
+        }
+
+        void ILogEntryContainer.Clear()
+        {
+            _logEntries.Clear();
+            _contents.Clear();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -78,8 +79,14 @@ namespace Zob.Internal.Editor
 
             _logEntries = _logHandler;
             LogSystem.AddHandler(_logHandler);
+            _logEntries.Updated += NewLogEntryHandler;
 
             Repaint();
+        }
+
+        private void NewLogEntryHandler(ILogEntryContainer logEntries, LogEntry logEntry)
+        {
+
         }
 
         protected void OnGUIInitialize()
@@ -110,7 +117,8 @@ namespace Zob.Internal.Editor
 
             if (GUILayout.Button("Clear", new GUIStyle("ToolbarButton")))
             {
-                Debug.Log("--clear--");
+                _selectedLogEntryIndex = -1;
+                _logEntries.Clear();
             }
 
             EditorGUILayout.Space();

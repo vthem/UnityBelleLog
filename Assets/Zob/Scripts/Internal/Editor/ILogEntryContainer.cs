@@ -1,4 +1,6 @@
-﻿namespace Zob.Internal.Editor
+﻿using System;
+
+namespace Zob.Internal.Editor
 {
     internal interface ILogEntryContainer
     {
@@ -7,5 +9,7 @@
         int Count { get; }
         LogEntry this[int index] { get; }
         string Content(int index);
+        void Clear();
+        event Action<ILogEntryContainer, LogEntry> Updated;
     }
 }
