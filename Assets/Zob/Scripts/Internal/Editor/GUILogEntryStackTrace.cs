@@ -15,6 +15,10 @@ namespace Zob.Internal.Editor
 
         public void OnGUI(LogEntry logEntry)
         {
+            if (logEntry.stackTrace == null)
+            {
+                return;
+            }
             _scrollValue = GUILayout.BeginScrollView(_scrollValue, false, false);
             var frames = logEntry.stackTrace.GetFrames();
             for (int i = 0; i < frames.Length; ++i)

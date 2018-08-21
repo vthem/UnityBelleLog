@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Zob.Internal.Editor
@@ -8,7 +9,9 @@ namespace Zob.Internal.Editor
         private List<LogEntry> _logEntries = new List<LogEntry>();
         private List<string> _contents = new List<string>();
         private StringBuilder _stringBuilder = new StringBuilder();
+        private event Action<ILogEntryContainer, LogEntry> Updated;
 
+        #region ILogEntryContainer
         int ILogEntryContainer.Count { get { return _logEntries.Count; } }
 
         LogEntry ILogEntryContainer.this[int index]
@@ -23,8 +26,18 @@ namespace Zob.Internal.Editor
             }
         }
 
-        event System.Action<ILogEntryContainer, LogEntry> ILogEntryContainer.Updated;
+        event Action<ILogEntryContainer, LogEntry> ILogEntryContainer.Updated
+        {
+            add
+            {
+                Updated += value;
+            }
 
+            remove
+            {
+                Updated -= value;
+            }
+        }
 
         void ILogEntryContainer.Lock()
         {
@@ -34,14 +47,6 @@ namespace Zob.Internal.Editor
         void ILogEntryContainer.Unlock()
         {
             throw new System.NotImplementedException();
-        }
-
-        void ILogHandler.Enqueue(LogEntry entry)
-        {
-            _logEntries.Add(entry);
-            _stringBuilder.Length = 0;
-            _stringBuilder.AppendFormat(entry.format, entry.args);
-            _contents.Add(_stringBuilder.ToString());
         }
 
         string ILogEntryContainer.Content(int index)
@@ -58,5 +63,28 @@ namespace Zob.Internal.Editor
             _logEntries.Clear();
             _contents.Clear();
         }
+        #endregion ILogEntryContainer
+
+        #region ILogHandler
+        void ILogHandler.Enqueue(LogEntry entry)
+        {
+            _logEntries.Add(entry);
+            if (entry.args != null)
+            {
+                _stringBuilder.Length = 0;
+                _stringBuilder.AppendFormat(entry.format, entry.args);
+                _contents.Add(_stringBuilder.ToString());
+            }
+            else
+            {
+                _contents.Add(entry.format);
+            }
+
+            if (Updated != null)
+            {
+                Updated.Invoke(this, entry);
+            }
+        }
+        #endregion ILogHandler
     }
 }

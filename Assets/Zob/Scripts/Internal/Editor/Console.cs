@@ -7,10 +7,7 @@ namespace Zob.Internal.Editor
 {
     internal class Console : EditorWindow
     {
-        private Rect _rect;
-        private float _scrollValue;
-
-        private ConsoleLogHandler _logHandler = new ConsoleLogHandler();
+        private readonly ConsoleLogHandler _logHandler = new ConsoleLogHandler();
         private ILogEntryContainer _logEntries;
 
         private int _selectedLogEntryIndex = -1;
@@ -58,6 +55,7 @@ namespace Zob.Internal.Editor
         {
             _initialized = false;
             _onGUIInitialized = false;
+            _logEntries.Updated -= NewLogEntryHandler;
         }
 
         private void Initialize()
@@ -80,13 +78,15 @@ namespace Zob.Internal.Editor
             _logEntries = _logHandler;
             LogSystem.AddHandler(_logHandler);
             _logEntries.Updated += NewLogEntryHandler;
+            _selectedLogEntryIndex = -1;
 
             Repaint();
         }
 
         private void NewLogEntryHandler(ILogEntryContainer logEntries, LogEntry logEntry)
         {
-
+            Repaint();
+            _logEntryTableGUI.UpdateAutoScrolling(logEntries);
         }
 
         protected void OnGUIInitialize()

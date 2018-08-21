@@ -25,6 +25,15 @@ namespace Zob.Internal.Editor
             _bottomBarTexture.Apply();
         }
 
+        public void UpdateAutoScrolling(ILogEntryContainer logEntries)
+        {
+            int rowCount = GetRowCount();
+            if (IsScrollCursorAtBottom(rowCount, logEntries))
+            {
+                _scrollValue = logEntries.Count - rowCount;
+            }
+        }
+
         public int OnGUI(int selectedLogEntryIndex, ILogEntryContainer logEntries)
         {
             if (null == _split)
@@ -33,16 +42,24 @@ namespace Zob.Internal.Editor
             }
             _split.OnGUI();
 
+            // get the position from the vertical split
+            Rect position = _split.Position;
+            int rowCount = GetRowCount();
+            bool enableScroll = logEntries.Count > rowCount;
+            bool scrollCursorAtBottom = IsScrollCursorAtBottom(rowCount, logEntries);
+
             if (Event.current.type != EventType.Layout)
             {
-                Rect position = _split.Position;
-                int rowCount = Mathf.CeilToInt(position.height / _rowHeight);
-                var scrollbarPosition = new Rect(
-                    position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth,
-                    position.y,
-                    GUI.skin.verticalScrollbar.fixedWidth,
-                    position.height);
-                _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, logEntries.Count - rowCount + 1);
+                if (enableScroll)
+                {
+                    var scrollbarPosition = new Rect(position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth,
+                        position.y,
+                        GUI.skin.verticalScrollbar.fixedWidth,
+                        position.height);
+                    _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, logEntries.Count - rowCount + 1);
+                }
+
+                DebugConsole.SetValue("scroll", _scrollValue.ToString());
 
                 _entriesRect.Clear();
                 float delta = 0f;
@@ -57,17 +74,22 @@ namespace Zob.Internal.Editor
                     int index = ((int)_scrollValue + rowIndex);
                     if (index < 0 || index >= logEntries.Count)
                     {
-                        break;
+                        continue;
                     }
 
                     Rect rowRect = new Rect(
                         position.x,
                         position.y + rowIndex * _rowHeight,
-                        position.width - GUI.skin.verticalScrollbar.fixedWidth,
+                        position.width,
                         _rowHeight);
 
+                    if (enableScroll)
+                    {
+                        rowRect.width -= GUI.skin.verticalScrollbar.fixedWidth;
+                    }
+
                     // set the row height and y depending on the position of the scroll
-                    if (rowCount + (int)_scrollValue == logEntries.Count)
+                    if (scrollCursorAtBottom)
                     {
                         // scroll cursor is at the bottom
                         if (rowIndex == 0)
@@ -79,13 +101,6 @@ namespace Zob.Internal.Editor
                             rowRect.y = rowRect.y - delta;
                         }
                     }
-                    else
-                    {
-                        if (rowIndex == rowCount - 1) // last raw
-                        {
-                            rowRect.height = rowRect.height - delta;
-                        }
-                    }
 
                     _entriesRect.Add(rowRect);
                     if (Event.current.type == EventType.Repaint)
@@ -93,11 +108,14 @@ namespace Zob.Internal.Editor
                         GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
                         s.Draw(rowRect, false, false, selectedLogEntryIndex == index, false);
                     }
-                    EditorGUI.LabelField(rowRect, logEntries.Content(index));
+                    GUIStyle s2 = new GUIStyle();
+                    s2.alignment = TextAnchor.LowerLeft;
+                    EditorGUI.LabelField(rowRect, logEntries.Content(index) /*, s2* */);
                 }
             }
 
-            if (Event.current.type == EventType.ScrollWheel)
+            // scrolling with scrollwheel
+            if (enableScroll && Event.current.type == EventType.ScrollWheel)
             {
                 float step = Event.current.delta.y;
                 if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
@@ -108,6 +126,7 @@ namespace Zob.Internal.Editor
                 _parent.Repaint();
             }
 
+            // log entry selection with mouse button
             if (Event.current.isMouse && Event.current.button == 0 && Event.current.type == EventType.MouseDown)
             {
                 for (int i = 0; i < _entriesRect.Count; ++i)
@@ -121,6 +140,7 @@ namespace Zob.Internal.Editor
                 }
             }
 
+            // draw the bottom bar
             var bottomBarPosition = GUILayoutUtility.GetRect(0, 2);
             if (Event.current.type == EventType.Repaint)
             {
@@ -128,6 +148,18 @@ namespace Zob.Internal.Editor
             }
 
             return selectedLogEntryIndex;
+        }
+
+        private int GetRowCount()
+        {
+            Rect position = _split.Position;
+            int rowCount = Mathf.CeilToInt(position.height / _rowHeight);
+            return rowCount;
+        }
+
+        private bool IsScrollCursorAtBottom(int rowCount, ILogEntryContainer logEntries)
+        {
+            return rowCount + (int)_scrollValue == logEntries.Count;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Zob
             _stringBuilder.Append("::");
             _stringBuilder.Append(method.Name);
 
-            DoLog(Internal.LogLevel.Trace, _stringBuilder.ToString(), null, stackTrace);
+            DoLog(Internal.LogLevel.Trace, _stringBuilder.ToString(), stackTrace, null);
         }
 
         public void Debug(string format, params object[] args)
