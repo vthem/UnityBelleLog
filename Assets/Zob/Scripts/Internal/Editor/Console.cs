@@ -136,9 +136,11 @@ namespace Zob.Internal.Editor
             var maxWidth = GUILayout.MaxWidth(20);
             if (GUILayout.Button("<", new GUIStyle("ToolbarButton"), maxWidth))
             {
+                _selectedLogEntryIndex = _searchFieldGUI.SearchBackward(_selectedLogEntryIndex, _logEntries);
             }
             if (GUILayout.Button(">", new GUIStyle("ToolbarButton"), maxWidth))
             {
+                _selectedLogEntryIndex = _searchFieldGUI.SearchForward(_selectedLogEntryIndex, _logEntries);
             }
             GUILayout.EndHorizontal();
 
