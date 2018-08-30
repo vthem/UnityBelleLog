@@ -12,6 +12,7 @@ namespace Zob.Internal.Editor
         private List<Rect> _entriesRect = new List<Rect>();
         private Texture2D _bottomBarTexture;
         private GUIVerticalSplit _split;
+        private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
 
         private const float _rowHeight = 20f;
 
@@ -59,7 +60,7 @@ namespace Zob.Internal.Editor
                     _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, logEntries.Count - rowCount + 1);
                 }
 
-                DebugConsole.SetValue("scroll", _scrollValue.ToString());
+                _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
 
                 _entriesRect.Clear();
                 float delta = 0f;
@@ -160,6 +161,30 @@ namespace Zob.Internal.Editor
         private bool IsScrollCursorAtBottom(int rowCount, ILogEntryContainer logEntries)
         {
             return rowCount + (int)_scrollValue == logEntries.Count;
+        }
+        class AutoScrollToSelected
+        {
+            public int _selectedLogEntryIndex = -1;
+
+            public float Scroll(int selectedLogEntryIndex, float scrollValue, int rowCount)
+            {
+                if (selectedLogEntryIndex == _selectedLogEntryIndex)
+                {
+                    return scrollValue;
+                }
+                if (selectedLogEntryIndex == -1)
+                {
+                    return scrollValue;
+                }
+                int minEntryIndex = (int)scrollValue;
+                int maxEntryIndex = (int)scrollValue + rowCount;
+                if (selectedLogEntryIndex < minEntryIndex || selectedLogEntryIndex > minEntryIndex)
+                {
+                    _selectedLogEntryIndex = selectedLogEntryIndex;
+                    return selectedLogEntryIndex - Mathf.FloorToInt(rowCount / 2f);
+                }
+                return scrollValue;
+            }
         }
     }
 }
