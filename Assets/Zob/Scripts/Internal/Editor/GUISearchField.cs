@@ -10,8 +10,9 @@ namespace Zob.Internal.Editor
 
         protected enum SearchDirection
         {
-            Forward = 1,
-            Backward = -1
+            Backward = -1,
+            None = 0,
+            Forward = 1
         }
 
         public GUISearchField()
@@ -25,26 +26,25 @@ namespace Zob.Internal.Editor
         public int OnGUI(int logEntryIndex, ILogEntryContainer entries)
         {
             _searchFieldContent = _searchField.OnToolbarGUI(_searchFieldContent);
-            bool hasFocus = _searchField.HasFocus();
-            if (!hasFocus && _searchFieldContent != _searchFieldResult)
+            if (_searchFieldContent != _searchFieldResult)
             {
                 _searchFieldResult = _searchFieldContent;
-                return SearchForward(logEntryIndex, entries);
+                return Search(logEntryIndex, entries, SearchDirection.None, SearchDirection.Forward);
             }
             return logEntryIndex;
         }
 
         public int SearchForward(int logEntryIndex, ILogEntryContainer entries)
         {
-            return Search(logEntryIndex, entries, SearchDirection.Forward);
+            return Search(logEntryIndex, entries, SearchDirection.Forward, SearchDirection.Forward);
         }
 
         public int SearchBackward(int logEntryIndex, ILogEntryContainer entries)
         {
-            return Search(logEntryIndex, entries, SearchDirection.Backward);
+            return Search(logEntryIndex, entries, SearchDirection.Backward, SearchDirection.Backward);
         }
 
-        protected int Search(int logEntryIndex, ILogEntryContainer entries, SearchDirection direction)
+        protected int Search(int logEntryIndex, ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction)
         {
             if (string.IsNullOrEmpty(_searchFieldResult))
             {
@@ -56,12 +56,12 @@ namespace Zob.Internal.Editor
             {
                 start = 0;
             }
-            start = CycleCursor(start + (int)direction, entries.Count);
+            start = CycleCursor(start + (int)initialDirection, entries.Count);
             bool loop = false;
             int cur = start;
             while (!loop)
             {
-                if (entries[cur].format.Contains(_searchFieldResult))
+                if (entries.Content(cur).Contains(_searchFieldResult))
                 {
                     logEntryIndex = cur;
                     break;
