@@ -4,6 +4,8 @@ namespace Zob.Internal.Editor
 {
     internal class GUISearchField
     {
+        public bool HasUpdatedLogEntryIndex { get; protected set; }
+
         private UnityEditor.IMGUI.Controls.SearchField _searchField;
         private string _searchFieldResult;
         private string _searchFieldContent;
@@ -46,6 +48,7 @@ namespace Zob.Internal.Editor
 
         protected int Search(int logEntryIndex, ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction)
         {
+            HasUpdatedLogEntryIndex = false;
             if (string.IsNullOrEmpty(_searchFieldResult))
             {
                 return logEntryIndex;
@@ -63,6 +66,7 @@ namespace Zob.Internal.Editor
             {
                 if (entries.Content(cur).Contains(_searchFieldResult))
                 {
+                    HasUpdatedLogEntryIndex = true;
                     logEntryIndex = cur;
                     break;
                 }

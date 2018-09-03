@@ -35,6 +35,12 @@ namespace Zob.Internal.Editor
             }
         }
 
+        public void ScrollToSelected(int selectedLogEntryIndex)
+        {
+            int rowCount = GetRowCount();
+            _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+        }
+
         public int OnGUI(int selectedLogEntryIndex, ILogEntryContainer logEntries)
         {
             if (null == _split)
