@@ -68,16 +68,15 @@ namespace Zob.Internal.Editor
                         position.y,
                         GUI.skin.verticalScrollbar.fixedWidth,
                         position.height);
-                    _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, logEntries.Count - rowCount + 1);
-                }
 
-                if (_autoScrollToSelected.Enable)
-                {
-                    _scrollValue= _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
-                }
-                else
-                {
-                    _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+                    if (_autoScrollToSelected.Enable)
+                    {
+                        _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+                    }
+                    else
+                    {
+                        _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, .1f, 0f, logEntries.Count - rowCount + 1);
+                    }
                 }
 
                 _entriesRect.Clear();

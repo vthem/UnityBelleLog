@@ -84,6 +84,22 @@ namespace Zob.Internal.Editor
                 var line = PickRandomLine();
                 AddRandomLog(line);
             }
+            if (GUILayout.Button("-- add 50x --"))
+            {
+                LoadLines();
+                for (int i = 0; i < 50; ++i)
+                {
+                    var line = PickRandomLine();
+                    AddRandomLog(line);
+                }
+            }
+            if (GUILayout.Button("-- add 50x (index) --"))
+            {
+                for (int i = 0; i < 50; ++i)
+                {
+                    AddRandomLog(i.ToString());
+                }
+            }
         }
 
         private void LoadLines()
