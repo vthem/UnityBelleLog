@@ -12,6 +12,7 @@ namespace Zob.Internal.Editor
         private List<Rect> _entriesRect = new List<Rect>();
         private Texture2D _bottomBarTexture;
         private GUIVerticalSplit _split;
+        private bool _enableScroll;
         private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
 
         private const float _rowHeight = 20f;
@@ -35,14 +36,17 @@ namespace Zob.Internal.Editor
             }
         }
 
-        public void ScrollToSelected(int selectedLogEntryIndex)
+        public int OnGUI(int selectedLogEntryIndex, ILogEntryContainer logEntries, bool scrollToSelected)
         {
-            int rowCount = GetRowCount();
-            _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
-        }
+            if (scrollToSelected && !_autoScrollToSelected.Enable)
+            {
+                _autoScrollToSelected.Enable = scrollToSelected;
+            }
+            if (Event.current.type == EventType.Used)
+            {
+                return selectedLogEntryIndex;
+            }
 
-        public int OnGUI(int selectedLogEntryIndex, ILogEntryContainer logEntries)
-        {
             if (null == _split)
             {
                 _split = new GUIVerticalSplit(_parent);
@@ -51,13 +55,14 @@ namespace Zob.Internal.Editor
 
             // get the position from the vertical split
             Rect position = _split.Position;
-            int rowCount = GetRowCount();
-            bool enableScroll = logEntries.Count > rowCount;
-            bool scrollCursorAtBottom = IsScrollCursorAtBottom(rowCount, logEntries);
 
             if (Event.current.type != EventType.Layout)
             {
-                if (enableScroll)
+                int rowCount = GetRowCount();
+                _enableScroll = logEntries.Count > rowCount;
+                bool scrollCursorAtBottom = IsScrollCursorAtBottom(rowCount, logEntries);
+
+                if (_enableScroll)
                 {
                     var scrollbarPosition = new Rect(position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth,
                         position.y,
@@ -66,7 +71,14 @@ namespace Zob.Internal.Editor
                     _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1, 0f, logEntries.Count - rowCount + 1);
                 }
 
-                _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+                if (_autoScrollToSelected.Enable)
+                {
+                    _scrollValue= _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+                }
+                else
+                {
+                    _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+                }
 
                 _entriesRect.Clear();
                 float delta = 0f;
@@ -90,7 +102,7 @@ namespace Zob.Internal.Editor
                         position.width,
                         _rowHeight);
 
-                    if (enableScroll)
+                    if (_enableScroll)
                     {
                         rowRect.width -= GUI.skin.verticalScrollbar.fixedWidth;
                     }
@@ -122,7 +134,7 @@ namespace Zob.Internal.Editor
             }
 
             // scrolling with scrollwheel
-            if (enableScroll && Event.current.type == EventType.ScrollWheel)
+            if (_enableScroll && Event.current.type == EventType.ScrollWheel)
             {
                 float step = Event.current.delta.y;
                 if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
@@ -170,11 +182,11 @@ namespace Zob.Internal.Editor
         }
         class AutoScrollToSelected
         {
-            public int _selectedLogEntryIndex = -1;
+            public bool Enable { get; set; }
 
             public float Scroll(int selectedLogEntryIndex, float scrollValue, int rowCount)
             {
-                if (selectedLogEntryIndex == _selectedLogEntryIndex)
+                if (!Enable)
                 {
                     return scrollValue;
                 }
@@ -182,15 +194,16 @@ namespace Zob.Internal.Editor
                 {
                     return scrollValue;
                 }
+                Enable = false;
                 int minEntryIndex = (int)scrollValue;
                 int maxEntryIndex = (int)scrollValue + rowCount;
-                if (selectedLogEntryIndex < minEntryIndex || selectedLogEntryIndex > minEntryIndex)
+                if (selectedLogEntryIndex < minEntryIndex || selectedLogEntryIndex >= maxEntryIndex)
                 {
-                    _selectedLogEntryIndex = selectedLogEntryIndex;
                     return selectedLogEntryIndex - Mathf.FloorToInt(rowCount / 2f);
                 }
                 return scrollValue;
             }
+
         }
     }
 }

@@ -144,11 +144,7 @@ namespace Zob.Internal.Editor
             }
             GUILayout.EndHorizontal();
 
-            if (_searchFieldGUI.HasUpdatedLogEntryIndex)
-            {
-                _logEntryTableGUI.ScrollToSelected(_selectedLogEntryIndex);
-            }
-            _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
+            _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntries, _searchFieldGUI.HasUpdatedLogEntryIndex);
 
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 

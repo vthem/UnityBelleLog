@@ -27,6 +27,8 @@ namespace Zob.Internal.Editor
 
         public int OnGUI(int logEntryIndex, ILogEntryContainer entries)
         {
+            HasUpdatedLogEntryIndex = false;
+
             _searchFieldContent = _searchField.OnToolbarGUI(_searchFieldContent);
             if (_searchFieldContent != _searchFieldResult)
             {
@@ -48,7 +50,6 @@ namespace Zob.Internal.Editor
 
         protected int Search(int logEntryIndex, ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction)
         {
-            HasUpdatedLogEntryIndex = false;
             if (string.IsNullOrEmpty(_searchFieldResult))
             {
                 return logEntryIndex;
