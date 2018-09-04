@@ -38,14 +38,6 @@ namespace Zob.Internal.Editor
                 _colliderRect.height = 2;
                 EditorGUIUtility.AddCursorRect(_colliderRect, MouseCursor.ResizeVertical);
             }
-            if (Event.current.type == EventType.Repaint)
-            {
-                Debug.Log("event=" + Event.current.type + " rect=" + _colliderRect + " mpos=" + Event.current.mousePosition);
-            }
-            if (Event.current.type == EventType.MouseDown)
-            {
-                Debug.Log("event=" + Event.current.type + " rect=" + _colliderRect + " mpos=" + Event.current.mousePosition);
-            }
 
             if (Event.current.type == EventType.MouseDown && _colliderRect.Contains(Event.current.mousePosition))
             {
