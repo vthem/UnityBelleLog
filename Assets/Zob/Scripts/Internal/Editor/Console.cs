@@ -130,19 +130,7 @@ namespace Zob.Internal.Editor
             _showFilter = GUILayout.Toggle(_showFilter, "Show filter", new GUIStyle("ToolbarButton"));
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
             _selectedLogEntryIndex = _searchFieldGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
-            GUILayout.Space(5f);
-            var maxWidth = GUILayout.MaxWidth(20);
-            if (GUILayout.Button("<", new GUIStyle("ToolbarButton"), maxWidth))
-            {
-                _selectedLogEntryIndex = _searchFieldGUI.SearchBackward(_selectedLogEntryIndex, _logEntries);
-            }
-            if (GUILayout.Button(">", new GUIStyle("ToolbarButton"), maxWidth))
-            {
-                _selectedLogEntryIndex = _searchFieldGUI.SearchForward(_selectedLogEntryIndex, _logEntries);
-            }
-            GUILayout.EndHorizontal();
 
             _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntries, _searchFieldGUI.HasUpdatedLogEntryIndex);
 

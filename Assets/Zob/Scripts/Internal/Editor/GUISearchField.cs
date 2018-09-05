@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
@@ -9,6 +10,8 @@ namespace Zob.Internal.Editor
         private UnityEditor.IMGUI.Controls.SearchField _searchField;
         private string _searchFieldResult;
         private string _searchFieldContent;
+        private GUIStyle _toolbarButtonStyle;
+        private int _searchIndexResult = -1;
 
         protected enum SearchDirection
         {
@@ -19,6 +22,7 @@ namespace Zob.Internal.Editor
 
         public GUISearchField()
         {
+
             _searchField = new UnityEditor.IMGUI.Controls.SearchField
             {
                 autoSetFocusOnFindCommand = true
@@ -27,23 +31,43 @@ namespace Zob.Internal.Editor
 
         public int OnGUI(int logEntryIndex, ILogEntryContainer entries)
         {
+            if (null == _toolbarButtonStyle)
+            {
+                _toolbarButtonStyle = new GUIStyle("ToolbarButton");
+            }
+
             HasUpdatedLogEntryIndex = false;
+            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 
             _searchFieldContent = _searchField.OnToolbarGUI(_searchFieldContent);
             if (_searchFieldContent != _searchFieldResult)
             {
                 _searchFieldResult = _searchFieldContent;
-                return Search(logEntryIndex, entries, SearchDirection.None, SearchDirection.Forward);
+                _searchIndexResult = Search(logEntryIndex, entries, SearchDirection.None, SearchDirection.Forward);
             }
+
+            GUILayout.Space(5f);
+            var maxWidth = GUILayout.MaxWidth(20);
+            GUI.enabled = true;
+            if (GUILayout.Button("<", _toolbarButtonStyle, maxWidth))
+            {
+                logEntryIndex = SearchBackward(logEntryIndex, entries);
+            }
+            if (GUILayout.Button(">", _toolbarButtonStyle, maxWidth))
+            {
+                logEntryIndex = SearchForward(logEntryIndex, entries);
+            }
+            GUI.enabled = true;
+            GUILayout.EndHorizontal();
             return logEntryIndex;
         }
 
-        public int SearchForward(int logEntryIndex, ILogEntryContainer entries)
+        protected int SearchForward(int logEntryIndex, ILogEntryContainer entries)
         {
             return Search(logEntryIndex, entries, SearchDirection.Forward, SearchDirection.Forward);
         }
 
-        public int SearchBackward(int logEntryIndex, ILogEntryContainer entries)
+        protected int SearchBackward(int logEntryIndex, ILogEntryContainer entries)
         {
             return Search(logEntryIndex, entries, SearchDirection.Backward, SearchDirection.Backward);
         }
