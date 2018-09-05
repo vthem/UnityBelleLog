@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Zob.Internal.Editor
         private ILogEntryContainer _logEntries;
 
         private int _selectedLogEntryIndex = -1;
-        private GUISearchField _searchFieldGUI;
+        private GUISearchTab _searchFieldGUI;
         private GUILogEntryTable _logEntryTableGUI;
         private GUILogEntryContent _logEntryContentGUI;
         private GUILogEntryStackTrace _logEntryStackTraceGUI;
@@ -21,10 +22,10 @@ namespace Zob.Internal.Editor
         private bool _collapse;
         private bool _clearOnPlay;
         private bool _errorPause;
-        private bool _showFilter;
         private GUIStyles _guiStyles;
         private BottomMode _bottomMode = BottomMode.LogContent;
         private Texture2D _text;
+        private Texture2D iconWarn;
 
         private enum BottomMode
         {
@@ -69,7 +70,7 @@ namespace Zob.Internal.Editor
 
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            _searchFieldGUI = new GUISearchField();
+            _searchFieldGUI = new GUISearchTab();
 
             _text = new Texture2D(1, 1);
             _text.SetPixel(0, 0, Color.magenta);
@@ -102,6 +103,22 @@ namespace Zob.Internal.Editor
             _logEntryContentGUI = new GUILogEntryContent(this, _guiStyles);
             _logEntryStackTraceGUI = new GUILogEntryStackTrace(this);
             _logEntryTableGUI = new GUILogEntryTable(this, _guiStyles);
+
+            MethodInfo method = typeof(EditorGUIUtility).GetMethod("LoadIcon", BindingFlags.Static | BindingFlags.NonPublic);
+            if (method == null)
+            {
+                Debug.Log("load icon not found");
+            }
+            iconWarn = (Texture2D)method.Invoke(null, new string [] { "console.warnicon" });
+            Debug.Log("icon size=" + iconWarn.width + "x" + iconWarn.height);
+            //iconError = EditorGUIUtility.LoadIcon("console.erroricon");
+            //iconInfoSmall = EditorGUIUtility.LoadIcon("console.infoicon.sml");
+            //iconWarnSmall = EditorGUIUtility.LoadIcon("console.warnicon.sml");
+            //iconErrorSmall = EditorGUIUtility.LoadIcon("console.erroricon.sml");
+
+            //iconInfoMono = EditorGUIUtility.LoadIcon("console.infoicon.sml");
+            //iconWarnMono = EditorGUIUtility.LoadIcon("console.warnicon.inactive.sml");
+            //iconErrorMono = EditorGUIUtility.LoadIcon("console.erroricon.inactive.sml");
         }
 
         protected void OnGUI()
@@ -127,7 +144,12 @@ namespace Zob.Internal.Editor
             _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
             _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
             GUILayout.FlexibleSpace();
-            _showFilter = GUILayout.Toggle(_showFilter, "Show filter", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "TRC [0]", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "DBG [0]", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "NFO [0]", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "WRN [0]", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "ERR [0]", new GUIStyle("ToolbarButton"));
+            _errorPause = GUILayout.Toggle(_errorPause, "FTL [0]", new GUIStyle("ToolbarButton"));
             GUILayout.EndHorizontal();
 
             _selectedLogEntryIndex = _searchFieldGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
