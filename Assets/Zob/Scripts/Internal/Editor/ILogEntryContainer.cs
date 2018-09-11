@@ -11,5 +11,8 @@ namespace Zob.Internal.Editor
         string Content(int index);
         void Clear();
         event Action<ILogEntryContainer, LogEntry> Updated;
+
+        void AddFilter(ILogFilter filter);
+        void Removeilter(ILogFilter filter);
     }
 }

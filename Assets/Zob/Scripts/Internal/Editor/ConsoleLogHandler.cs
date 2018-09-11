@@ -85,6 +85,16 @@ namespace Zob.Internal.Editor
                 Updated.Invoke(this, entry);
             }
         }
+
+        public void AddFilter(ILogFilter filter)
+        {
+
+        }
+
+        public void Removeilter(ILogFilter filter)
+        {
+
+        }
         #endregion ILogHandler
     }
 }
