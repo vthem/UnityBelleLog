@@ -1,4 +1,4 @@
-﻿namespace Zob.Internal
+﻿namespace Zob
 {
     public enum LogLevel
     {

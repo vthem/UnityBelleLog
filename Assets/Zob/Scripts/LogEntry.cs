@@ -1,6 +1,6 @@
-﻿namespace Zob.Internal
+﻿namespace Zob
 {
-    internal struct LogEntry
+    public struct LogEntry
     {
         public LogLevel level;
         public string format;
