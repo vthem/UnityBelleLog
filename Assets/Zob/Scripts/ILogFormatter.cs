@@ -1,6 +1,6 @@
-﻿namespace Zob.Internal
+﻿namespace Zob
 {
-    internal interface ILogFormatter
+    public interface ILogFormatter
     {
         string Format(LogEntry entry);
 

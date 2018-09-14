@@ -4,7 +4,7 @@
 
 namespace Zob.Internal
 {
-    internal interface ILogHandler
+    public interface ILogHandler
     {
         void Enqueue(LogEntry entry);
     }

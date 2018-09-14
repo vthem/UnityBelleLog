@@ -31,35 +31,35 @@ namespace Zob
             _stringBuilder.Append("::");
             _stringBuilder.Append(method.Name);
 
-            DoLog(Internal.LogLevel.Trace, _stringBuilder.ToString(), stackTrace, null);
+            DoLog(LogLevel.Trace, _stringBuilder.ToString(), stackTrace, null);
         }
 
         public void Debug(string format, params object[] args)
         {
-            DoLog(Internal.LogLevel.Debug, format, args);
+            DoLog(LogLevel.Debug, format, args);
         }
 
         public void Info(string format, params object[] args)
         {
-            DoLog(Internal.LogLevel.Info, format, args);
+            DoLog(LogLevel.Info, format, args);
         }
 
         public void Warning(string format, params object[] args)
         {
-            DoLog(Internal.LogLevel.Warning, format, args);
+            DoLog(LogLevel.Warning, format, args);
         }
 
         public void Error(string format, params object[] args)
         {
-            DoLog(Internal.LogLevel.Error, format, args);
+            DoLog(LogLevel.Error, format, args);
         }
 
         public void Fatal(string format, params object[] args)
         {
-            DoLog(Internal.LogLevel.Fatal, format, args);
+            DoLog(LogLevel.Fatal, format, args);
         }
 
-        private void DoLog(Internal.LogLevel level, string format, params object[] args)
+        private void DoLog(LogLevel level, string format, params object[] args)
         {
             var stackTrace = new System.Diagnostics.StackTrace(2, true);
             if (stackTrace.FrameCount == 0)
@@ -70,12 +70,12 @@ namespace Zob
             DoLog(level, format, stackTrace, args);
         }
 
-        private void DoLog(Internal.LogLevel level, string format, System.Diagnostics.StackTrace stackTrace, params object[] args)
+        private void DoLog(LogLevel level, string format, System.Diagnostics.StackTrace stackTrace, params object[] args)
         {
-            Internal.LogEntry entry;
+            LogEntry entry;
             entry.args = args;
             entry.format = format;
-            entry.level = Internal.LogLevel.Debug;
+            entry.level = LogLevel.Debug;
             entry.domain = _domain;
             entry.timestamp = System.DateTime.Now;
             entry.stackTrace = stackTrace;

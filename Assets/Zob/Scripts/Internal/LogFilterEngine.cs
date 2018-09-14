@@ -4,37 +4,27 @@ using System.Linq;
 
 namespace Zob.Internal
 {
-    public enum FilterAction
-    {
-        Accept,
-        Drop
-    }
 
-    public enum FilterState
-    {
-        Continue,
-        Stop
-    }
 
     class PredicateLogFilter : ILogFilter
     {
         private Func<LogEntry, bool> _predicate;
-        private FilterState _stateWhenMatching;
+        private LogFilterState _stateWhenMatching;
 
 
-        internal PredicateLogFilter(FilterState stateWhenMatching, Func<LogEntry, bool>  predicate)
+        internal PredicateLogFilter(LogFilterState stateWhenMatching, Func<LogEntry, bool>  predicate)
         {
             _predicate = predicate;
             _stateWhenMatching = stateWhenMatching;
         }
 
-        public void Apply(LogEntry logEntry, ref FilterAction action, out FilterState state)
+        public void Apply(LogEntry logEntry, ref LogFilterAction action, out LogFilterState state)
         {
-            state = FilterState.Continue;
+            state = LogFilterState.Continue;
             if (_predicate(logEntry))
             {
                 state = _stateWhenMatching;
-                action = FilterAction.Drop;
+                action = LogFilterAction.Drop;
                 return;
             }
         }
@@ -62,15 +52,15 @@ namespace Zob.Internal
             List<LogEntry> result = new List<LogEntry>();
             ILogFilter[] filters = _filters.ToArray();
 
-            FilterState state = FilterState.Continue;
-            FilterAction action = FilterAction.Accept;
+            LogFilterState state = LogFilterState.Continue;
+            LogFilterAction action = LogFilterAction.Accept;
             for (int i = 0; i < entries.Count; ++i)
             {
-                for (int f = 0; f < filters.Length && state == FilterState.Continue; ++f)
+                for (int f = 0; f < filters.Length && state == LogFilterState.Continue; ++f)
                 {
                     filters[f].Apply(entries[i], ref action, out state);
                 }
-                if (action == FilterAction.Accept)
+                if (action == LogFilterAction.Accept)
                 {
                     result.Add(entries[i]);
                 }
