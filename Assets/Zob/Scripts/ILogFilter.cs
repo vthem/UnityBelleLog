@@ -1,20 +1,21 @@
 ﻿
 namespace Zob
 {
-    public enum LogFilterState
+    public enum LogFilterAction
     {
         Continue,
         Stop
     }
 
-    public enum LogFilterAction
+    public enum LogFilterState
     {
         Accept,
-        Drop
+        Drop,
+        None
     }
 
     public interface ILogFilter
     {
-        void Apply(LogEntry logEntry, ref LogFilterAction action, out LogFilterState state);
+        void Apply(LogEntry logEntry, ref LogFilterState state, out LogFilterAction action);
     }
 }

@@ -4,33 +4,36 @@ using System.Linq;
 
 namespace Zob.Internal
 {
-
-
-    class PredicateLogFilter : ILogFilter
+    internal class PredicateLogFilter : ILogFilter
     {
         private Func<LogEntry, bool> _predicate;
-        private LogFilterState _stateWhenMatching;
+        private LogFilterAction _onTrueAction;
+        private LogFilterAction _onFalseAction;
+        private LogFilterState _onTrueState;
 
-
-        internal PredicateLogFilter(LogFilterState stateWhenMatching, Func<LogEntry, bool>  predicate)
+        internal PredicateLogFilter(Func<LogEntry, bool> predicate, LogFilterAction onTrueAction, LogFilterAction onFalseAction, LogFilterState onTrueState)
         {
             _predicate = predicate;
-            _stateWhenMatching = stateWhenMatching;
+            _onTrueAction = onTrueAction;
+            _onFalseAction = onFalseAction;
+            _onTrueState = onTrueState;
         }
 
-        public void Apply(LogEntry logEntry, ref LogFilterAction action, out LogFilterState state)
+        public void Apply(LogEntry logEntry, ref LogFilterState state, out LogFilterAction action)
         {
-            state = LogFilterState.Continue;
             if (_predicate(logEntry))
             {
-                state = _stateWhenMatching;
-                action = LogFilterAction.Drop;
-                return;
+                state = _onTrueState;
+                action = _onTrueAction;
+            }
+            else
+            {
+                action = _onFalseAction;
             }
         }
     }
 
-    class LogFilterEngine
+    internal class LogFilterEngine
     {
         private HashSet<ILogFilter> _filters = new HashSet<ILogFilter>();
 
@@ -47,22 +50,26 @@ namespace Zob.Internal
             _filters.Remove(filter);
         }
 
-        public List<LogEntry> Apply(List<LogEntry> entries)
+        public List<int> Apply(List<LogEntry> entries)
         {
-            List<LogEntry> result = new List<LogEntry>();
+            List<int> result = new List<int>();
             ILogFilter[] filters = _filters.ToArray();
 
-            LogFilterState state = LogFilterState.Continue;
-            LogFilterAction action = LogFilterAction.Accept;
             for (int i = 0; i < entries.Count; ++i)
             {
-                for (int f = 0; f < filters.Length && state == LogFilterState.Continue; ++f)
+                LogFilterState state = LogFilterState.None;
+                for (int f = 0; f < filters.Length; ++f)
                 {
-                    filters[f].Apply(entries[i], ref action, out state);
+                    LogFilterAction action;
+                    filters[f].Apply(entries[i], ref state, out action);
+                    if (action == LogFilterAction.Stop)
+                    {
+                        break;
+                    }
                 }
-                if (action == LogFilterAction.Accept)
+                if (state == LogFilterState.Accept)
                 {
-                    result.Add(entries[i]);
+                    result.Add(i);
                 }
             }
 
