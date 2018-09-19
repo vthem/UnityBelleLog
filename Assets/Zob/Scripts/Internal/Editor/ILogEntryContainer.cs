@@ -8,11 +8,7 @@ namespace Zob.Internal.Editor
         void Unlock();
         int Count { get; }
         LogEntry this[int index] { get; }
-        string Content(int index);
         void Clear();
         event Action<ILogEntryContainer, LogEntry> Updated;
-
-        void AddFilter(ILogFilter filter);
-        void Removeilter(ILogFilter filter);
     }
 }

@@ -79,6 +79,7 @@ namespace Zob
             entry.domain = _domain;
             entry.timestamp = System.DateTime.Now;
             entry.stackTrace = stackTrace;
+            entry.content = string.Empty;
 
             Internal.LogSystem.Log(entry);
         }

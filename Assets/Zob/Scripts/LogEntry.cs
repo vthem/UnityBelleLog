@@ -8,5 +8,6 @@
         public object[] args;
         public System.Diagnostics.StackTrace stackTrace;
         public System.DateTime timestamp;
+        public string content;
     }
 }

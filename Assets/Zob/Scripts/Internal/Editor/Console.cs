@@ -27,6 +27,9 @@ namespace Zob.Internal.Editor
         private Texture2D _text;
         private Texture2D iconWarn;
 
+        private ILogFilter[] _logLevelFilters;
+        private string[] _logFilterToggleLabel;
+
         private enum BottomMode
         {
             LogContent,
@@ -76,6 +79,24 @@ namespace Zob.Internal.Editor
             _text.SetPixel(0, 0, Color.magenta);
             _text.Apply();
 
+            _logFilterToggleLabel = new string[]
+            {
+                "TRC [{0}]",
+                "DBG [{0}]",
+                "NFO [{0}]",
+                "WRN [{0}]",
+                "ERR [{0}]",
+                "FTL [{0}]"
+            };
+            _logLevelFilters = new PredicateLogFilter[]
+            {
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Trace, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Debug, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Info, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Warning, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Error, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Fatal, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+            };
             _logEntries = _logHandler;
             LogSystem.AddHandler(_logHandler);
             _logEntries.Updated += NewLogEntryHandler;
@@ -144,12 +165,16 @@ namespace Zob.Internal.Editor
             _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
             _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
             GUILayout.FlexibleSpace();
-            _errorPause = GUILayout.Toggle(_errorPause, "TRC [0]", new GUIStyle("ToolbarButton"));
-            _errorPause = GUILayout.Toggle(_errorPause, "DBG [0]", new GUIStyle("ToolbarButton"));
-            _errorPause = GUILayout.Toggle(_errorPause, "NFO [0]", new GUIStyle("ToolbarButton"));
-            _errorPause = GUILayout.Toggle(_errorPause, "WRN [0]", new GUIStyle("ToolbarButton"));
-            _errorPause = GUILayout.Toggle(_errorPause, "ERR [0]", new GUIStyle("ToolbarButton"));
-            _errorPause = GUILayout.Toggle(_errorPause, "FTL [0]", new GUIStyle("ToolbarButton"));
+
+            for (int i = 0; i < _logLevelFilters.Length; ++i)
+            {
+                bool isEnable = _logLevelFilters[i].Enable;
+                _logLevelFilters[i].Enable = GUILayout.Toggle(_logLevelFilters[i].Enable, string.Format(_logFilterToggleLabel[i], _logLevelFilters[i].MatchCount), new GUIStyle("ToolbarButton"));
+                if (isEnable != _logLevelFilters[i].Enable)
+                {
+                    _logHandler.ApplyFilters();
+                }
+            }
             GUILayout.EndHorizontal();
 
             _selectedLogEntryIndex = _searchFieldGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
@@ -173,7 +198,7 @@ namespace Zob.Internal.Editor
                 string label = string.Empty;
                 if (_selectedLogEntryIndex != -1)
                 {
-                    label = _logEntries.Content(_selectedLogEntryIndex);
+                    label = _logEntries[_selectedLogEntryIndex].content;
                 }
                 _logEntryContentGUI.OnGUI(label);
             }

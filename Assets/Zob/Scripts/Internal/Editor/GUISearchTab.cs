@@ -89,7 +89,7 @@ namespace Zob.Internal.Editor
             int cur = start;
             while (!loop)
             {
-                if (entries.Content(cur).Contains(_searchFieldResult))
+                if (entries[cur].content.Contains(_searchFieldResult))
                 {
                     HasUpdatedLogEntryIndex = true;
                     logEntryIndex = cur;

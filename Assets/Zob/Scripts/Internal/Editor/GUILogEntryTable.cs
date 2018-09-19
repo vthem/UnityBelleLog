@@ -125,7 +125,7 @@ namespace Zob.Internal.Editor
                     }
                     GUIStyle s2 = new GUIStyle();
                     s2.alignment = TextAnchor.LowerLeft;
-                    EditorGUI.LabelField(rowRect, logEntries.Content(index) /*, s2* */);
+                    EditorGUI.LabelField(rowRect, logEntries[index].content /*, s2* */);
                 }
             }
 

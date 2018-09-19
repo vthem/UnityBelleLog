@@ -7,11 +7,25 @@ namespace Zob.Internal.Editor
     internal class ConsoleLogHandler : ILogHandler, ILogEntryContainer
     {
         private List<LogEntry> _logEntries = new List<LogEntry>();
-        private List<string> _contents = new List<string>();
         private StringBuilder _stringBuilder = new StringBuilder();
         private event Action<ILogEntryContainer, LogEntry> Updated;
         private List<int> _filteredLogEntries = new List<int>();
         private LogFilterEngine _filterEngine = new LogFilterEngine();
+
+        public void AddFilter(ILogFilter filter)
+        {
+            _filterEngine.AddFilter(filter);
+        }
+
+        public void RemoveFilter(ILogFilter filter)
+        {
+            _filterEngine.RemoveFilter(filter);
+        }
+
+        public void ApplyFilters()
+        {
+            _filteredLogEntries = _filterEngine.Apply(_logEntries);
+        }
 
         #region ILogEntryContainer
         int ILogEntryContainer.Count { get { return _filteredLogEntries.Count; } }
@@ -51,52 +65,37 @@ namespace Zob.Internal.Editor
             throw new System.NotImplementedException();
         }
 
-        string ILogEntryContainer.Content(int index)
-        {
-            if (index < 0 || index >= _filteredLogEntries.Count)
-            {
-                throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _contents.Count);
-            }
-            return _contents[_filteredLogEntries[index]];
-        }
-
         void ILogEntryContainer.Clear()
         {
             _logEntries.Clear();
-            _contents.Clear();
             _filteredLogEntries.Clear();
+            _filterEngine.ResetFiltersMatchCount();
         }
         #endregion ILogEntryContainer
 
         #region ILogHandler
         void ILogHandler.Enqueue(LogEntry entry)
         {
-            _logEntries.Add(entry);
             if (entry.args != null)
             {
                 _stringBuilder.Length = 0;
                 _stringBuilder.AppendFormat(entry.format, entry.args);
-                _contents.Add(_stringBuilder.ToString());
+                entry.content = _stringBuilder.ToString();
             }
             else
             {
-                _contents.Add(entry.format);
+                entry.content = entry.format;
+            }
+            _logEntries.Add(entry);
+            if (_filterEngine.Apply(entry) == LogFilterState.Accept)
+            {
+                _filteredLogEntries.Add(_logEntries.Count - 1);
             }
 
             if (Updated != null)
             {
                 Updated.Invoke(this, entry);
             }
-        }
-
-        public void AddFilter(ILogFilter filter)
-        {
-            _filterEngine.AddFilter(filter);
-        }
-
-        public void Removeilter(ILogFilter filter)
-        {
-            _filterEngine.RemoveFilter(filter);
         }
         #endregion ILogHandler
     }
