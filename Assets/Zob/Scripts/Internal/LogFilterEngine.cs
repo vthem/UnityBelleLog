@@ -35,7 +35,7 @@ namespace Zob.Internal
 
     internal class LogFilterEngine
     {
-        private HashSet<ILogFilter> _filters = new HashSet<ILogFilter>();
+        private List<ILogFilter> _filters = new List<ILogFilter>();
 
         public void AddFilter(ILogFilter filter)
         {
@@ -50,29 +50,31 @@ namespace Zob.Internal
             _filters.Remove(filter);
         }
 
+        public LogFilterState Apply(LogEntry entry)
+        {
+            LogFilterState state = LogFilterState.None;
+            for (int f = 0; f < _filters.Count; ++f)
+            {
+                LogFilterAction action;
+                _filters[f].Apply(entry, ref state, out action);
+                if (action == LogFilterAction.Stop)
+                {
+                    break;
+                }
+            }
+            return state;
+        }
+
         public List<int> Apply(List<LogEntry> entries)
         {
             List<int> result = new List<int>();
-            ILogFilter[] filters = _filters.ToArray();
-
             for (int i = 0; i < entries.Count; ++i)
             {
-                LogFilterState state = LogFilterState.None;
-                for (int f = 0; f < filters.Length; ++f)
-                {
-                    LogFilterAction action;
-                    filters[f].Apply(entries[i], ref state, out action);
-                    if (action == LogFilterAction.Stop)
-                    {
-                        break;
-                    }
-                }
-                if (state == LogFilterState.Accept)
+                if (Apply(entries[i]) == LogFilterState.Accept)
                 {
                     result.Add(i);
                 }
             }
-
             return result;
         }
     }

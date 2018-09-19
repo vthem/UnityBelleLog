@@ -10,19 +10,21 @@ namespace Zob.Internal.Editor
         private List<string> _contents = new List<string>();
         private StringBuilder _stringBuilder = new StringBuilder();
         private event Action<ILogEntryContainer, LogEntry> Updated;
+        private List<int> _filteredLogEntries = new List<int>();
+        private LogFilterEngine _filterEngine = new LogFilterEngine();
 
         #region ILogEntryContainer
-        int ILogEntryContainer.Count { get { return _logEntries.Count; } }
+        int ILogEntryContainer.Count { get { return _filteredLogEntries.Count; } }
 
         LogEntry ILogEntryContainer.this[int index]
         {
             get
             {
-                if (index < 0 || index >= _logEntries.Count)
+                if (index < 0 || index >= _filteredLogEntries.Count)
                 {
                     throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _logEntries.Count);
                 }
-                return _logEntries[index];
+                return _logEntries[_filteredLogEntries[index]];
             }
         }
 
@@ -51,17 +53,18 @@ namespace Zob.Internal.Editor
 
         string ILogEntryContainer.Content(int index)
         {
-            if (index < 0 || index >= _contents.Count)
+            if (index < 0 || index >= _filteredLogEntries.Count)
             {
                 throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _contents.Count);
             }
-            return _contents[index];
+            return _contents[_filteredLogEntries[index]];
         }
 
         void ILogEntryContainer.Clear()
         {
             _logEntries.Clear();
             _contents.Clear();
+            _filteredLogEntries.Clear();
         }
         #endregion ILogEntryContainer
 
@@ -88,12 +91,12 @@ namespace Zob.Internal.Editor
 
         public void AddFilter(ILogFilter filter)
         {
-
+            _filterEngine.AddFilter(filter);
         }
 
         public void Removeilter(ILogFilter filter)
         {
-
+            _filterEngine.RemoveFilter(filter);
         }
         #endregion ILogHandler
     }
