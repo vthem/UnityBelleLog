@@ -18,6 +18,5 @@ namespace Zob
     {
         bool Enable { get; set; }
         void Apply(LogEntry logEntry, ref LogFilterState state, out LogFilterAction action);
-        long MatchCount { get; set; }
     }
 }

@@ -13,8 +13,6 @@ namespace Zob.Internal
 
         public bool Enable { get; set; }
 
-        public long MatchCount { get; set; }
-
         internal PredicateLogFilter(Func<LogEntry, bool> predicate, LogFilterAction onTrueAction, LogFilterAction onFalseAction, LogFilterState onTrueState)
         {
             _predicate = predicate;
@@ -22,7 +20,6 @@ namespace Zob.Internal
             _onFalseAction = onFalseAction;
             _onTrueState = onTrueState;
             Enable = true;
-            MatchCount = 0;
         }
 
         public void Apply(LogEntry logEntry, ref LogFilterState state, out LogFilterAction action)
@@ -31,7 +28,6 @@ namespace Zob.Internal
             {
                 state = _onTrueState;
                 action = _onTrueAction;
-                MatchCount += 1;
             }
             else
             {
@@ -62,6 +58,10 @@ namespace Zob.Internal
             LogFilterState state = LogFilterState.None;
             for (int f = 0; f < _filters.Count; ++f)
             {
+                if (!_filters[f].Enable)
+                {
+                    continue;
+                }
                 LogFilterAction action;
                 _filters[f].Apply(entry, ref state, out action);
                 if (action == LogFilterAction.Stop)
@@ -74,8 +74,6 @@ namespace Zob.Internal
 
         public List<int> Apply(List<LogEntry> entries)
         {
-            ResetFiltersMatchCount();
-
             List<int> result = new List<int>();
             for (int i = 0; i < entries.Count; ++i)
             {
@@ -85,14 +83,6 @@ namespace Zob.Internal
                 }
             }
             return result;
-        }
-
-        public void ResetFiltersMatchCount()
-        {
-            for (int i = 0; i < _filters.Count; ++i)
-            {
-                _filters[i].MatchCount = 0;
-            }
         }
     }
 }

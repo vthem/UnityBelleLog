@@ -6,11 +6,20 @@ namespace Zob.Internal.Editor
 {
     internal class ConsoleLogHandler : ILogHandler, ILogEntryContainer
     {
-        private List<LogEntry> _logEntries = new List<LogEntry>();
-        private StringBuilder _stringBuilder = new StringBuilder();
+        private readonly List<LogEntry> _logEntries = new List<LogEntry>();
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
         private event Action<ILogEntryContainer, LogEntry> Updated;
         private List<int> _filteredLogEntries = new List<int>();
-        private LogFilterEngine _filterEngine = new LogFilterEngine();
+        private readonly LogFilterEngine _filterEngine = new LogFilterEngine();
+        private readonly uint[] _logEntryCountByLevel = new uint[]
+        {
+            0, // Trace
+            0, // Debug
+            0, // Info
+            0, // Warning,
+            0, // Error,
+            0 // Fatal
+        };
 
         public void AddFilter(ILogFilter filter)
         {
@@ -69,7 +78,15 @@ namespace Zob.Internal.Editor
         {
             _logEntries.Clear();
             _filteredLogEntries.Clear();
-            _filterEngine.ResetFiltersMatchCount();
+            for (int i = 0; i < _logEntryCountByLevel.Length; ++i)
+            {
+                _logEntryCountByLevel[i] = 0;
+            }
+        }
+
+        public uint CountByLevel(LogLevel level)
+        {
+            return _logEntryCountByLevel[(int)level];
         }
         #endregion ILogEntryContainer
 
@@ -91,6 +108,8 @@ namespace Zob.Internal.Editor
             {
                 _filteredLogEntries.Add(_logEntries.Count - 1);
             }
+
+            _logEntryCountByLevel[(int)entry.level] += 1;
 
             if (Updated != null)
             {

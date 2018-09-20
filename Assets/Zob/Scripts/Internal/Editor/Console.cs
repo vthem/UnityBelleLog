@@ -97,6 +97,10 @@ namespace Zob.Internal.Editor
                 new PredicateLogFilter((entry) => entry.level == LogLevel.Error, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
                 new PredicateLogFilter((entry) => entry.level == LogLevel.Fatal, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
             };
+            for (int i = 0; i < _logLevelFilters.Length; ++i)
+            {
+                _logHandler.AddFilter(_logLevelFilters[i]);
+            }
             _logEntries = _logHandler;
             LogSystem.AddHandler(_logHandler);
             _logEntries.Updated += NewLogEntryHandler;
@@ -169,7 +173,11 @@ namespace Zob.Internal.Editor
             for (int i = 0; i < _logLevelFilters.Length; ++i)
             {
                 bool isEnable = _logLevelFilters[i].Enable;
-                _logLevelFilters[i].Enable = GUILayout.Toggle(_logLevelFilters[i].Enable, string.Format(_logFilterToggleLabel[i], _logLevelFilters[i].MatchCount), new GUIStyle("ToolbarButton"));
+                _logLevelFilters[i].Enable = GUILayout.Toggle(
+                    _logLevelFilters[i].Enable,
+                    string.Format(_logFilterToggleLabel[i], _logEntries.CountByLevel((LogLevel)i)),
+                    new GUIStyle("ToolbarButton")
+                );
                 if (isEnable != _logLevelFilters[i].Enable)
                 {
                     _logHandler.ApplyFilters();
