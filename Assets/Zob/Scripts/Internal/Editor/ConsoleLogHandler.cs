@@ -104,7 +104,7 @@ namespace Zob.Internal.Editor
                 entry.content = entry.format;
             }
             _logEntries.Add(entry);
-            if (_filterEngine.Apply(entry) == LogFilterState.Accept)
+            if (_filterEngine.Apply(entry) == LogFilterAction.Accept)
             {
                 _filteredLogEntries.Add(_logEntries.Count - 1);
             }

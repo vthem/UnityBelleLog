@@ -90,15 +90,16 @@ namespace Zob.Internal.Editor
             };
             _logLevelFilters = new PredicateLogFilter[]
             {
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Trace, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Debug, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Info, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Warning, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Error, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Fatal, LogFilterAction.Stop, LogFilterAction.Continue, LogFilterState.Drop),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Trace),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Debug),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Info),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Warning),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Error),
+                new PredicateLogFilter((entry) => entry.level == LogLevel.Fatal),
             };
             for (int i = 0; i < _logLevelFilters.Length; ++i)
             {
+                _logLevelFilters[i].Enable = false;
                 _logHandler.AddFilter(_logLevelFilters[i]);
             }
             _logEntries = _logHandler;
@@ -172,13 +173,13 @@ namespace Zob.Internal.Editor
 
             for (int i = 0; i < _logLevelFilters.Length; ++i)
             {
-                bool isEnable = _logLevelFilters[i].Enable;
-                _logLevelFilters[i].Enable = GUILayout.Toggle(
-                    _logLevelFilters[i].Enable,
+                bool prevState = _logLevelFilters[i].Enable;
+                _logLevelFilters[i].Enable = !GUILayout.Toggle(
+                    !_logLevelFilters[i].Enable,
                     string.Format(_logFilterToggleLabel[i], _logEntries.CountByLevel((LogLevel)i)),
                     new GUIStyle("ToolbarButton")
                 );
-                if (isEnable != _logLevelFilters[i].Enable)
+                if (prevState != _logLevelFilters[i].Enable)
                 {
                     _logHandler.ApplyFilters();
                 }

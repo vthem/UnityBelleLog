@@ -1,37 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Zob.Internal
 {
     internal class PredicateLogFilter : ILogFilter
     {
         private Func<LogEntry, bool> _predicate;
-        private LogFilterAction _onTrueAction;
-        private LogFilterAction _onFalseAction;
-        private LogFilterState _onTrueState;
+        private LogFilterTermination _trueTermination;
+        private LogFilterTermination _falseTermination;
+        private LogFilterAction _trueAction;
+        private LogFilterAction _falseAction;
 
         public bool Enable { get; set; }
 
-        internal PredicateLogFilter(Func<LogEntry, bool> predicate, LogFilterAction onTrueAction, LogFilterAction onFalseAction, LogFilterState onTrueState)
+        internal PredicateLogFilter(Func<LogEntry, bool> predicate, LogFilterTermination trueTermination, LogFilterTermination falseTermination, LogFilterAction trueAction, LogFilterAction falseAction)
         {
             _predicate = predicate;
-            _onTrueAction = onTrueAction;
-            _onFalseAction = onFalseAction;
-            _onTrueState = onTrueState;
+            _trueTermination = trueTermination;
+            _falseTermination = falseTermination;
+            _trueAction = trueAction;
+            _falseAction = falseAction;
             Enable = true;
         }
 
-        public void Apply(LogEntry logEntry, ref LogFilterState state, out LogFilterAction action)
+        internal PredicateLogFilter(Func<LogEntry, bool> predicate)
+        {
+            _predicate = predicate;
+            _trueTermination = LogFilterTermination.Stop;
+            _falseTermination = LogFilterTermination.Continue;
+            _trueAction = LogFilterAction.Reject;
+            _falseAction = LogFilterAction.Hold;
+            Enable = true;
+        }
+
+        public void Apply(LogEntry logEntry, ref LogFilterAction action, out LogFilterTermination termination)
         {
             if (_predicate(logEntry))
             {
-                state = _onTrueState;
-                action = _onTrueAction;
+                action = _trueAction == LogFilterAction.Hold ? action : _trueAction;
+                termination = _trueTermination;
             }
             else
             {
-                action = _onFalseAction;
+                action = _falseAction == LogFilterAction.Hold ? action : _falseAction;
+                termination = _falseTermination;
             }
         }
     }
@@ -53,23 +65,23 @@ namespace Zob.Internal
             _filters.Remove(filter);
         }
 
-        public LogFilterState Apply(LogEntry entry)
+        public LogFilterAction Apply(LogEntry entry)
         {
-            LogFilterState state = LogFilterState.None;
+            LogFilterTermination termination;
+            LogFilterAction action = LogFilterAction.Accept;
             for (int f = 0; f < _filters.Count; ++f)
             {
                 if (!_filters[f].Enable)
                 {
                     continue;
                 }
-                LogFilterAction action;
-                _filters[f].Apply(entry, ref state, out action);
-                if (action == LogFilterAction.Stop)
+                _filters[f].Apply(entry, ref action, out termination);
+                if (termination == LogFilterTermination.Stop)
                 {
                     break;
                 }
             }
-            return state;
+            return action;
         }
 
         public List<int> Apply(List<LogEntry> entries)
@@ -77,7 +89,7 @@ namespace Zob.Internal
             List<int> result = new List<int>();
             for (int i = 0; i < entries.Count; ++i)
             {
-                if (Apply(entries[i]) == LogFilterState.Accept)
+                if (Apply(entries[i]) == LogFilterAction.Accept)
                 {
                     result.Add(i);
                 }
