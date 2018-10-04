@@ -127,22 +127,6 @@ namespace Zob.Internal.Editor
             _logEntryContentGUI = new GUILogEntryContent(this, _guiStyles);
             _logEntryStackTraceGUI = new GUILogEntryStackTrace(this);
             _logEntryTableGUI = new GUILogEntryTable(this, _guiStyles);
-
-            MethodInfo method = typeof(EditorGUIUtility).GetMethod("LoadIcon", BindingFlags.Static | BindingFlags.NonPublic);
-            if (method == null)
-            {
-                Debug.Log("load icon not found");
-            }
-            iconWarn = (Texture2D)method.Invoke(null, new string [] { "console.warnicon" });
-            Debug.Log("icon size=" + iconWarn.width + "x" + iconWarn.height);
-            //iconError = EditorGUIUtility.LoadIcon("console.erroricon");
-            //iconInfoSmall = EditorGUIUtility.LoadIcon("console.infoicon.sml");
-            //iconWarnSmall = EditorGUIUtility.LoadIcon("console.warnicon.sml");
-            //iconErrorSmall = EditorGUIUtility.LoadIcon("console.erroricon.sml");
-
-            //iconInfoMono = EditorGUIUtility.LoadIcon("console.infoicon.sml");
-            //iconWarnMono = EditorGUIUtility.LoadIcon("console.warnicon.inactive.sml");
-            //iconErrorMono = EditorGUIUtility.LoadIcon("console.erroricon.inactive.sml");
         }
 
         protected void OnGUI()
