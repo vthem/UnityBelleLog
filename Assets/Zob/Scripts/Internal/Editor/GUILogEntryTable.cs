@@ -4,42 +4,52 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
+    internal interface ITableLineCount
+    {
+        int Count { get; }
+    }
+
+    internal interface ITableLineRenderer
+    {
+        void OnGUI(Rect position, int index, int selectedIndex);
+    }
+
     internal class GUILogEntryTable
     {
         private EditorWindow _parent;
-        private GUIStyles _styles;
         private float _scrollValue;
         private List<Rect> _entriesRect = new List<Rect>();
         private Texture2D _bottomBarTexture;
         private GUIVerticalSplit _split;
         private bool _enableScroll;
         private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
+        private readonly ITableLineRenderer _renderer = null;
 
         // one scroll line is 10 unit in unity source ...
         private const float ScrollConstant = 10f;
+        private const float RowHeight = 20f;
 
-        private const float _rowHeight = 20f;
 
-        public GUILogEntryTable(EditorWindow parent, GUIStyles styles)
+        public GUILogEntryTable(EditorWindow parent, ITableLineRenderer renderer)
         {
             _parent = parent;
-            _styles = styles;
 
             _bottomBarTexture = new Texture2D(1, 1);
             _bottomBarTexture.SetPixel(0, 0, new Color32(23, 23, 23, 255));
             _bottomBarTexture.Apply();
+            _renderer = renderer;
         }
 
-        public void UpdateAutoScrolling(ILogEntryContainer logEntries)
+        public void UpdateAutoScrolling(ITableLineCount lines)
         {
             int rowCount = GetRowCount();
-            if (IsScrollCursorAtBottom(rowCount, logEntries))
+            if (IsScrollCursorAtBottom(rowCount, lines.Count))
             {
-                _scrollValue = logEntries.Count - rowCount;
+                _scrollValue = lines.Count - rowCount;
             }
         }
 
-        public int OnGUI(int selectedLogEntryIndex, ILogEntryContainer logEntries, bool scrollToSelected)
+        public int OnGUI(int selectedLogEntryIndex, ITableLineCount lines, bool scrollToSelected)
         {
             if (scrollToSelected && !_autoScrollToSelected.Enable)
             {
@@ -62,8 +72,8 @@ namespace Zob.Internal.Editor
             if (Event.current.type != EventType.Layout)
             {
                 int rowCount = GetRowCount();
-                _enableScroll = logEntries.Count > rowCount;
-                bool scrollCursorAtBottom = IsScrollCursorAtBottom(rowCount, logEntries);
+                _enableScroll = lines.Count > rowCount;
+                bool scrollCursorAtBottom = IsScrollCursorAtBottom(rowCount, lines.Count);
 
                 if (_enableScroll)
                 {
@@ -73,12 +83,12 @@ namespace Zob.Internal.Editor
                         position.height);
 
                     _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
-                    _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1f, 0f, (logEntries.Count - rowCount + 1) * ScrollConstant);
+                    _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1f, 0f, (lines.Count - rowCount + 1) * ScrollConstant);
                 }
 
                 _entriesRect.Clear();
                 float delta = 0f;
-                var totalHeight = rowCount * _rowHeight;
+                var totalHeight = rowCount * RowHeight;
                 if (totalHeight > position.height)
                 {
                     delta = totalHeight - position.height;
@@ -87,16 +97,16 @@ namespace Zob.Internal.Editor
                 for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex)
                 {
                     int index = Mathf.FloorToInt(_scrollValue / ScrollConstant) + rowIndex;
-                    if (index < 0 || index >= logEntries.Count)
+                    if (index < 0 || index >= lines.Count)
                     {
                         continue;
                     }
 
                     Rect rowRect = new Rect(
                         position.x,
-                        position.y + rowIndex * _rowHeight,
+                        position.y + rowIndex * RowHeight,
                         position.width,
-                        _rowHeight);
+                        RowHeight);
 
                     if (_enableScroll)
                     {
@@ -118,14 +128,7 @@ namespace Zob.Internal.Editor
                     }
 
                     _entriesRect.Add(rowRect);
-                    if (Event.current.type == EventType.Repaint)
-                    {
-                        GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
-                        s.Draw(rowRect, false, false, selectedLogEntryIndex == index, false);
-                    }
-                    GUIStyle s2 = new GUIStyle();
-                    s2.alignment = TextAnchor.LowerLeft;
-                    EditorGUI.LabelField(rowRect, logEntries[index].content /*, s2* */);
+                    _renderer.OnGUI(rowRect, index, selectedLogEntryIndex);
                 }
             }
 
@@ -135,9 +138,9 @@ namespace Zob.Internal.Editor
                 float step = Event.current.delta.y * ScrollConstant;
                 if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
                 {
-                    step = Mathf.Sign(step) * logEntries.Count * 0.05f * ScrollConstant;
+                    step = Mathf.Sign(step) * lines.Count * 0.05f * ScrollConstant;
                 }
-                _scrollValue = Mathf.FloorToInt(Mathf.Clamp(_scrollValue + step, 0f, logEntries.Count * ScrollConstant));
+                _scrollValue = Mathf.FloorToInt(Mathf.Clamp(_scrollValue + step, 0f, lines.Count * ScrollConstant));
                 _parent.Repaint();
             }
 
@@ -168,13 +171,13 @@ namespace Zob.Internal.Editor
         private int GetRowCount()
         {
             Rect position = _split.Position;
-            int rowCount = Mathf.FloorToInt(position.height / _rowHeight);
+            int rowCount = Mathf.FloorToInt(position.height / RowHeight);
             return rowCount;
         }
 
-        private bool IsScrollCursorAtBottom(int rowCount, ILogEntryContainer logEntries)
+        private bool IsScrollCursorAtBottom(int rowCount, int lineCount)
         {
-            return rowCount + Mathf.FloorToInt(_scrollValue / ScrollConstant) == logEntries.Count;
+            return rowCount + Mathf.FloorToInt(_scrollValue / ScrollConstant) == lineCount;
         }
 
         class AutoScrollToSelected

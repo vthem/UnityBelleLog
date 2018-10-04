@@ -1,9 +1,48 @@
-﻿using System.Reflection;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
+    internal class LogEntryRenderer : ITableLineRenderer
+    {
+        private ILogEntryContainer _container;
+        private GUIStyles _styles;
+
+        public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
+        {
+            _container = container;
+            _styles = styles;
+        }
+
+        public void OnGUI(Rect position, int index, int selectedIndex)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
+                s.Draw(position, false, false, selectedIndex == index, false);
+            }
+            EditorGUI.LabelField(position, _container[index].content);
+        }
+    }
+
+    internal class LogEntryCounter : ITableLineCount
+    {
+        private ILogEntryContainer _container;
+
+        public LogEntryCounter(ILogEntryContainer container)
+        {
+            _container = container;
+        }
+
+        public int Count
+        {
+            get
+            {
+                return _container.Count;
+            }
+        }
+    }
+
     internal class Console : EditorWindow
     {
         private readonly ConsoleLogHandler _logHandler = new ConsoleLogHandler();
@@ -14,6 +53,7 @@ namespace Zob.Internal.Editor
         private GUILogEntryTable _logEntryTableGUI;
         private GUILogEntryContent _logEntryContentGUI;
         private GUILogEntryStackTrace _logEntryStackTraceGUI;
+        private LogEntryCounter _logEntryCounter;
 
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
@@ -111,7 +151,7 @@ namespace Zob.Internal.Editor
         private void NewLogEntryHandler(ILogEntryContainer logEntries, LogEntry logEntry)
         {
             Repaint();
-            _logEntryTableGUI.UpdateAutoScrolling(logEntries);
+            _logEntryTableGUI.UpdateAutoScrolling(_logEntryCounter);
         }
 
         protected void OnGUIInitialize()
@@ -126,7 +166,9 @@ namespace Zob.Internal.Editor
             _guiStyles = new GUIStyles();
             _logEntryContentGUI = new GUILogEntryContent(this, _guiStyles);
             _logEntryStackTraceGUI = new GUILogEntryStackTrace(this);
-            _logEntryTableGUI = new GUILogEntryTable(this, _guiStyles);
+            _logEntryCounter = new LogEntryCounter(_logEntries);
+            _logEntryTableGUI = new GUILogEntryTable(this, new LogEntryRenderer(_logEntries, _guiStyles));
+
         }
 
         protected void OnGUI()
@@ -170,7 +212,7 @@ namespace Zob.Internal.Editor
 
             _selectedLogEntryIndex = _searchFieldGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
 
-            _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntries, _searchFieldGUI.HasUpdatedLogEntryIndex);
+            _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntryCounter, _searchFieldGUI.HasUpdatedLogEntryIndex);
 
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 
