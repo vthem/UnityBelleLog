@@ -75,7 +75,7 @@ namespace Zob
             LogEntry entry;
             entry.args = args;
             entry.format = format;
-            entry.level = LogLevel.Debug;
+            entry.level = level;
             entry.domain = _domain;
             entry.timestamp = System.DateTime.Now;
             entry.stackTrace = stackTrace;

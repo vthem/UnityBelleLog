@@ -8,10 +8,33 @@ namespace Zob.Internal.Editor
         private ILogEntryContainer _container;
         private GUIStyles _styles;
 
+        private Texture2D[] _levelTexture;
+
         public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
         {
             _container = container;
             _styles = styles;
+
+            _levelTexture = new Texture2D[]
+            {
+                new Texture2D(1, 1), // TRC
+                new Texture2D(1, 1), // DBG
+                new Texture2D(1, 1), // NFO
+                new Texture2D(1, 1), // WRN
+                new Texture2D(1, 1), // ERR
+                new Texture2D(1, 1)  // FTL
+            };
+            _levelTexture[(int)LogLevel.Trace].SetPixel(0, 0, new Color32(0xB0, 0xB0, 0xB0, 0xff));
+            _levelTexture[(int)LogLevel.Debug].SetPixel(0, 0, new Color32(0xFF, 0xFF, 0xFF, 0xff));
+            _levelTexture[(int)LogLevel.Info].SetPixel(0, 0, new Color32(0x00, 0xFF, 0x00, 0xff));
+            _levelTexture[(int)LogLevel.Warning].SetPixel(0, 0, new Color32(0xFF, 0x80, 0x00, 0xff));
+            _levelTexture[(int)LogLevel.Error].SetPixel(0, 0, new Color32(0xFF, 0x00, 0x00, 0xff));
+            _levelTexture[(int)LogLevel.Fatal].SetPixel(0, 0, new Color32(0x80, 0x00, 0xFF, 0xff));
+
+            for (int i = 0; i  < _levelTexture.Length; ++i)
+            {
+                _levelTexture[i].Apply();
+            }
         }
 
         public void OnGUI(Rect position, int index, int selectedIndex)
@@ -21,7 +44,27 @@ namespace Zob.Internal.Editor
                 GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
                 s.Draw(position, false, false, selectedIndex == index, false);
             }
-            EditorGUI.LabelField(position, _container[index].content);
+
+            var entry = _container[index];
+
+            RenderLevelColor(position, entry);
+            RenderTextLabel(position, entry);
+        }
+
+        private void RenderLevelColor(Rect position, LogEntry entry)
+        {
+            Rect colorPos = position;
+            colorPos.x = 1;
+            colorPos.width = 8;
+            colorPos.y = colorPos.y + colorPos.height - 6f;
+            colorPos.height = 2;
+            GUI.DrawTexture(colorPos, _levelTexture[(int)entry.level]);
+        }
+
+        private void RenderTextLabel(Rect position, LogEntry entry)
+        {
+            position.x = 10;
+            EditorGUI.LabelField(position, entry.content);
         }
     }
 
