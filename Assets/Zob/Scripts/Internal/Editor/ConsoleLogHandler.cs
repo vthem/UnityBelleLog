@@ -45,7 +45,7 @@ namespace Zob.Internal.Editor
             {
                 if (index < 0 || index >= _filteredLogEntries.Count)
                 {
-                    throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _logEntries.Count);
+                    throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _filteredLogEntries.Count);
                 }
                 return _logEntries[_filteredLogEntries[index]];
             }

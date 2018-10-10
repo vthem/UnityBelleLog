@@ -106,7 +106,6 @@ namespace Zob.Internal.Editor
         private GUIStyles _guiStyles;
         private BottomMode _bottomMode = BottomMode.LogContent;
         private Texture2D _text;
-        private Texture2D iconWarn;
 
         private ILogFilter[] _logLevelFilters;
         private string[] _logFilterToggleLabel;
@@ -185,7 +184,6 @@ namespace Zob.Internal.Editor
             }
             _logEntries = _logHandler;
             LogSystem.AddHandler(_logHandler);
-            _logEntries.Updated += NewLogEntryHandler;
             _selectedLogEntryIndex = -1;
 
             Repaint();
@@ -212,6 +210,7 @@ namespace Zob.Internal.Editor
             _logEntryCounter = new LogEntryCounter(_logEntries);
             _logEntryTableGUI = new GUILogEntryTable(this, new LogEntryRenderer(_logEntries, _guiStyles));
 
+            _logEntries.Updated += NewLogEntryHandler;
         }
 
         protected void OnGUI()
@@ -248,7 +247,9 @@ namespace Zob.Internal.Editor
                 );
                 if (prevState != _logLevelFilters[i].Enable)
                 {
+                    _selectedLogEntryIndex = -1;
                     _logHandler.ApplyFilters();
+                    Repaint();
                 }
             }
             GUILayout.EndHorizontal();
