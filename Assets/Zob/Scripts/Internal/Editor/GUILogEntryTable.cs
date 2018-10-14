@@ -37,6 +37,7 @@ namespace Zob.Internal.Editor
             _bottomBarTexture = new Texture2D(1, 1);
             _bottomBarTexture.SetPixel(0, 0, new Color32(23, 23, 23, 255));
             _bottomBarTexture.Apply();
+            _bottomBarTexture.hideFlags = HideFlags.HideAndDontSave;
             _renderer = renderer;
         }
 

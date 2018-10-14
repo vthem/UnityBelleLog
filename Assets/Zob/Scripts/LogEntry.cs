@@ -8,6 +8,7 @@
         public object[] args;
         public System.Diagnostics.StackTrace stackTrace;
         public System.DateTime timestamp;
+//        public System.DateTime playstartRelativeTimestamp;
         public string content;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
@@ -7,8 +8,9 @@ namespace Zob.Internal.Editor
     {
         private ILogEntryContainer _container;
         private GUIStyles _styles;
-
         private Texture2D[] _levelTexture;
+        private DateTime _startTimestamp;
+        private const string _defaultTimestampLabel = "0m00s000";
 
         public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
         {
@@ -34,6 +36,7 @@ namespace Zob.Internal.Editor
             for (int i = 0; i  < _levelTexture.Length; ++i)
             {
                 _levelTexture[i].Apply();
+                _levelTexture[i].hideFlags = HideFlags.HideAndDontSave;
             }
         }
 
@@ -48,22 +51,37 @@ namespace Zob.Internal.Editor
             var entry = _container[index];
 
             RenderLevelColor(position, entry);
+            RenderTimestampLabel(position, entry);
             RenderTextLabel(position, entry);
         }
 
         private void RenderLevelColor(Rect position, LogEntry entry)
         {
-            Rect colorPos = position;
-            colorPos.x = 1;
-            colorPos.width = 8;
-            colorPos.y = colorPos.y + colorPos.height - 6f;
-            colorPos.height = 2;
-            GUI.DrawTexture(colorPos, _levelTexture[(int)entry.level]);
+            position.x = 1;
+            position.width = 8;
+            position.y = position.y + position.height - 6f;
+            position.height = 2;
+            GUI.DrawTexture(position, _levelTexture[(int)entry.level]);
+        }
+
+        private void RenderTimestampLabel(Rect position, LogEntry entry)
+        {
+            position.x = 10;
+
+            if (EditorApplication.isPlaying)
+            {
+                var ts = (entry.timestamp - EditorPlayMode.StartTime);
+                EditorGUI.LabelField(position, string.Format("{0}m{1}s{2}", ts.Minutes, ts.Seconds, ts.Milliseconds));
+            }
+            else
+            {
+                EditorGUI.LabelField(position, _defaultTimestampLabel);
+            }
         }
 
         private void RenderTextLabel(Rect position, LogEntry entry)
         {
-            position.x = 10;
+            position.x = 80;
             EditorGUI.LabelField(position, entry.content);
         }
     }

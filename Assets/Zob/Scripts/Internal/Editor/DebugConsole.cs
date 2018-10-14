@@ -15,6 +15,7 @@ namespace Zob.Internal.Editor
         private int _current = 0;
         private Logger _logger;
         private bool _initialized = false;
+        private Texture2D _texture;
 
         public static void SetValue(string key, string value)
         {
@@ -33,6 +34,7 @@ namespace Zob.Internal.Editor
             _instance = (DebugConsole)EditorWindow.GetWindow(typeof(DebugConsole));
             _instance.Show();
             _instance.InitializeOnce();
+            _instance.hideFlags = HideFlags.HideAndDontSave;
 
         }
 
@@ -55,11 +57,16 @@ namespace Zob.Internal.Editor
             _logger = new Logger();
             _instance._keyValue["start"] = DateTime.Now.ToShortDateString();
 
+            _texture = new Texture2D(1, 1);
+            _texture.SetPixel(0, 0, Color.magenta);
+            _texture.Apply();
+            _texture.hideFlags = HideFlags.HideAndDontSave;
             _initialized = true;
         }
 
         protected void OnGUI()
         {
+            GUI.DrawTexture(new Rect(0, 0, 50, 50), _texture);
             foreach (var kv in _keyValue)
             {
                 EditorGUILayout.BeginHorizontal();

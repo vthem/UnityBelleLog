@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 using Zob.Internal;
 
-namespace Zob.Writer
+namespace Zob.Internal
 {
     public sealed class FileLogWriter : ILogWriter
     {
