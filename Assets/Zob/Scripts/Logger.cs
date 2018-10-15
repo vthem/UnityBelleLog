@@ -77,7 +77,8 @@ namespace Zob
             entry.format = format;
             entry.level = level;
             entry.domain = _domain;
-            entry.timestamp = System.DateTime.Now;
+            entry.time = System.DateTime.Now;
+            entry.duration = System.TimeSpan.FromSeconds(UnityEngine.Time.realtimeSinceStartup);
             entry.stackTrace = stackTrace;
             entry.content = string.Empty;
 

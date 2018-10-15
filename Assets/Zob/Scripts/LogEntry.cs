@@ -7,8 +7,8 @@
         public string domain;
         public object[] args;
         public System.Diagnostics.StackTrace stackTrace;
-        public System.DateTime timestamp;
-//        public System.DateTime playstartRelativeTimestamp;
+        public System.DateTime time;
+        public System.TimeSpan duration;
         public string content;
     }
 }

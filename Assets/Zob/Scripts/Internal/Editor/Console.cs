@@ -68,15 +68,7 @@ namespace Zob.Internal.Editor
         {
             position.x = 10;
 
-            if (EditorApplication.isPlaying)
-            {
-                var ts = (entry.timestamp - EditorPlayMode.StartTime);
-                EditorGUI.LabelField(position, string.Format("{0}m{1}s{2}", ts.Minutes, ts.Seconds, ts.Milliseconds));
-            }
-            else
-            {
-                EditorGUI.LabelField(position, _defaultTimestampLabel);
-            }
+            EditorGUI.LabelField(position, string.Format("{0}m{1}s{2}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
         }
 
         private void RenderTextLabel(Rect position, LogEntry entry)
