@@ -19,10 +19,16 @@ namespace Zob.Internal.Editor
         {
             if (logEntry.stackTrace == null)
             {
+                EditorGUILayout.LabelField("no stacktrace available");
+                return;
+            }
+            var frames = logEntry.stackTrace.GetFrames();
+            if (frames.Length == 0)
+            {
+                EditorGUILayout.LabelField("no frame available");
                 return;
             }
             _scrollValue = GUILayout.BeginScrollView(_scrollValue, false, false);
-            var frames = logEntry.stackTrace.GetFrames();
             for (int i = 0; i < frames.Length; ++i)
             {
                 var frame = frames[i];
