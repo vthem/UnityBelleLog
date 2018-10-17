@@ -7,6 +7,7 @@
         public string domain;
         public object[] args;
         public System.Diagnostics.StackTrace stackTrace;
+        public long frameCount;
         public System.DateTime time;
         public System.TimeSpan duration;
         public string content;

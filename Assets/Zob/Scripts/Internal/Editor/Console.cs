@@ -11,11 +11,14 @@ namespace Zob.Internal.Editor
         private Texture2D[] _levelTexture;
         private DateTime _startTimestamp;
         private const string _defaultTimestampLabel = "0m00s000";
+        private GUIStyle _labelStyle;
 
         public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
         {
             _container = container;
             _styles = styles;
+            _labelStyle = new GUIStyle(GUI.skin.label);
+            _labelStyle.alignment = TextAnchor.MiddleLeft;
 
             _levelTexture = new Texture2D[]
             {
@@ -50,31 +53,65 @@ namespace Zob.Internal.Editor
 
             var entry = _container[index];
 
-            RenderLevelColor(position, entry);
-            RenderTimestampLabel(position, entry);
-            RenderTextLabel(position, entry);
+            position = RenderLevelColor(position, entry);
+            position = RenderFrameCount(position, entry);
+            position = RenderTimestampLabel(position, entry);
+            position = RenderTextLabel(position, entry);
         }
 
-        private void RenderLevelColor(Rect position, LogEntry entry)
+        private Rect RenderLevelColor(Rect position, LogEntry entry)
         {
-            position.x = 1;
-            position.width = 8;
-            position.y = position.y + position.height - 6f;
-            position.height = 2;
-            GUI.DrawTexture(position, _levelTexture[(int)entry.level]);
+            Rect lpos = position;
+            lpos.x = position.x + 4;
+            lpos.width = 4;
+            lpos.y = position.y + 6;
+            lpos.height = 8;
+
+            GUI.DrawTexture(lpos, _levelTexture[(int)entry.level]);
+
+            position.x = lpos.x + lpos.width;
+            return position;
         }
 
-        private void RenderTimestampLabel(Rect position, LogEntry entry)
+        private Rect RenderFrameCount(Rect position, LogEntry entry)
         {
-            position.x = 10;
+            Rect lpos = position;
+            lpos.x = position.x + 3;
 
-            EditorGUI.LabelField(position, string.Format("{0}m{1}s{2}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
+            var content = new GUIContent(string.Format("{0:D5}", entry.frameCount));
+            float min, max;
+            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
+            lpos.width = max;
+            EditorGUI.LabelField(lpos, content, _labelStyle);
+
+            position.x = lpos.x + lpos.width;
+            return position;
         }
 
-        private void RenderTextLabel(Rect position, LogEntry entry)
+        private Rect RenderTimestampLabel(Rect position, LogEntry entry)
         {
-            position.x = 80;
-            EditorGUI.LabelField(position, entry.content);
+            Rect lpos = position;
+            lpos.x = position.x + 3;
+
+
+            var content = new GUIContent(string.Format("{0:D3}m{1:D2}s{2:D3}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
+            float min, max;
+            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
+            lpos.width = min;
+            EditorGUI.LabelField(lpos, content, _labelStyle);
+
+            position.x = lpos.x + lpos.width;
+            return position;
+        }
+
+        private Rect RenderTextLabel(Rect position, LogEntry entry)
+        {
+            Rect lpos = position;
+            position.x = position.x + 15;
+            EditorGUI.LabelField(lpos, entry.content, _labelStyle);
+
+            position.x = lpos.x + lpos.width;
+            return position;
         }
     }
 

@@ -81,6 +81,7 @@ namespace Zob
             entry.duration = System.TimeSpan.FromSeconds(UnityEngine.Time.realtimeSinceStartup);
             entry.stackTrace = stackTrace;
             entry.content = string.Empty;
+            entry.frameCount = UnityEngine.Time.frameCount;
 
             Internal.LogSystem.Log(entry);
         }
