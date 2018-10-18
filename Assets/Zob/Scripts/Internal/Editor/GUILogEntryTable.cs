@@ -154,6 +154,7 @@ namespace Zob.Internal.Editor
                     {
                         selectedLogEntryIndex = i + Mathf.FloorToInt(_scrollValue / ScrollConstant);
                         _parent.Repaint();
+                        Event.current.Use();
                         break;
                     }
                 }
