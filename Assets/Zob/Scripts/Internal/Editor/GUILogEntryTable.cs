@@ -29,6 +29,7 @@ namespace Zob.Internal.Editor
         private const float ScrollConstant = 10f;
         private const float RowHeight = 20f;
 
+        public bool HasUpdatedLogEntryIndex { get; protected set; }
 
         public GUILogEntryTable(EditorWindow parent, ITableLineRenderer renderer)
         {
@@ -52,6 +53,8 @@ namespace Zob.Internal.Editor
 
         public int OnGUI(int selectedLogEntryIndex, ITableLineCount lines, bool scrollToSelected)
         {
+            HasUpdatedLogEntryIndex = false;
+
             if (scrollToSelected && !_autoScrollToSelected.Enable)
             {
                 _autoScrollToSelected.Enable = scrollToSelected;
@@ -70,6 +73,8 @@ namespace Zob.Internal.Editor
             // get the position from the vertical split
             Rect position = _split.Position;
 
+            // we don't use GUILayout in the following part :
+            // compute each row position
             if (Event.current.type != EventType.Layout)
             {
                 int rowCount = GetRowCount();
@@ -154,7 +159,7 @@ namespace Zob.Internal.Editor
                     {
                         selectedLogEntryIndex = i + Mathf.FloorToInt(_scrollValue / ScrollConstant);
                         _parent.Repaint();
-                        Event.current.Use();
+                        HasUpdatedLogEntryIndex = true;
                         break;
                     }
                 }

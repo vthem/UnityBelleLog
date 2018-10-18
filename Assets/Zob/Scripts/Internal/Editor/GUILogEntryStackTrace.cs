@@ -17,10 +17,6 @@ namespace Zob.Internal.Editor
 
         public void OnGUI(LogEntry logEntry)
         {
-            if (Event.current.type == EventType.Used)
-            {
-                return;
-            }
             if (logEntry.stackTrace == null)
             {
                 EditorGUILayout.LabelField("no stacktrace available");

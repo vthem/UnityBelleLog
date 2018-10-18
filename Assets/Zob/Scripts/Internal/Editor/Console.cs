@@ -36,7 +36,7 @@ namespace Zob.Internal.Editor
             _levelTexture[(int)LogLevel.Error].SetPixel(0, 0, new Color32(0xFF, 0x00, 0x00, 0xff));
             _levelTexture[(int)LogLevel.Fatal].SetPixel(0, 0, new Color32(0x80, 0x00, 0xFF, 0xff));
 
-            for (int i = 0; i  < _levelTexture.Length; ++i)
+            for (int i = 0; i < _levelTexture.Length; ++i)
             {
                 _levelTexture[i].Apply();
                 _levelTexture[i].hideFlags = HideFlags.HideAndDontSave;
@@ -317,20 +317,19 @@ namespace Zob.Internal.Editor
             }
             GUILayout.EndHorizontal();
 
-            if (_bottomMode == BottomMode.LogContent)
+            bool logEntryUpdated = _logEntryTableGUI.HasUpdatedLogEntryIndex || _searchFieldGUI.HasUpdatedLogEntryIndex;
+            // drawing stacktrace or content modifies the GUILayout. yet it can't be modified before a new layout event
+            if (_selectedLogEntryIndex != -1 && !logEntryUpdated)
             {
-                string label = string.Empty;
-                if (_selectedLogEntryIndex != -1)
+                if (_bottomMode == BottomMode.LogContent)
                 {
+                    string label = string.Empty;
                     label = _logEntries[_selectedLogEntryIndex].content;
+                    _logEntryContentGUI.OnGUI(label);
                 }
-                _logEntryContentGUI.OnGUI(label);
-            }
-            else if (_bottomMode == BottomMode.StackTrace)
-            {
-                LogEntry logEntry;
-                if (_selectedLogEntryIndex != -1)
+                else if (_bottomMode == BottomMode.StackTrace)
                 {
+                    LogEntry logEntry;
                     logEntry = _logEntries[_selectedLogEntryIndex];
                     _logEntryStackTraceGUI.OnGUI(logEntry);
                 }
