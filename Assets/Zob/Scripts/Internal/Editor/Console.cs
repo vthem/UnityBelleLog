@@ -151,9 +151,11 @@ namespace Zob.Internal.Editor
 
             EditorGUILayout.Space();
 
+            GUI.enabled = false;
             _collapse = GUILayout.Toggle(_collapse, "Collapse", new GUIStyle("ToolbarButton"));
             _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
             _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
+            GUI.enabled = true;
             GUILayout.FlexibleSpace();
 
             for (int i = 0; i < _logLevelFilters.Length; ++i)
@@ -164,6 +166,7 @@ namespace Zob.Internal.Editor
                     string.Format(_logFilterToggleLabel[i], _logEntries.CountByLevel((LogLevel)i)),
                     new GUIStyle("ToolbarButton")
                 );
+
                 if (prevState != _logLevelFilters[i].Enable)
                 {
                     _selectedLogEntryIndex = -1;
