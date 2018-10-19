@@ -4,145 +4,16 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal class LogEntryRenderer : ITableLineRenderer
-    {
-        private ILogEntryContainer _container;
-        private GUIStyles _styles;
-        private Texture2D[] _levelTexture;
-        private DateTime _startTimestamp;
-        private const string _defaultTimestampLabel = "0m00s000";
-        private GUIStyle _labelStyle;
-
-        public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
-        {
-            _container = container;
-            _styles = styles;
-            _labelStyle = new GUIStyle(GUI.skin.label);
-            _labelStyle.alignment = TextAnchor.MiddleLeft;
-
-            _levelTexture = new Texture2D[]
-            {
-                new Texture2D(1, 1), // TRC
-                new Texture2D(1, 1), // DBG
-                new Texture2D(1, 1), // NFO
-                new Texture2D(1, 1), // WRN
-                new Texture2D(1, 1), // ERR
-                new Texture2D(1, 1)  // FTL
-            };
-            _levelTexture[(int)LogLevel.Trace].SetPixel(0, 0, new Color32(0xB0, 0xB0, 0xB0, 0xff));
-            _levelTexture[(int)LogLevel.Debug].SetPixel(0, 0, new Color32(0xFF, 0xFF, 0xFF, 0xff));
-            _levelTexture[(int)LogLevel.Info].SetPixel(0, 0, new Color32(0x00, 0xFF, 0x00, 0xff));
-            _levelTexture[(int)LogLevel.Warning].SetPixel(0, 0, new Color32(0xFF, 0x80, 0x00, 0xff));
-            _levelTexture[(int)LogLevel.Error].SetPixel(0, 0, new Color32(0xFF, 0x00, 0x00, 0xff));
-            _levelTexture[(int)LogLevel.Fatal].SetPixel(0, 0, new Color32(0x80, 0x00, 0xFF, 0xff));
-
-            for (int i = 0; i < _levelTexture.Length; ++i)
-            {
-                _levelTexture[i].Apply();
-                _levelTexture[i].hideFlags = HideFlags.HideAndDontSave;
-            }
-        }
-
-        public void OnGUI(Rect position, int index, int selectedIndex)
-        {
-            if (Event.current.type == EventType.Repaint)
-            {
-                GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
-                s.Draw(position, false, false, selectedIndex == index, false);
-            }
-
-            var entry = _container[index];
-
-            position = RenderLevelColor(position, entry);
-            position = RenderFrameCount(position, entry);
-            position = RenderTimestampLabel(position, entry);
-            position = RenderTextLabel(position, entry);
-        }
-
-        private Rect RenderLevelColor(Rect position, LogEntry entry)
-        {
-            Rect lpos = position;
-            lpos.x = position.x + 4;
-            lpos.width = 4;
-            lpos.y = position.y + 6;
-            lpos.height = 8;
-
-            GUI.DrawTexture(lpos, _levelTexture[(int)entry.level]);
-
-            position.x = lpos.x + lpos.width;
-            return position;
-        }
-
-        private Rect RenderFrameCount(Rect position, LogEntry entry)
-        {
-            Rect lpos = position;
-            lpos.x = position.x + 3;
-
-            var content = new GUIContent(string.Format("{0:D5}", entry.frameCount));
-            float min, max;
-            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
-            lpos.width = max;
-            EditorGUI.LabelField(lpos, content, _labelStyle);
-
-            position.x = lpos.x + lpos.width;
-            return position;
-        }
-
-        private Rect RenderTimestampLabel(Rect position, LogEntry entry)
-        {
-            Rect lpos = position;
-            lpos.x = position.x + 3;
-
-
-            var content = new GUIContent(string.Format("{0:D3}m{1:D2}s{2:D3}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
-            float min, max;
-            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
-            lpos.width = min;
-            EditorGUI.LabelField(lpos, content, _labelStyle);
-
-            position.x = lpos.x + lpos.width;
-            return position;
-        }
-
-        private Rect RenderTextLabel(Rect position, LogEntry entry)
-        {
-            Rect lpos = position;
-            position.x = position.x + 15;
-            EditorGUI.LabelField(lpos, entry.content, _labelStyle);
-
-            position.x = lpos.x + lpos.width;
-            return position;
-        }
-    }
-
-    internal class LogEntryCounter : ITableLineCount
-    {
-        private ILogEntryContainer _container;
-
-        public LogEntryCounter(ILogEntryContainer container)
-        {
-            _container = container;
-        }
-
-        public int Count
-        {
-            get
-            {
-                return _container.Count;
-            }
-        }
-    }
-
     internal class Console : EditorWindow
     {
         private readonly ConsoleLogHandler _logHandler = new ConsoleLogHandler();
         private ILogEntryContainer _logEntries;
 
         private int _selectedLogEntryIndex = -1;
-        private GUISearchTab _searchFieldGUI;
-        private GUILogEntryTable _logEntryTableGUI;
-        private GUILogEntryContent _logEntryContentGUI;
-        private GUILogEntryStackTrace _logEntryStackTraceGUI;
+        private SearchTab _searchFieldGUI;
+        private LogEntryTable _logEntryTableGUI;
+        private LogEntryContent _logEntryContentGUI;
+        private LogEntryStackTrace _logEntryStackTraceGUI;
         private LogEntryCounter _logEntryCounter;
 
         private bool _initialized = false;
@@ -200,7 +71,7 @@ namespace Zob.Internal.Editor
 
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            _searchFieldGUI = new GUISearchTab();
+            _searchFieldGUI = new SearchTab();
 
             _text = new Texture2D(1, 1);
             _text.SetPixel(0, 0, Color.magenta);
@@ -252,25 +123,26 @@ namespace Zob.Internal.Editor
 
             // Initialize things that need to be initialize in OnGUI
             _guiStyles = new GUIStyles();
-            _logEntryContentGUI = new GUILogEntryContent(this, _guiStyles);
-            _logEntryStackTraceGUI = new GUILogEntryStackTrace(this);
+            _logEntryContentGUI = new LogEntryContent(this, _guiStyles);
+            _logEntryStackTraceGUI = new LogEntryStackTrace(this);
             _logEntryCounter = new LogEntryCounter(_logEntries);
-            _logEntryTableGUI = new GUILogEntryTable(this, new LogEntryRenderer(_logEntries, _guiStyles));
+            _logEntryTableGUI = new LogEntryTable(this, new LogEntryRenderer(_logEntries, _guiStyles));
 
             _logEntries.Updated += NewLogEntryHandler;
         }
 
-        protected void OnGUI()
+        protected void OnGUIWarningNotProperlyInitialized()
         {
-            OnGUIInitialize();
-
             if (!_initialized)
             {
                 EditorGUILayout.LabelField("Not properly initialized");
                 return;
             }
-            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+        }
 
+        protected void OnGUIToolbar()
+        {
+            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
             if (GUILayout.Button("Clear", new GUIStyle("ToolbarButton")))
             {
                 _selectedLogEntryIndex = -1;
@@ -300,11 +172,20 @@ namespace Zob.Internal.Editor
                 }
             }
             GUILayout.EndHorizontal();
+        }
 
+        protected void OnGUISearchBar()
+        {
             _selectedLogEntryIndex = _searchFieldGUI.OnGUI(_selectedLogEntryIndex, _logEntries);
+        }
 
+        protected void OnGUILogEntryTable()
+        {
             _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntryCounter, _searchFieldGUI.HasUpdatedLogEntryIndex);
+        }
 
+        protected void OnGUILogEntryInformation()
+        {
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 
             if (GUILayout.Toggle(_bottomMode == BottomMode.LogContent, "Content", new GUIStyle("ToolbarButton")))
@@ -334,6 +215,16 @@ namespace Zob.Internal.Editor
                     _logEntryStackTraceGUI.OnGUI(logEntry);
                 }
             }
+        }
+
+        protected void OnGUI()
+        {
+            OnGUIInitialize();
+            OnGUIWarningNotProperlyInitialized();
+            OnGUIToolbar();
+            OnGUISearchBar();
+            OnGUILogEntryTable();
+            OnGUILogEntryInformation();
         }
     }
 }

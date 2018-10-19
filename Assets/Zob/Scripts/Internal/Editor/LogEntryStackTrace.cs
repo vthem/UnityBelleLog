@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal class GUILogEntryStackTrace
+    internal class LogEntryStackTrace
     {
         private Vector2 _scrollValue;
         private EditorWindow _parent;
 
-        public GUILogEntryStackTrace(EditorWindow parent)
+        public LogEntryStackTrace(EditorWindow parent)
         {
             _parent = parent;
         }

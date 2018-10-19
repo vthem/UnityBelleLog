@@ -64,16 +64,6 @@ namespace Zob.Internal.Editor
             }
         }
 
-        void ILogEntryContainer.Lock()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        void ILogEntryContainer.Unlock()
-        {
-            throw new System.NotImplementedException();
-        }
-
         void ILogEntryContainer.Clear()
         {
             _logEntries.Clear();

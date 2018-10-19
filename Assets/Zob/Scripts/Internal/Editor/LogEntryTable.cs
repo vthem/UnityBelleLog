@@ -14,13 +14,13 @@ namespace Zob.Internal.Editor
         void OnGUI(Rect position, int index, int selectedIndex);
     }
 
-    internal class GUILogEntryTable
+    internal class LogEntryTable
     {
         private EditorWindow _parent;
         private float _scrollValue;
         private List<Rect> _entriesRect = new List<Rect>();
         private Texture2D _bottomBarTexture;
-        private GUIVerticalSplit _split;
+        private VerticalSplit _split;
         private bool _enableScroll;
         private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
         private readonly ITableLineRenderer _renderer = null;
@@ -31,7 +31,7 @@ namespace Zob.Internal.Editor
 
         public bool HasUpdatedLogEntryIndex { get; protected set; }
 
-        public GUILogEntryTable(EditorWindow parent, ITableLineRenderer renderer)
+        public LogEntryTable(EditorWindow parent, ITableLineRenderer renderer)
         {
             _parent = parent;
 
@@ -66,7 +66,7 @@ namespace Zob.Internal.Editor
 
             if (null == _split)
             {
-                _split = new GUIVerticalSplit(_parent);
+                _split = new VerticalSplit(_parent);
             }
             _split.OnGUI();
 

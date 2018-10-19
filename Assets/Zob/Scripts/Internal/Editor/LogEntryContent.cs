@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal class GUILogEntryContent
+    internal class LogEntryContent
     {
         private Vector2 _scrollValue;
         private EditorWindow _parent;
         private GUIStyles _styles;
 
-        public GUILogEntryContent(EditorWindow parent, GUIStyles styles)
+        public LogEntryContent(EditorWindow parent, GUIStyles styles)
         {
             _parent = parent;
             _styles = styles;
