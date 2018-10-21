@@ -71,7 +71,6 @@ namespace Zob.Internal.Editor
 
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
-            _searchFieldGUI = new SearchTab();
 
             _text = new Texture2D(1, 1);
             _text.SetPixel(0, 0, Color.magenta);
@@ -127,6 +126,7 @@ namespace Zob.Internal.Editor
             _logEntryStackTraceGUI = new LogEntryStackTrace(this);
             _logEntryCounter = new LogEntryCounter(_logEntries);
             _logEntryTableGUI = new LogEntryTable(this, new LogEntryRenderer(_logEntries, _guiStyles));
+            _searchFieldGUI = new SearchTab(this);
 
             _logEntries.Updated += NewLogEntryHandler;
         }
@@ -222,6 +222,10 @@ namespace Zob.Internal.Editor
 
         protected void OnGUI()
         {
+       //     Debug.Log("type=" + Event.current.type
+       //+ " code=" + Event.current.keyCode
+       //+ " shift=" + Event.current.shift
+       //+ " editing=" + EditorGUIUtility.editingTextField);
             OnGUIInitialize();
             OnGUIWarningNotProperlyInitialized();
             OnGUIToolbar();

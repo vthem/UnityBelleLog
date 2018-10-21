@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
@@ -11,7 +12,10 @@ namespace Zob.Internal.Editor
         private string _searchFieldResult;
         private string _searchFieldContent;
         private GUIStyle _toolbarButtonStyle;
-        private bool _searchFound = false;
+        private int _searchResult;
+        private bool _matchCase = false;
+        private readonly EditorWindow _parent;
+        private string _text = string.Empty;
 
         protected enum SearchDirection
         {
@@ -20,9 +24,9 @@ namespace Zob.Internal.Editor
             Forward = 1
         }
 
-        public SearchTab()
+        public SearchTab(EditorWindow parent)
         {
-
+            _parent = parent;
             _searchField = new UnityEditor.IMGUI.Controls.SearchField
             {
                 autoSetFocusOnFindCommand = true
@@ -37,46 +41,62 @@ namespace Zob.Internal.Editor
             }
 
             HasUpdatedLogEntryIndex = false;
-            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
-
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            // catch the return / enter key before calling OnToolBarGUI
+            // otherwise the event is used
+            bool returnKeyDown = EditorGUIUtility.editingTextField && Event.current.type == EventType.KeyDown && (Event.current.keyCode == KeyCode.KeypadEnter || Event.current.keyCode == KeyCode.Return);
             _searchFieldContent = _searchField.OnToolbarGUI(_searchFieldContent);
             if (_searchFieldContent != _searchFieldResult)
             {
                 _searchFieldResult = _searchFieldContent;
-                _searchFound = Search(entries, SearchDirection.None, SearchDirection.Forward, ref logEntryIndex);
+                _searchResult = Search(entries, SearchDirection.None, SearchDirection.Forward, logEntryIndex);
             }
 
             GUILayout.Space(5f);
             var maxWidth = GUILayout.MaxWidth(20);
-            GUI.enabled = _searchFound;
-            if (GUILayout.Button("<", _toolbarButtonStyle, maxWidth))
+            GUI.enabled = _searchResult != -1;
+
+            bool searchBackward = GUILayout.Button("<", _toolbarButtonStyle, maxWidth)
+                || Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F3 && Event.current.shift
+                || !EditorGUIUtility.editingTextField && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.P;
+            if (searchBackward)
             {
-                SearchBackward(entries, ref logEntryIndex);
+                logEntryIndex = SearchBackward(entries, logEntryIndex);
+                HasUpdatedLogEntryIndex = true;
+                _parent.Repaint();
             }
-            if (GUILayout.Button(">", _toolbarButtonStyle, maxWidth))
+
+            bool searchForward = GUILayout.Button(">", _toolbarButtonStyle, maxWidth)
+                || returnKeyDown
+                || Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F3
+                || !EditorGUIUtility.editingTextField && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.N;
+            if (searchForward)
             {
-                SearchForward(entries, ref logEntryIndex);
+                logEntryIndex = SearchForward(entries, logEntryIndex);
+                HasUpdatedLogEntryIndex = true;
+                _parent.Repaint();
             }
             GUI.enabled = true;
+            _matchCase = GUILayout.Toggle(_matchCase, "Match Case", EditorStyles.toolbarButton, GUILayout.Width(70));
             GUILayout.EndHorizontal();
             return logEntryIndex;
         }
 
-        protected void SearchForward(ILogEntryContainer entries, ref int logEntryIndex)
+        protected int SearchForward(ILogEntryContainer entries, int logEntryIndex)
         {
-            _searchFound = Search(entries, SearchDirection.Forward, SearchDirection.Forward, ref logEntryIndex);
+            return Search(entries, SearchDirection.Forward, SearchDirection.Forward, logEntryIndex);
         }
 
-        protected void SearchBackward(ILogEntryContainer entries, ref int logEntryIndex)
+        protected int SearchBackward(ILogEntryContainer entries, int logEntryIndex)
         {
-            _searchFound = Search(entries, SearchDirection.Backward, SearchDirection.Backward, ref logEntryIndex);
+            return Search(entries, SearchDirection.Backward, SearchDirection.Backward, logEntryIndex);
         }
 
-        protected bool Search(ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction, ref int logEntryIndex)
+        protected int Search(ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction, int logEntryIndex)
         {
             if (string.IsNullOrEmpty(_searchFieldResult))
             {
-                return false;
+                return -1;
             }
 
             int start = logEntryIndex;
@@ -89,16 +109,14 @@ namespace Zob.Internal.Editor
             int cur = start;
             while (!loop)
             {
-                if (entries[cur].content.Contains(_searchFieldResult))
+                if (entries[cur].content.IndexOf(_searchFieldResult, _matchCase ? System.StringComparison.Ordinal : System.StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    HasUpdatedLogEntryIndex = true;
-                    logEntryIndex = cur;
-                    return true;
+                    return cur;
                 }
                 cur = CycleCursor(cur + (int)direction, entries.Count);
                 loop = cur == start;
             }
-            return false;
+            return -1;
         }
 
         protected static int CycleCursor(int cursor, int count)
