@@ -29,12 +29,12 @@ namespace Zob.Internal.Editor
                 new Texture2D(1, 1), // ERR
                 new Texture2D(1, 1)  // FTL
             };
-            _levelTexture[(int)LogLevel.Trace].SetPixel(0, 0, new Color32(0xB0, 0xB0, 0xB0, 0xff));
-            _levelTexture[(int)LogLevel.Debug].SetPixel(0, 0, new Color32(0xFF, 0xFF, 0xFF, 0xff));
-            _levelTexture[(int)LogLevel.Info].SetPixel(0, 0, new Color32(0x00, 0xFF, 0x00, 0xff));
-            _levelTexture[(int)LogLevel.Warning].SetPixel(0, 0, new Color32(0xFF, 0x80, 0x00, 0xff));
-            _levelTexture[(int)LogLevel.Error].SetPixel(0, 0, new Color32(0xFF, 0x00, 0x00, 0xff));
-            _levelTexture[(int)LogLevel.Fatal].SetPixel(0, 0, new Color32(0x80, 0x00, 0xFF, 0xff));
+            _levelTexture[(int)LogLevel.Trace].SetPixel(0, 0, new Color32(195, 195, 195, 0xff));
+            _levelTexture[(int)LogLevel.Debug].SetPixel(0, 0, new Color32(240, 240, 240, 0xff));
+            _levelTexture[(int)LogLevel.Info].SetPixel(0, 0, new Color32(160, 221, 160, 0xff));
+            _levelTexture[(int)LogLevel.Warning].SetPixel(0, 0, new Color32(255, 128, 0, 0xff));
+            _levelTexture[(int)LogLevel.Error].SetPixel(0, 0, new Color32(255, 89, 89, 0xff));
+            _levelTexture[(int)LogLevel.Fatal].SetPixel(0, 0, new Color32(255, 0, 0, 0xff));
 
             for (int i = 0; i < _levelTexture.Length; ++i)
             {
