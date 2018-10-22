@@ -164,7 +164,7 @@ namespace Zob.Internal.Editor
                 _logLevelFilters[i].Enable = !GUILayout.Toggle(
                     !_logLevelFilters[i].Enable,
                     string.Format(_logFilterToggleLabel[i], _logEntries.CountByLevel((LogLevel)i)),
-                    new GUIStyle("ToolbarButton")
+                    EditorStyles.toolbarButton
                 );
 
                 if (prevState != _logLevelFilters[i].Enable)
@@ -191,11 +191,11 @@ namespace Zob.Internal.Editor
         {
             GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
 
-            if (GUILayout.Toggle(_bottomMode == BottomMode.LogContent, "Content", new GUIStyle("ToolbarButton")))
+            if (GUILayout.Toggle(_bottomMode == BottomMode.LogContent, "Content", EditorStyles.toolbarButton))
             {
                 _bottomMode = BottomMode.LogContent;
             }
-            if (GUILayout.Toggle(_bottomMode == BottomMode.StackTrace, "Stack trace", new GUIStyle("ToolbarButton")))
+            if (GUILayout.Toggle(_bottomMode == BottomMode.StackTrace, "Stack trace", EditorStyles.toolbarButton))
             {
                 _bottomMode = BottomMode.StackTrace;
             }
