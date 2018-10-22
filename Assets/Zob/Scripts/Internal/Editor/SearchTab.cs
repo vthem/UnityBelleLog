@@ -11,7 +11,6 @@ namespace Zob.Internal.Editor
         private UnityEditor.IMGUI.Controls.SearchField _searchField;
         private string _searchFieldResult;
         private string _searchFieldContent;
-        private GUIStyle _toolbarButtonStyle;
         private int _searchResult;
         private bool _matchCase = false;
         private readonly EditorWindow _parent;
@@ -35,11 +34,6 @@ namespace Zob.Internal.Editor
 
         public int OnGUI(int logEntryIndex, ILogEntryContainer entries)
         {
-            if (null == _toolbarButtonStyle)
-            {
-                _toolbarButtonStyle = new GUIStyle("ToolbarButton");
-            }
-
             HasUpdatedLogEntryIndex = false;
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             // catch the return / enter key before calling OnToolBarGUI
@@ -56,7 +50,7 @@ namespace Zob.Internal.Editor
             var maxWidth = GUILayout.MaxWidth(20);
             GUI.enabled = _searchResult != -1;
 
-            bool searchBackward = GUILayout.Button("<", _toolbarButtonStyle, maxWidth)
+            bool searchBackward = GUILayout.Button("<", EditorStyles.toolbarButton, maxWidth)
                 || Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F3 && Event.current.shift
                 || !EditorGUIUtility.editingTextField && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.P;
             if (searchBackward)
@@ -66,7 +60,7 @@ namespace Zob.Internal.Editor
                 _parent.Repaint();
             }
 
-            bool searchForward = GUILayout.Button(">", _toolbarButtonStyle, maxWidth)
+            bool searchForward = GUILayout.Button(">", EditorStyles.toolbarButton, maxWidth)
                 || returnKeyDown
                 || Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F3
                 || !EditorGUIUtility.editingTextField && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.N;

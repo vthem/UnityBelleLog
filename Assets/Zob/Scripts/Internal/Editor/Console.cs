@@ -142,8 +142,8 @@ namespace Zob.Internal.Editor
 
         protected void OnGUIToolbar()
         {
-            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
-            if (GUILayout.Button("Clear", new GUIStyle("ToolbarButton")))
+            GUILayout.BeginHorizontal(EditorStyles.toolbar);
+            if (GUILayout.Button("Clear", EditorStyles.toolbarButton))
             {
                 _selectedLogEntryIndex = -1;
                 _logEntries.Clear();
@@ -152,9 +152,9 @@ namespace Zob.Internal.Editor
             EditorGUILayout.Space();
 
             GUI.enabled = false;
-            _collapse = GUILayout.Toggle(_collapse, "Collapse", new GUIStyle("ToolbarButton"));
-            _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", new GUIStyle("ToolbarButton"));
-            _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", new GUIStyle("ToolbarButton"));
+            _collapse = GUILayout.Toggle(_collapse, "Collapse", EditorStyles.toolbarButton);
+            _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", EditorStyles.toolbarButton);
+            _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", EditorStyles.toolbarButton);
             GUI.enabled = true;
             GUILayout.FlexibleSpace();
 
@@ -222,10 +222,6 @@ namespace Zob.Internal.Editor
 
         protected void OnGUI()
         {
-       //     Debug.Log("type=" + Event.current.type
-       //+ " code=" + Event.current.keyCode
-       //+ " shift=" + Event.current.shift
-       //+ " editing=" + EditorGUIUtility.editingTextField);
             OnGUIInitialize();
             OnGUIWarningNotProperlyInitialized();
             OnGUIToolbar();
