@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -76,21 +77,27 @@ namespace Zob.Internal.Editor
             return logEntryIndex;
         }
 
-        protected int SearchForward(ILogEntryContainer entries, int logEntryIndex)
+        private int SearchForward(ILogEntryContainer entries, int logEntryIndex)
         {
             return Search(entries, SearchDirection.Forward, SearchDirection.Forward, logEntryIndex);
         }
 
-        protected int SearchBackward(ILogEntryContainer entries, int logEntryIndex)
+        private int SearchBackward(ILogEntryContainer entries, int logEntryIndex)
         {
             return Search(entries, SearchDirection.Backward, SearchDirection.Backward, logEntryIndex);
         }
 
-        protected int Search(ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction, int logEntryIndex)
+        private int Search(ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction, int logEntryIndex)
         {
             if (string.IsNullOrEmpty(_searchFieldResult))
             {
                 return -1;
+            }
+
+            Func<LogEntry, bool> matchFunc = SearchContent;
+            if (SearchFieldResultContainMetaLevel())
+            {
+                matchFunc = SearchLogLevel;
             }
 
             int start = logEntryIndex;
@@ -103,7 +110,7 @@ namespace Zob.Internal.Editor
             int cur = start;
             while (!loop)
             {
-                if (entries[cur].content.IndexOf(_searchFieldResult, _matchCase ? System.StringComparison.Ordinal : System.StringComparison.OrdinalIgnoreCase) >= 0)
+                if (matchFunc(entries[cur]))
                 {
                     return cur;
                 }
@@ -113,7 +120,34 @@ namespace Zob.Internal.Editor
             return -1;
         }
 
-        protected static int CycleCursor(int cursor, int count)
+        private bool SearchLogLevel(LogEntry entry)
+        {
+            if (_searchFieldResult.Length < 3)
+            {
+                return false;
+            }
+            var meta = _searchFieldResult[2];
+            if (meta == 't' && entry.level == LogLevel.Trace) { return true; }
+            else if (meta == 'd' && entry.level == LogLevel.Debug) { return true; }
+            else if (meta == 'i' && entry.level == LogLevel.Info) { return true; }
+            else if (meta == 'w' && entry.level == LogLevel.Warning) { return true; }
+            else if (meta == 'e' && entry.level == LogLevel.Error) { return true; }
+            else if (meta == 'f' && entry.level == LogLevel.Fatal) { return true; }
+            return false;
+        }
+
+        private bool SearchContent(LogEntry entry)
+        {
+            return entry.content.IndexOf(_searchFieldResult, _matchCase ? System.StringComparison.Ordinal : System.StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool SearchFieldResultContainMetaLevel()
+        {
+            return _searchFieldResult.IndexOf(":") == 1
+                && _searchFieldResult[0] == 'l';
+        }
+
+        private static int CycleCursor(int cursor, int count)
         {
             if (cursor < 0)
             {
