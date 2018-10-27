@@ -15,6 +15,7 @@ namespace Zob.Internal.Editor
         private LogEntryContent _logEntryContentGUI;
         private LogEntryStackTrace _logEntryStackTraceGUI;
         private LogEntryCounter _logEntryCounter;
+        private LogEntryRenderer _logEntryRenderer;
 
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
@@ -26,6 +27,7 @@ namespace Zob.Internal.Editor
         private Texture2D _text;
 
         private ILogFilter[] _logLevelFilters;
+        private bool[] _enableLogLevelColors;
         private string[] _logFilterToggleLabel;
 
         private enum BottomMode
@@ -94,9 +96,11 @@ namespace Zob.Internal.Editor
                 new PredicateLogFilter((entry) => entry.level == LogLevel.Error),
                 new PredicateLogFilter((entry) => entry.level == LogLevel.Fatal),
             };
+            _enableLogLevelColors = new bool[_logLevelFilters.Length];
             for (int i = 0; i < _logLevelFilters.Length; ++i)
             {
                 _logLevelFilters[i].Enable = false;
+                _enableLogLevelColors[i] = false;
                 _logHandler.AddFilter(_logLevelFilters[i]);
             }
             _logEntries = _logHandler;
@@ -125,7 +129,9 @@ namespace Zob.Internal.Editor
             _logEntryContentGUI = new LogEntryContent(this, _guiStyles);
             _logEntryStackTraceGUI = new LogEntryStackTrace(this);
             _logEntryCounter = new LogEntryCounter(_logEntries);
-            _logEntryTableGUI = new LogEntryTable(this, new LogEntryRenderer(_logEntries, _guiStyles));
+            _logEntryRenderer = new LogEntryRenderer(_logEntries, _guiStyles);
+            _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
+            _logEntryTableGUI = new LogEntryTable(this, _logEntryRenderer);
             _searchFieldGUI = new SearchTab(this);
 
             _logEntries.Updated += NewLogEntryHandler;
@@ -161,17 +167,35 @@ namespace Zob.Internal.Editor
             for (int i = 0; i < _logLevelFilters.Length; ++i)
             {
                 bool prevState = _logLevelFilters[i].Enable;
-                _logLevelFilters[i].Enable = !GUILayout.Toggle(
+                Color normalColor = EditorStyles.toolbarButton.normal.textColor;
+                Color onNormalColor = EditorStyles.toolbarButton.onNormal.textColor;
+                if (_enableLogLevelColors[i])
+                {
+                    EditorStyles.toolbarButton.normal.textColor = _logEntryRenderer.GetLevelColor((LogLevel)i);
+                    EditorStyles.toolbarButton.onNormal.textColor = _logEntryRenderer.GetLevelColor((LogLevel)i);
+                }
+                bool newState = !GUILayout.Toggle(
                     !_logLevelFilters[i].Enable,
                     string.Format(_logFilterToggleLabel[i], _logEntries.CountByLevel((LogLevel)i)),
                     EditorStyles.toolbarButton
                 );
+                EditorStyles.toolbarButton.normal.textColor = normalColor;
+                EditorStyles.toolbarButton.onNormal.textColor = onNormalColor;
 
-                if (prevState != _logLevelFilters[i].Enable)
+                if (prevState != newState)
                 {
-                    _selectedLogEntryIndex = -1;
-                    _logHandler.ApplyFilters();
-                    Repaint();
+                    if (!Event.current.control)
+                    {
+                        _logLevelFilters[i].Enable = newState;
+                        _selectedLogEntryIndex = -1;
+                        _logHandler.ApplyFilters();
+                        Repaint();
+                    }
+                    else
+                    {
+                        _enableLogLevelColors[i] = !_enableLogLevelColors[i];
+                        _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
+                    }
                 }
             }
             GUILayout.EndHorizontal();

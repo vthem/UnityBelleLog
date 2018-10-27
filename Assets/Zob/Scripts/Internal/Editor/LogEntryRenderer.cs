@@ -8,10 +8,20 @@ namespace Zob.Internal.Editor
     {
         private ILogEntryContainer _container;
         private GUIStyles _styles;
-        private Texture2D[] _levelTexture;
         private DateTime _startTimestamp;
         private const string _defaultTimestampLabel = "0m00s000";
         private GUIStyle _labelStyle;
+        private Color32[] _levelColors = new Color32[]
+        {
+            new Color32(181, 230, 29, 0xff),
+            new Color32(153, 217, 234, 0xff),
+            new Color32(255, 255, 255, 0xff),
+            new Color32(255, 201, 14, 0xff),
+            new Color32(237, 28, 36, 0xff),
+            new Color32(206, 0, 190, 0xff),
+        };
+
+        public bool[] EnableLevelColors { get; set; }
 
         public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
         {
@@ -19,58 +29,33 @@ namespace Zob.Internal.Editor
             _styles = styles;
             _labelStyle = new GUIStyle(GUI.skin.label);
             _labelStyle.alignment = TextAnchor.MiddleLeft;
+        }
 
-            _levelTexture = new Texture2D[]
-            {
-                new Texture2D(1, 1), // TRC
-                new Texture2D(1, 1), // DBG
-                new Texture2D(1, 1), // NFO
-                new Texture2D(1, 1), // WRN
-                new Texture2D(1, 1), // ERR
-                new Texture2D(1, 1)  // FTL
-            };
-            _levelTexture[(int)LogLevel.Trace].SetPixel(0, 0, new Color32(195, 195, 195, 0xff));
-            _levelTexture[(int)LogLevel.Debug].SetPixel(0, 0, new Color32(240, 240, 240, 0xff));
-            _levelTexture[(int)LogLevel.Info].SetPixel(0, 0, new Color32(160, 221, 160, 0xff));
-            _levelTexture[(int)LogLevel.Warning].SetPixel(0, 0, new Color32(255, 128, 0, 0xff));
-            _levelTexture[(int)LogLevel.Error].SetPixel(0, 0, new Color32(255, 89, 89, 0xff));
-            _levelTexture[(int)LogLevel.Fatal].SetPixel(0, 0, new Color32(255, 0, 0, 0xff));
-
-            for (int i = 0; i < _levelTexture.Length; ++i)
-            {
-                _levelTexture[i].Apply();
-                _levelTexture[i].hideFlags = HideFlags.HideAndDontSave;
-            }
+        public Color32 GetLevelColor(LogLevel level)
+        {
+            return _levelColors[(int)level];
         }
 
         public void OnGUI(Rect position, int index, int selectedIndex)
         {
+            bool entrySelected = index == selectedIndex;
             if (Event.current.type == EventType.Repaint)
             {
                 GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
-                s.Draw(position, false, false, selectedIndex == index, false);
+                s.Draw(position, false, false, entrySelected, false);
             }
 
             var entry = _container[index];
 
-            position = RenderLevelColor(position, entry);
+            var normalColor = _labelStyle.normal.textColor;
+            if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
+            {
+                _labelStyle.normal.textColor = _levelColors[(int)entry.level];
+            }
             position = RenderFrameCount(position, entry);
             position = RenderTimestampLabel(position, entry);
             position = RenderTextLabel(position, entry);
-        }
-
-        private Rect RenderLevelColor(Rect position, LogEntry entry)
-        {
-            Rect lpos = position;
-            lpos.x = position.x + 4;
-            lpos.width = 4;
-            lpos.y = position.y + 6;
-            lpos.height = 8;
-
-            GUI.DrawTexture(lpos, _levelTexture[(int)entry.level]);
-
-            position.x = lpos.x + lpos.width;
-            return position;
+            _labelStyle.normal.textColor = normalColor;
         }
 
         private Rect RenderFrameCount(Rect position, LogEntry entry)
