@@ -20,7 +20,6 @@ namespace Zob.Internal.Editor
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
         private bool _collapse;
-        private bool _clearOnPlay;
         private bool _errorPause;
         private GUIStyles _guiStyles;
         private BottomMode _bottomMode = BottomMode.LogContent;
@@ -159,7 +158,6 @@ namespace Zob.Internal.Editor
 
             GUI.enabled = false;
             _collapse = GUILayout.Toggle(_collapse, "Collapse", EditorStyles.toolbarButton);
-            _clearOnPlay = GUILayout.Toggle(_clearOnPlay, "Clear on Play", EditorStyles.toolbarButton);
             _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", EditorStyles.toolbarButton);
             GUI.enabled = true;
             GUILayout.FlexibleSpace();
@@ -184,7 +182,7 @@ namespace Zob.Internal.Editor
 
                 if (prevState != newState)
                 {
-                    if (!Event.current.control)
+                    if (Event.current.button == 0)
                     {
                         _logLevelFilters[i].Enable = newState;
                         _selectedLogEntryIndex = -1;
