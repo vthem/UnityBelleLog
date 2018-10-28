@@ -223,7 +223,7 @@ namespace Zob.Internal.Editor
             }
             GUILayout.EndHorizontal();
 
-            bool logEntryUpdated = _logEntryTableGUI.HasUpdatedLogEntryIndex || _searchFieldGUI.HasUpdatedLogEntryIndex;
+            bool logEntryUpdated = _logEntryTableGUI.HasUpdateSelectedEntry || _searchFieldGUI.HasUpdatedLogEntryIndex;
             // drawing stacktrace or content modifies the GUILayout. yet it can't be modified before a new layout event
             if (_selectedLogEntryIndex != -1 && !logEntryUpdated)
             {

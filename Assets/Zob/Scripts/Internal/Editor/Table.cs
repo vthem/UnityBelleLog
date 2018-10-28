@@ -28,7 +28,7 @@ namespace Zob.Internal.Editor
         private const float ScrollConstant = 10f;
         private const float RowHeight = 20f;
 
-        public bool HasUpdatedLogEntryIndex { get; protected set; }
+        public bool HasUpdateSelectedEntry { get; protected set; }
 
         public Table(EditorWindow parent, ITableLineRenderer renderer)
         {
@@ -50,9 +50,9 @@ namespace Zob.Internal.Editor
             }
         }
 
-        public int OnGUI(int selectedLogEntryIndex, ITableLineCount lines, bool scrollToSelected)
+        public int OnGUI(int selectedEntry, ITableLineCount lines, bool scrollToSelected)
         {
-            HasUpdatedLogEntryIndex = false;
+            HasUpdateSelectedEntry = false;
 
             if (scrollToSelected && !_autoScrollToSelected.Enable)
             {
@@ -60,7 +60,7 @@ namespace Zob.Internal.Editor
             }
             if (Event.current.type == EventType.Used)
             {
-                return selectedLogEntryIndex;
+                return selectedEntry;
             }
 
             if (null == _split)
@@ -87,7 +87,7 @@ namespace Zob.Internal.Editor
                         GUI.skin.verticalScrollbar.fixedWidth,
                         position.height);
 
-                    _scrollValue = _autoScrollToSelected.Scroll(selectedLogEntryIndex, _scrollValue, rowCount);
+                    _scrollValue = _autoScrollToSelected.Scroll(selectedEntry, _scrollValue, rowCount);
                     _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1f, 0f, (lines.Count - rowCount + 1) * ScrollConstant);
                 }
 
@@ -133,7 +133,7 @@ namespace Zob.Internal.Editor
                     }
 
                     _entriesRect.Add(rowRect);
-                    _renderer.OnGUI(rowRect, index, selectedLogEntryIndex);
+                    _renderer.OnGUI(rowRect, index, selectedEntry);
                 }
             }
 
@@ -156,9 +156,9 @@ namespace Zob.Internal.Editor
                 {
                     if (_entriesRect[i].Contains(Event.current.mousePosition))
                     {
-                        selectedLogEntryIndex = i + Mathf.FloorToInt(_scrollValue / ScrollConstant);
+                        selectedEntry = i + Mathf.FloorToInt(_scrollValue / ScrollConstant);
                         _parent.Repaint();
-                        HasUpdatedLogEntryIndex = true;
+                        HasUpdateSelectedEntry = true;
                         break;
                     }
                 }
@@ -171,7 +171,7 @@ namespace Zob.Internal.Editor
                 GUI.DrawTexture(bottomBarPosition, _bottomBarTexture);
             }
 
-            return selectedLogEntryIndex;
+            return selectedEntry;
         }
 
         private int GetRowCount()
@@ -190,22 +190,22 @@ namespace Zob.Internal.Editor
         {
             public bool Enable { get; set; }
 
-            public float Scroll(int selectedLogEntryIndex, float scrollValue, int rowCount)
+            public float Scroll(int selectedEntry, float scrollValue, int rowCount)
             {
                 if (!Enable)
                 {
                     return scrollValue;
                 }
-                if (selectedLogEntryIndex == -1)
+                if (selectedEntry == -1)
                 {
                     return scrollValue;
                 }
                 Enable = false;
                 int minEntryIndex = Mathf.FloorToInt(scrollValue / ScrollConstant);
                 int maxEntryIndex = Mathf.FloorToInt(scrollValue / ScrollConstant) + rowCount;
-                if (selectedLogEntryIndex < minEntryIndex || selectedLogEntryIndex >= maxEntryIndex)
+                if (selectedEntry < minEntryIndex || selectedEntry >= maxEntryIndex)
                 {
-                    return (selectedLogEntryIndex - Mathf.FloorToInt(rowCount / 2f)) * ScrollConstant;
+                    return (selectedEntry - Mathf.FloorToInt(rowCount / 2f)) * ScrollConstant;
                 }
                 return scrollValue;
             }
