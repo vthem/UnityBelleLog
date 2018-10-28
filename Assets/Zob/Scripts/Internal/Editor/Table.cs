@@ -14,7 +14,7 @@ namespace Zob.Internal.Editor
         void OnGUI(Rect position, int index, int selectedIndex);
     }
 
-    internal class LogEntryTable
+    internal class Table
     {
         private EditorWindow _parent;
         private float _scrollValue;
@@ -30,7 +30,7 @@ namespace Zob.Internal.Editor
 
         public bool HasUpdatedLogEntryIndex { get; protected set; }
 
-        public LogEntryTable(EditorWindow parent, ITableLineRenderer renderer)
+        public Table(EditorWindow parent, ITableLineRenderer renderer)
         {
             _parent = parent;
 

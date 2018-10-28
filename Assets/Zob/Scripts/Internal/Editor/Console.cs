@@ -11,7 +11,7 @@ namespace Zob.Internal.Editor
 
         private int _selectedLogEntryIndex = -1;
         private SearchTab _searchFieldGUI;
-        private LogEntryTable _logEntryTableGUI;
+        private Table _logEntryTableGUI;
         private LogEntryContent _logEntryContentGUI;
         private LogEntryStackTrace _logEntryStackTraceGUI;
         private LogEntryCounter _logEntryCounter;
@@ -130,7 +130,7 @@ namespace Zob.Internal.Editor
             _logEntryCounter = new LogEntryCounter(_logEntries);
             _logEntryRenderer = new LogEntryRenderer(_logEntries, _guiStyles);
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
-            _logEntryTableGUI = new LogEntryTable(this, _logEntryRenderer);
+            _logEntryTableGUI = new Table(this, _logEntryRenderer);
             _searchFieldGUI = new SearchTab(this);
 
             _logEntries.Updated += NewLogEntryHandler;
