@@ -21,7 +21,6 @@ namespace Zob.Internal.Editor
         private List<Rect> _entriesRect = new List<Rect>();
         private Texture2D _bottomBarTexture;
         private VerticalSplit _split;
-        private bool _enableScroll;
         private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
         private readonly ITableLineRenderer _renderer = null;
 
@@ -75,13 +74,13 @@ namespace Zob.Internal.Editor
 
             // we don't use GUILayout in the following part :
             // compute each row position
+            int rowCount = GetRowCount();
+            bool enableScroll = lines.Count > rowCount;
             if (Event.current.type != EventType.Layout)
             {
-                int rowCount = GetRowCount();
-                _enableScroll = lines.Count > rowCount;
                 bool scrollCursorAtBottom = IsScrollCursorAtBottom(rowCount, lines.Count);
 
-                if (_enableScroll)
+                if (enableScroll)
                 {
                     var scrollbarPosition = new Rect(position.x + position.width - GUI.skin.verticalScrollbar.fixedWidth,
                         position.y,
@@ -114,7 +113,7 @@ namespace Zob.Internal.Editor
                         position.width,
                         RowHeight);
 
-                    if (_enableScroll)
+                    if (enableScroll)
                     {
                         rowRect.width -= GUI.skin.verticalScrollbar.fixedWidth;
                     }
@@ -139,7 +138,7 @@ namespace Zob.Internal.Editor
             }
 
             // scrolling with scrollwheel
-            if (_enableScroll && Event.current.type == EventType.ScrollWheel)
+            if (enableScroll && Event.current.type == EventType.ScrollWheel)
             {
                 float step = Event.current.delta.y * ScrollConstant;
                 if ((Event.current.modifiers & EventModifiers.Shift) == EventModifiers.Shift)
