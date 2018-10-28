@@ -101,12 +101,6 @@ namespace Zob.Internal.Editor
 
                 for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex)
                 {
-                    int index = Mathf.FloorToInt(_scrollValue / ScrollConstant) + rowIndex;
-                    if (index < 0 || index >= lines.Count)
-                    {
-                        continue;
-                    }
-
                     Rect rowRect = new Rect(
                         position.x,
                         position.y + rowIndex * RowHeight,
@@ -133,7 +127,7 @@ namespace Zob.Internal.Editor
                     }
 
                     _entriesRect.Add(rowRect);
-                    _renderer.OnGUI(rowRect, index, selectedEntry);
+                    _renderer.OnGUI(rowRect, Mathf.FloorToInt(_scrollValue / ScrollConstant) + rowIndex, selectedEntry);
                 }
             }
 
@@ -156,9 +150,13 @@ namespace Zob.Internal.Editor
                 {
                     if (_entriesRect[i].Contains(Event.current.mousePosition))
                     {
-                        selectedEntry = i + Mathf.FloorToInt(_scrollValue / ScrollConstant);
-                        _parent.Repaint();
-                        HasUpdateSelectedEntry = true;
+                        var newIndex = i + Mathf.FloorToInt(_scrollValue / ScrollConstant);
+                        if (newIndex >= 0 && newIndex < lines.Count)
+                        {
+                            _parent.Repaint();
+                            HasUpdateSelectedEntry = true;
+                            selectedEntry = newIndex;
+                        }
                         break;
                     }
                 }
