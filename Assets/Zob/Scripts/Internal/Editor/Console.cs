@@ -19,15 +19,13 @@ namespace Zob.Internal.Editor
 
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
-        private bool _collapse;
-        private bool _errorPause;
         private GUIStyles _guiStyles;
         private BottomMode _bottomMode = BottomMode.LogContent;
-        private Texture2D _text;
 
         private ILogFilter[] _logLevelFilters;
         private bool[] _enableLogLevelColors;
         private string[] _logFilterToggleLabel;
+        private CollapseLogFilter _collapseFilter;
 
         private enum BottomMode
         {
@@ -73,9 +71,8 @@ namespace Zob.Internal.Editor
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
 
-            _text = new Texture2D(1, 1);
-            _text.SetPixel(0, 0, Color.magenta);
-            _text.Apply();
+            _collapseFilter = new CollapseLogFilter();
+            _logHandler.AddFilter(_collapseFilter);
 
             _logFilterToggleLabel = new string[]
             {
@@ -126,7 +123,7 @@ namespace Zob.Internal.Editor
             // Initialize things that need to be initialize in OnGUI
             _guiStyles = new GUIStyles();
             _logEntryContentGUI = new LogEntryContent(this, _guiStyles);
-            _logEntryStackTraceGUI = new LogEntryStackTrace(this);
+            _logEntryStackTraceGUI = new LogEntryStackTrace();
             _logEntryCounter = new LogEntryCounter(_logEntries);
             _logEntryRenderer = new LogEntryRenderer(_logEntries, _guiStyles);
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
@@ -156,10 +153,13 @@ namespace Zob.Internal.Editor
 
             EditorGUILayout.Space();
 
-            GUI.enabled = false;
-            _collapse = GUILayout.Toggle(_collapse, "Collapse", EditorStyles.toolbarButton);
-            _errorPause = GUILayout.Toggle(_errorPause, "Error Pause", EditorStyles.toolbarButton);
-            GUI.enabled = true;
+            var newCollapseState = GUILayout.Toggle(_collapseFilter.Enable, "Collapse", EditorStyles.toolbarButton);
+            if (newCollapseState != _collapseFilter.Enable)
+            {
+                Debug.Log("set collapse filter state=" + newCollapseState);
+                _collapseFilter.Enable = newCollapseState;
+                _logHandler.ApplyFilters();
+            }
             GUILayout.FlexibleSpace();
 
             for (int i = 0; i < _logLevelFilters.Length; ++i)
@@ -184,8 +184,8 @@ namespace Zob.Internal.Editor
                 {
                     if (Event.current.button == 0)
                     {
-                        _logLevelFilters[i].Enable = newState;
                         _selectedLogEntryIndex = -1;
+                        _logLevelFilters[i].Enable = newState;
                         _logHandler.ApplyFilters();
                         Repaint();
                     }

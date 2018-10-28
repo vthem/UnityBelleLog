@@ -15,7 +15,6 @@ namespace Zob.Internal.Editor
         private int _searchResult;
         private bool _matchCase = false;
         private readonly EditorWindow _parent;
-        private string _text = string.Empty;
 
         protected enum SearchDirection
         {

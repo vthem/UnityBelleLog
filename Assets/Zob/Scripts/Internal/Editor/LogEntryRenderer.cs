@@ -20,7 +20,6 @@ namespace Zob.Internal.Editor
             new Color32(237, 28, 36, 0xff),
             new Color32(206, 0, 190, 0xff),
         };
-        private int lastRenderIndex = -1;
 
         public bool[] EnableLevelColors { get; set; }
 
@@ -62,13 +61,11 @@ namespace Zob.Internal.Editor
             position = RenderTimestampLabel(position, entry);
             position = RenderTextLabel(position, entry);
             _labelStyle.normal.textColor = normalColor;
-
-            lastRenderIndex = index;
         }
 
         private bool IndexValid(int index)
         {
-            return index >= 0 || index < _container.Count;
+            return index >= 0 && index < _container.Count;
         }
 
         private Rect RenderFrameCount(Rect position, LogEntry entry)

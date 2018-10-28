@@ -3,6 +3,41 @@ using System.Collections.Generic;
 
 namespace Zob.Internal
 {
+    internal class CollapseLogFilter : ILogFilter
+    {
+        private List<int> _collapseCount = new List<int>();
+        private string _lastContent = string.Empty;
+
+        public bool Enable { get; set; }
+
+        public int CollapseCount(int index)
+        {
+            return 0;
+        }
+
+        public void Reset()
+        {
+            _collapseCount.Clear();
+            _lastContent = string.Empty;
+        }
+
+        public void Apply(LogEntry logEntry, ref LogFilterAction action, out LogFilterTermination termination)
+        {
+            if (!string.IsNullOrEmpty(_lastContent) && logEntry.content == _lastContent)
+            {
+                _collapseCount[_collapseCount.Count - 1] = _collapseCount[_collapseCount.Count - 1] + 1;
+                action = LogFilterAction.Reject;
+                termination = LogFilterTermination.Stop;
+            }
+            else
+            {
+                action = LogFilterAction.Accept;
+                termination = LogFilterTermination.Continue;
+                _collapseCount.Add(0);
+            }
+        }
+    }
+
     internal class PredicateLogFilter : ILogFilter
     {
         private Func<LogEntry, bool> _predicate;
@@ -29,7 +64,7 @@ namespace Zob.Internal
             _trueTermination = LogFilterTermination.Stop;
             _falseTermination = LogFilterTermination.Continue;
             _trueAction = LogFilterAction.Reject;
-            _falseAction = LogFilterAction.Hold;
+            _falseAction = LogFilterAction.Keep;
             Enable = true;
         }
 
@@ -37,14 +72,19 @@ namespace Zob.Internal
         {
             if (_predicate(logEntry))
             {
-                action = _trueAction == LogFilterAction.Hold ? action : _trueAction;
+                action = _trueAction == LogFilterAction.Keep ? action : _trueAction;
                 termination = _trueTermination;
             }
             else
             {
-                action = _falseAction == LogFilterAction.Hold ? action : _falseAction;
+                action = _falseAction == LogFilterAction.Keep ? action : _falseAction;
                 termination = _falseTermination;
             }
+        }
+
+        public void Reset()
+        {
+
         }
     }
 
@@ -86,6 +126,11 @@ namespace Zob.Internal
 
         public List<int> Apply(List<LogEntry> entries)
         {
+            for (int f = 0; f < _filters.Count; ++f)
+            {
+                _filters[f].Reset();
+            }
+
             List<int> result = new List<int>();
             for (int i = 0; i < entries.Count; ++i)
             {

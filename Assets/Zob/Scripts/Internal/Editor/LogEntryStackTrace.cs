@@ -8,12 +8,6 @@ namespace Zob.Internal.Editor
     internal class LogEntryStackTrace
     {
         private Vector2 _scrollValue;
-        private EditorWindow _parent;
-
-        public LogEntryStackTrace(EditorWindow parent)
-        {
-            _parent = parent;
-        }
 
         public void OnGUI(LogEntry logEntry)
         {

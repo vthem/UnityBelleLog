@@ -79,12 +79,6 @@ namespace Zob.Internal.Editor
                 _keyValue.Clear();
             }
 
-            if (GUILayout.Button("-- clear --"))
-            {
-                var lines = File.ReadAllLines(Path.Combine(Application.dataPath, "sample.txt"));
-
-            }
-
             if (GUILayout.Button("-- add 1x --"))
             {
                 LoadLines();
