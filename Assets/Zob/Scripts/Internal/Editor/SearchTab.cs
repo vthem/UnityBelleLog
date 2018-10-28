@@ -89,7 +89,8 @@ namespace Zob.Internal.Editor
 
         private int Search(ILogEntryContainer entries, SearchDirection initialDirection, SearchDirection direction, int logEntryIndex)
         {
-            if (string.IsNullOrEmpty(_searchFieldResult))
+            if (string.IsNullOrEmpty(_searchFieldResult)
+                || entries.Count == 0)
             {
                 return -1;
             }
