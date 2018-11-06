@@ -12,6 +12,10 @@ namespace Zob.Internal
 
         public int CollapseCount(int index)
         {
+            if (index >= 0 && index < _collapseCount.Count)
+            {
+                return _collapseCount[index];
+            }
             return 0;
         }
 
@@ -35,6 +39,7 @@ namespace Zob.Internal
                 termination = LogFilterTermination.Continue;
                 _collapseCount.Add(0);
             }
+            _lastContent = logEntry.content;
         }
     }
 

@@ -66,7 +66,6 @@ namespace Zob.Internal.Editor
 
         protected void OnGUI()
         {
-            GUI.DrawTexture(new Rect(0, 0, 50, 50), _texture);
             foreach (var kv in _keyValue)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -84,6 +83,11 @@ namespace Zob.Internal.Editor
                 LoadLines();
                 var line = PickRandomLine();
                 AddRandomLog(line);
+            }
+            if (GUILayout.Button("-- add 1x (same)--"))
+            {
+                LoadLines();
+                AddRandomLog(_lines[0]);
             }
             if (GUILayout.Button("-- add 50x --"))
             {

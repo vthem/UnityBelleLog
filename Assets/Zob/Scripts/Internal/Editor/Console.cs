@@ -71,6 +71,23 @@ namespace Zob.Internal.Editor
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
 
+            Repaint();
+        }
+
+        private void NewLogEntryHandler(ILogEntryContainer logEntries, LogEntry logEntry)
+        {
+            Repaint();
+            _logEntryTableGUI.UpdateAutoScrolling(_logEntryCounter);
+        }
+
+        protected void OnGUIInitialize()
+        {
+            if (_onGUIInitialized)
+            {
+                return;
+            }
+            _onGUIInitialized = true;
+
             _collapseFilter = new CollapseLogFilter();
             _logHandler.AddFilter(_collapseFilter);
 
@@ -103,29 +120,12 @@ namespace Zob.Internal.Editor
             LogSystem.AddHandler(_logHandler);
             _selectedLogEntryIndex = -1;
 
-            Repaint();
-        }
-
-        private void NewLogEntryHandler(ILogEntryContainer logEntries, LogEntry logEntry)
-        {
-            Repaint();
-            _logEntryTableGUI.UpdateAutoScrolling(_logEntryCounter);
-        }
-
-        protected void OnGUIInitialize()
-        {
-            if (_onGUIInitialized)
-            {
-                return;
-            }
-            _onGUIInitialized = true;
-
             // Initialize things that need to be initialize in OnGUI
             _guiStyles = new GUIStyles();
             _logEntryContentGUI = new LogEntryContent(this, _guiStyles);
             _logEntryStackTraceGUI = new LogEntryStackTrace();
             _logEntryCounter = new LogEntryCounter(_logEntries);
-            _logEntryRenderer = new LogEntryRenderer(_logEntries, _guiStyles);
+            _logEntryRenderer = new LogEntryRenderer(_logEntries, _guiStyles, _collapseFilter);
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
             _logEntryTableGUI = new Table(this, _logEntryRenderer);
             _searchFieldGUI = new SearchTab(this);

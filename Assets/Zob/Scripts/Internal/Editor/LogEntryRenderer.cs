@@ -20,15 +20,17 @@ namespace Zob.Internal.Editor
             new Color32(237, 28, 36, 0xff),
             new Color32(206, 0, 190, 0xff),
         };
+        private CollapseLogFilter _collapseFilter;
 
         public bool[] EnableLevelColors { get; set; }
 
-        public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles)
+        public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles, CollapseLogFilter collapseFilter)
         {
             _container = container;
             _styles = styles;
             _labelStyle = new GUIStyle(GUI.skin.label);
             _labelStyle.alignment = TextAnchor.MiddleLeft;
+            _collapseFilter = collapseFilter;
         }
 
         public Color32 GetLevelColor(LogLevel level)
@@ -57,6 +59,10 @@ namespace Zob.Internal.Editor
             {
                 _labelStyle.normal.textColor = _levelColors[(int)entry.level];
             }
+            if (_collapseFilter.Enable)
+            {
+                position = RenderCollapseCount(position, index);
+            }
             position = RenderFrameCount(position, entry);
             position = RenderTimestampLabel(position, entry);
             position = RenderTextLabel(position, entry);
@@ -66,6 +72,34 @@ namespace Zob.Internal.Editor
         private bool IndexValid(int index)
         {
             return index >= 0 && index < _container.Count;
+        }
+
+        private Rect RenderCollapseCount(Rect position, int index)
+        {
+            Rect lpos = position;
+            lpos.x = position.x + 3;
+
+            var count = _collapseFilter.CollapseCount(index);
+            GUIContent content = null;
+            if (count == 0)
+            {
+                content = new GUIContent(string.Format(" - "));
+            }
+            else if (count < 999)
+            {
+                content = new GUIContent(string.Format("{0:D3}", _collapseFilter.CollapseCount(index)));
+            }
+            else
+            {
+                content = new GUIContent(string.Format("+++"));
+            }
+            float min, max;
+            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
+            lpos.width = max;
+            EditorGUI.LabelField(lpos, content, _labelStyle);
+
+            position.x = lpos.x + lpos.width;
+            return position;
         }
 
         private Rect RenderFrameCount(Rect position, LogEntry entry)
