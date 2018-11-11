@@ -107,7 +107,7 @@ namespace Zob.Internal.Editor
             Rect lpos = position;
             lpos.x = position.x + 3;
 
-            var content = new GUIContent(string.Format("{0:D5}", entry.frameCount));
+            var content = new GUIContent(string.Format("{0:D5}", entry.frame));
             float min, max;
             GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
             lpos.width = max;

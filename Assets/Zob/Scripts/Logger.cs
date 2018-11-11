@@ -79,11 +79,33 @@ namespace Zob
             entry.domain = _domain;
             entry.time = System.DateTime.Now;
             entry.duration = System.TimeSpan.FromSeconds(UnityEngine.Time.realtimeSinceStartup);
-            entry.stackTrace = stackTrace;
+            entry.stackTrace = ConvertStackTrace(stackTrace);
             entry.content = string.Empty;
-            entry.frameCount = UnityEngine.Time.frameCount;
+            entry.frame = UnityEngine.Time.frameCount;
 
             Internal.LogSystem.Log(entry);
+        }
+
+        private static LogEntryStackFrame[] ConvertStackTrace(System.Diagnostics.StackTrace stackTrace)
+        {
+            var frames = stackTrace.GetFrames();
+            LogEntryStackFrame[] result = new LogEntryStackFrame[frames.Length];
+            if (result.Length == 0)
+            {
+                return result;
+            }
+
+            for (int i = 0; i < frames.Length; ++i)
+            {
+                var frame = frames[i];
+                LogEntryStackFrame internalFrame;
+                internalFrame.className = frame.GetMethod().ReflectedType.ToString();
+                internalFrame.methodName = frame.GetMethod().Name;
+                internalFrame.fileName = frame.GetFileName();
+                internalFrame.line = frame.GetFileLineNumber();
+                result[i] = internalFrame;
+            }
+            return result;
         }
     }
 }

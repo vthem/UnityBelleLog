@@ -16,33 +16,32 @@ namespace Zob.Internal.Editor
                 EditorGUILayout.LabelField("no stacktrace available");
                 return;
             }
-            var frames = logEntry.stackTrace.GetFrames();
-            if (frames.Length == 0)
+            if (logEntry.stackTrace.Length == 0)
             {
                 EditorGUILayout.LabelField("no frame available");
                 return;
             }
             _scrollValue = GUILayout.BeginScrollView(_scrollValue, false, false);
-            for (int i = 0; i < frames.Length; ++i)
+            for (int i = 0; i < logEntry.stackTrace.Length; ++i)
             {
-                var frame = frames[i];
-                var fileExist = File.Exists(frame.GetFileName());
+                var frame = logEntry.stackTrace[i];
+                var fileExist = File.Exists(frame.fileName);
                 EditorGUILayout.BeginHorizontal();
                 GUI.enabled = fileExist;
                 if (GUILayout.Button(">", GUILayout.Width(30)))
                 {
-                    InternalEditorUtility.OpenFileAtLineExternal(frame.GetFileName(), frame.GetFileLineNumber());
+                    InternalEditorUtility.OpenFileAtLineExternal(frame.fileName, frame.line);
                 }
                 GUI.enabled = true;
                 var style = EditorStyles.label;
                 style.alignment = TextAnchor.LowerLeft;
                 if (fileExist)
                 {
-                    EditorGUILayout.LabelField(frame.GetMethod().ReflectedType + "::" + frame.GetMethod().Name + " (at " + frame.GetFileName() + " +" + frame.GetFileLineNumber() + ")", style, GUILayout.Height(18));
+                    EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + frame.fileName + " +" + frame.line + ")", style, GUILayout.Height(18));
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(frame.GetMethod().ReflectedType + "::" + frame.GetMethod().Name, style, GUILayout.Height(18));
+                    EditorGUILayout.LabelField(frame.className + "::" + frame.methodName, style, GUILayout.Height(18));
                 }
                 EditorGUILayout.EndHorizontal();
             }

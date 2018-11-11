@@ -3,11 +3,21 @@ using System.Collections;
 using UnityEngine;
 using Zob;
 
-public class RuntimeLogGenerator : MonoBehaviour {
-
-
-
+public class RuntimeLogGenerator : MonoBehaviour
+{
     private LogGenerator _generator = new LogGenerator();
+
+    protected void Awake()
+    {
+        Debug.Log("Awake!!");
+        TestFuncWithParam(0);
+    }
+
+
+    private void TestFuncWithParam(int a)
+    {
+        Debug.Log("TestFuncWithParam!!");
+    }
 
     private void Update()
     {
