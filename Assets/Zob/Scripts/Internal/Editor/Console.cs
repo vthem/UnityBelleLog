@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
@@ -70,6 +72,11 @@ namespace Zob.Internal.Editor
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
 
+            // load log from unity
+            Assembly unityEditor = Assembly.Load("UnityEditor.dll");
+            Type logEntries = unityEditor.GetType("UnityEditorInternal.LogEntries");
+            MethodInfo getCount = logEntries.GetMethod("GetCount");
+            int count = (int)getCount.Invoke(null, null);
             Repaint();
         }
 

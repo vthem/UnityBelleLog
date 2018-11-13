@@ -35,7 +35,6 @@ namespace Zob.Internal.Editor
             _instance.Show();
             _instance.InitializeOnce();
             _instance.hideFlags = HideFlags.HideAndDontSave;
-
         }
 
         protected void OnEnable()

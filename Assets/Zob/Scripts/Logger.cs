@@ -19,6 +19,8 @@ namespace Zob
 
         public void Trace()
         {
+            int a;
+            int b;
             var stackTrace = new System.Diagnostics.StackTrace(1, true);
             if (stackTrace.FrameCount == 0)
             {

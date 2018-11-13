@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
@@ -47,16 +49,25 @@ namespace Zob.Internal.Editor
                     entry.level = LogLevel.Debug;
                     break;
             }
-            entry.stackTrace = ConvertStackTrace(stackTrace);
+
+            Regex rx = new Regex(@"#^(?<file>[A-Za-z\/_@~0-9]*.cs)\((?<line>[0-9]*),[0-9]*\)#");
+            Match match = rx.Match(condition);
+            if (Regex.Match(condition, @"/: (error)|(warning) CS[0-9]*:/").Success)
+            {
+                entry.stackTrace = new LogEntryStackFrame[1];
+                entry.stackTrace[0].fileName = match.Groups["file"].Value;
+                entry.stackTrace[0].line = Convert.ToInt32(match.Groups["line"].Value);
+                entry.stackTrace[0].methodName = string.Empty;
+                entry.stackTrace[0].fileName = string.Empty;
+            }
+            else
+            {
+                entry.stackTrace = ConvertStackTrace(stackTrace);
+            }
             entry.time = System.DateTime.Now;
 
             LogSystem.Log(entry);
         }
-
-        //Assets/Zob/Scripts/Internal/Editor/_UnityEditorDebugLogHandler.cs(33,37): error CS1061: Type `string' does not contain a definition for `GetFrames' and no extension method `GetFrames' of type `string' could be found. Are you missing an assembly reference?
-
-        //UnityEngine.Debug:Log(Object)
-        //RuntimeLogGenerator:Awake() Assets/RuntimeLogGenerator.cs:12)
 
         private static LogEntryStackFrame[] ConvertStackTrace(string stackTrace)
         {
@@ -79,34 +90,20 @@ namespace Zob.Internal.Editor
             }
             for (int i = start; i < length; ++i)
             {
-                var endClassMethodTokenPos = strFrames[i].IndexOf(')');
-                if (endClassMethodTokenPos == -1)
+                Regex rx = new Regex(@"/(?<class>^[a-zA-Z_\.0-9]*):(?<func>[a-zA-Z_0-9]*).*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*)/");
+                Match match = rx.Match(strFrames[i]);
+                if (match.Groups.Count == 4)
+                {
+                    result[i].className = match.Groups["class"].Value;
+                    result[i].methodName = match.Groups["func"].Value;
+                    result[i].fileName = match.Groups["file"].Value;
+                    result[i].line = Convert.ToInt32(match.Groups["line"].Value);
+                }
+                else
                 {
                     result[i] = invalidFrame;
-                    continue;
                 }
-                LogEntryStackFrame internalFrame;
-                var classMethodSeparatorPos = strFrames[i].IndexOf(':');
-                if (classMethodSeparatorPos == -1 || classMethodSeparatorPos >= endClassMethodTokenPos)
-                {
-                    result[i] = invalidFrame;
-                    continue;
-                }
-                internalFrame.className = strFrames[i].Substring(0, classMethodSeparatorPos);
-                internalFrame.methodName = strFrames[i].Substring(classMethodSeparatorPos+1, endClassMethodTokenPos);
-                internalFrame.
             }
-
-            //for (int i = 0; i < frames.Length; ++i)
-            //{
-            //    var frame = frames[i];
-            //    LogEntryStackFrame internalFrame;
-            //    internalFrame.className = frame.GetMethod().ReflectedType.ToString();
-            //    internalFrame.methodName = frame.GetMethod().Name;
-            //    internalFrame.fileName = frame.GetFileName();
-            //    internalFrame.line = frame.GetFileLineNumber();
-            //    result[i] = internalFrame;
-            //}
             return result;
         }
     }
