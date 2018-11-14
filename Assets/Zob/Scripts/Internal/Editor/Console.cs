@@ -72,11 +72,9 @@ namespace Zob.Internal.Editor
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
 
-            // load log from unity
-            Assembly unityEditor = Assembly.Load("UnityEditor.dll");
-            Type logEntries = unityEditor.GetType("UnityEditorInternal.LogEntries");
-            MethodInfo getCount = logEntries.GetMethod("GetCount");
-            int count = (int)getCount.Invoke(null, null);
+            UnityEditorInternal unityInternalLog = new UnityEditorInternal();
+            unityInternalLog.AddInternalLog();
+
             Repaint();
         }
 

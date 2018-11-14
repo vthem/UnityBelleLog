@@ -12,53 +12,43 @@ namespace Zob.Internal.Editor
         private FieldInfo _logEntryErrorNumFieldInfo = null;
         private FieldInfo _logEntryFileFieldInfo = null;
         private FieldInfo _logEntryLineFieldInfo = null;
+        private bool _initialized = false;
 
 
         public UnityEditorInternal()
         {
             try
             {
-                Assembly unityEditor = Assembly.Load("UnityEditor.dll");
-                Type logEntries = unityEditor.GetType("UnityEditorInternal.LogEntries");
-                _startGettingEntriesMethod = logEntries.GetMethod("StartGettingEntries");
+                var unityEditor = Assembly.Load("UnityEditor.dll");
+                var logEntriesType = unityEditor.GetType("UnityEditorInternal.LogEntries");
+                _startGettingEntriesMethod = logEntriesType.GetMethod("StartGettingEntries");
+                _endGettingEntriesMethod = logEntriesType.GetMethod("EndGettingEntries");
+                _getEntryMethod = logEntriesType.GetMethod("GetEntryInternal");
+                var logEntryType = unityEditor.GetType("UnityEditorInternal.LogEntry");
+                _logEntryConditionFieldInfo = logEntriesType.GetField("condition");
+                _logEntryErrorNumFieldInfo = logEntriesType.GetField("errorNum");
+                _logEntryFileFieldInfo = logEntriesType.GetField("file");
+                _logEntryLineFieldInfo = logEntriesType.GetField("line");
+                _initialized = true;
             }
-            catch (System.Exception _ex)
+            catch (System.Exception ex)
             {
-                throw new ZobFatalException("Fail to initialize _startGettingEntriesMethod", _ex);
-            }
-
-            try
-            {
-                if (null == _endGettingEntriesMethod)
-                {
-                    Assembly unityEditor = Assembly.Load("UnityEditor.dll");
-                    Type logEntries = unityEditor.GetType("UnityEditorInternal.LogEntries");
-                    _endGettingEntriesMethod = logEntries.GetMethod("EndGettingEntries");
-                }
-            }
-            catch (System.Exception _ex)
-            {
-                throw new ZobFatalException("Fail to initialize _endGettingEntriesMethod", _ex);
-            }
-
-            try
-            {
-                if (null == _getEntryMethod)
-                {
-                    Assembly unityEditor = Assembly.Load("UnityEditor.dll");
-                    Type logEntries = unityEditor.GetType("UnityEditorInternal.LogEntries");
-                    _startGettingEntriesMethod = logEntries.GetMethod("GetCount");
-                }
-            }
-            catch (System.Exception _ex)
-            {
-                throw new ZobFatalException("Fail to initialize _getEntryMethod", _ex);
+                throw new ZobFatalException("Fail to initialize UnityEditorInternal", ex);
             }
         }
 
         public void AddInternalLog()
         {
+            if (!_initialized)
+            {
+                return;
+            }
             int count = StartGettingEntries();
+            for (int i = 0; i < count; ++i)
+            {
+                LogSystem.Log(GetLogEntry(i));
+            }
+            EndGettingEntries();
         }
 
         private int StartGettingEntries()
@@ -76,8 +66,26 @@ namespace Zob.Internal.Editor
         public LogEntry GetLogEntry(int index)
         {
 
-            return (int)_startGettingEntriesMethod.Invoke(null, null);
 
+            object unityEntry = new object();
+
+            _getEntryMethod.Invoke(null, new object[] { index, unityEntry });
+            string condition = (string)_logEntryConditionFieldInfo.GetValue(unityEntry);
+            string file = (string)_logEntryFileFieldInfo.GetValue(unityEntry);
+            int errorNum = (int)_logEntryErrorNumFieldInfo.GetValue(unityEntry);
+            int line = (int)_logEntryLineFieldInfo.GetValue(unityEntry);
+
+            LogEntry entry;
+            entry.args = null;
+            entry.content = string.Empty;
+            entry.domain = "UnityEngine";
+            entry.duration = new TimeSpan(0);
+            entry.format = "tada!";
+            entry.frame = 0;
+            entry.level = LogLevel.Error;
+            entry.time = System.DateTime.Now;
+            entry.stackTrace = new LogEntryStackFrame[0];
+            return entry;
         }
     }
 }
