@@ -104,15 +104,6 @@ namespace Zob.Internal.Editor
                     AddRandomLog(i.ToString());
                 }
             }
-
-            if (GUILayout.Button("Access Unity Log"))
-            {
-                var assembly = Assembly.Load("UnityEditor.dll");
-                Type customerType = assembly.GetType("UnityEditorInternal.LogEntries");
-                MethodInfo staticMethodInfo = customerType.GetMethod("GetCount");
-                int returnValue = Convert.ToInt32(staticMethodInfo.Invoke(null, null));
-                Debug.Log("count=" + returnValue);
-            }
         }
 
         private void LoadLines()

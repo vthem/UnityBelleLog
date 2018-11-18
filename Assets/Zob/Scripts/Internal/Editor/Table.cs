@@ -23,6 +23,7 @@ namespace Zob.Internal.Editor
         private VerticalSplit _split;
         private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
         private readonly ITableLineRenderer _renderer = null;
+        private bool _onGUIInitialized = false;
 
         // one scroll line is 10 unit in unity source ...
         private const float ScrollConstant = 10f;
@@ -43,6 +44,11 @@ namespace Zob.Internal.Editor
 
         public void UpdateAutoScrolling(ITableLineCount lines)
         {
+            if (!_onGUIInitialized)
+            {
+                return;
+            }
+
             int rowCount = GetRowCount();
             if (IsScrollCursorAtBottom(rowCount, lines.Count))
             {
@@ -52,6 +58,8 @@ namespace Zob.Internal.Editor
 
         public int OnGUI(int selectedEntry, ITableLineCount lines, bool scrollToSelected)
         {
+            OnGUIInitialize();
+
             HasUpdateSelectedEntry = false;
 
             if (scrollToSelected && !_autoScrollToSelected.Enable)
@@ -63,10 +71,6 @@ namespace Zob.Internal.Editor
                 return selectedEntry;
             }
 
-            if (null == _split)
-            {
-                _split = new VerticalSplit(_parent);
-            }
             _split.OnGUI();
 
             // get the position from the vertical split
@@ -170,6 +174,21 @@ namespace Zob.Internal.Editor
             }
 
             return selectedEntry;
+        }
+
+        protected void OnGUIInitialize()
+        {
+            if (_onGUIInitialized)
+            {
+                return;
+            }
+
+            if (null == _split)
+            {
+                _split = new VerticalSplit(_parent);
+            }
+
+            _onGUIInitialized = true;
         }
 
         private int GetRowCount()

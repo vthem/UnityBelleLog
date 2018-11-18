@@ -72,9 +72,6 @@ namespace Zob.Internal.Editor
             wantsMouseMove = true;
             titleContent = new GUIContent("ZobConsole");
 
-            UnityEditorInternal unityInternalLog = new UnityEditorInternal();
-            unityInternalLog.AddInternalLog();
-
             Repaint();
         }
 
@@ -135,6 +132,9 @@ namespace Zob.Internal.Editor
             _searchFieldGUI = new SearchTab(this);
 
             _logEntries.Updated += NewLogEntryHandler;
+
+            UnityEditorInternal unityInternalLog = new UnityEditorInternal();
+            unityInternalLog.AddInternalLog();
         }
 
         protected void OnGUIWarningNotProperlyInitialized()

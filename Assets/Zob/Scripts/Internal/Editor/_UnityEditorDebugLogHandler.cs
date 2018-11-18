@@ -15,13 +15,19 @@ namespace Zob.Internal.Editor
         [InitializeOnLoadMethod]
         static void _InitializeOnLoad()
         {
+
             Application.logMessageReceived += LogMessageReceivedHandler;
+        }
+
+        public static void AddUnityInternalLog(string condition, string stacktrace, LogType type)
+        {
+            LogMessageReceivedHandler(condition, stacktrace, type);
         }
 
         private static void LogMessageReceivedHandler(string condition, string stackTrace, LogType type)
         {
 
-            if (stackTrace.Contains("Zob.Internal"))
+            if (stackTrace.Contains("_UnityEditorDebugLogHandler.LogMessageReceivedHandler"))
             {
                 return;
             }
@@ -50,7 +56,7 @@ namespace Zob.Internal.Editor
                     break;
             }
 
-            Regex rx = new Regex(@"#^(?<file>[A-Za-z\/_@~0-9]*.cs)\((?<line>[0-9]*),[0-9]*\)#");
+            Regex rx = new Regex(@"^(?<file>[A-Za-z\/_@~0-9]*.cs)\((?<line>[0-9]*),[0-9]*\)");
             Match match = rx.Match(condition);
             if (Regex.Match(condition, @"/: (error)|(warning) CS[0-9]*:/").Success)
             {
@@ -90,19 +96,12 @@ namespace Zob.Internal.Editor
             }
             for (int i = start; i < length; ++i)
             {
-                Regex rx = new Regex(@"/(?<class>^[a-zA-Z_\.0-9]*):(?<func>[a-zA-Z_0-9]*).*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*)/");
+                Regex rx = new Regex(@"(?<class>^[a-zA-Z_\.0-9]*):(?<func>[.a-zA-Z_0-9]*).*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*)");
                 Match match = rx.Match(strFrames[i]);
-                if (match.Groups.Count == 4)
-                {
-                    result[i].className = match.Groups["class"].Value;
-                    result[i].methodName = match.Groups["func"].Value;
-                    result[i].fileName = match.Groups["file"].Value;
-                    result[i].line = Convert.ToInt32(match.Groups["line"].Value);
-                }
-                else
-                {
-                    result[i] = invalidFrame;
-                }
+                result[i].className = match.Groups["class"].Value;
+                result[i].methodName = match.Groups["func"].Value;
+                result[i].fileName = match.Groups["file"].Value;
+                result[i].line = Convert.ToInt32(match.Groups["line"].Value);
             }
             return result;
         }
