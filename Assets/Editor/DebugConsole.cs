@@ -104,6 +104,17 @@ namespace Zob.Internal.Editor
                     AddRandomLog(i.ToString());
                 }
             }
+
+            if (GUILayout.Button("-- add unity warning --"))
+            {
+                Debug.LogWarning("warning log from unity");
+            }
+
+
+            if (GUILayout.Button("-- add unity error --"))
+            {
+                Debug.LogError("error log from unity");
+            }
         }
 
         private void LoadLines()
@@ -111,7 +122,6 @@ namespace Zob.Internal.Editor
             if (_lines == null)
             {
                 _lines = File.ReadAllLines(Path.Combine(Application.dataPath, "sample.txt"));
-                Debug.Log("loaded lines length=" + _lines.Length);
             }
         }
 
@@ -122,7 +132,6 @@ namespace Zob.Internal.Editor
                 return "no line loaded";
             }
             var rand = UnityEngine.Random.Range(0, _lines.Length);
-            Debug.Log("length=" + _lines.Length + " rand=" + rand);
 
             return _lines[rand];
         }

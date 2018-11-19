@@ -10,12 +10,12 @@ namespace Zob.Internal.Editor
         private static System.TimeSpan defaultDuration = new System.TimeSpan(0);
         private static object[] defaultArgs = new object[0];
         private static string[] splitStackTrace = new string[] { "\n" };
-        private static LogEntryStackFrame invalidFrame = new LogEntryStackFrame();
+        private static string projectPath = string.Empty;
 
         [InitializeOnLoadMethod]
         static void _InitializeOnLoad()
         {
-
+            projectPath = Application.dataPath.Replace("/Assets", "");
             Application.logMessageReceived += LogMessageReceivedHandler;
         }
 
@@ -58,13 +58,17 @@ namespace Zob.Internal.Editor
 
             Regex rx = new Regex(@"^(?<file>[A-Za-z\/_@~0-9]*.cs)\((?<line>[0-9]*),[0-9]*\)");
             Match match = rx.Match(condition);
-            if (Regex.Match(condition, @"/: (error)|(warning) CS[0-9]*:/").Success)
+            if (match.Success)
             {
                 entry.stackTrace = new LogEntryStackFrame[1];
-                entry.stackTrace[0].fileName = match.Groups["file"].Value;
-                entry.stackTrace[0].line = Convert.ToInt32(match.Groups["line"].Value);
+                entry.stackTrace[0].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
+                var line = match.Groups["line"].Value;
+                if (!string.IsNullOrEmpty(line))
+                {
+                    entry.stackTrace[0].line = Convert.ToInt32(line);
+                }
                 entry.stackTrace[0].methodName = string.Empty;
-                entry.stackTrace[0].fileName = string.Empty;
+                entry.stackTrace[0].className = string.Empty;
             }
             else
             {
@@ -89,19 +93,25 @@ namespace Zob.Internal.Editor
                 start = 1;
                 length -= 1;
             }
+
             LogEntryStackFrame[] result = new LogEntryStackFrame[length];
             if (result.Length == 0)
             {
                 return result;
             }
-            for (int i = start; i < length; ++i)
+            for (int i = start; i < strFrames.Length; ++i)
             {
-                Regex rx = new Regex(@"(?<class>^[a-zA-Z_\.0-9]*):(?<func>[.a-zA-Z_0-9]*).*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*)");
+                Regex rx = new Regex(@"(?<class>^[a-zA-Z_\.0-9]*):(?<func>[.a-zA-Z_0-9]*)(.*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*))?");
                 Match match = rx.Match(strFrames[i]);
-                result[i].className = match.Groups["class"].Value;
-                result[i].methodName = match.Groups["func"].Value;
-                result[i].fileName = match.Groups["file"].Value;
-                result[i].line = Convert.ToInt32(match.Groups["line"].Value);
+                result[i - start].className = match.Groups["class"].Value;
+                result[i - start].methodName = match.Groups["func"].Value;
+                result[i - start].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
+                result[i - start].line = 0;
+                var line = match.Groups["line"].Value;
+                if (!string.IsNullOrEmpty(line))
+                {
+                    result[i - start].line = Convert.ToInt32(line);
+                }
             }
             return result;
         }

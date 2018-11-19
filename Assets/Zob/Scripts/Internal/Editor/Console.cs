@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
@@ -45,7 +43,6 @@ namespace Zob.Internal.Editor
 
         public Console()
         {
-            Debug.Log("Console " + _initialized + " id=" + GetInstanceID());
         }
 
         void OnEnable()
@@ -117,6 +114,8 @@ namespace Zob.Internal.Editor
                 _enableLogLevelColors[i] = false;
                 _logHandler.AddFilter(_logLevelFilters[i]);
             }
+            _enableLogLevelColors[(int)LogLevel.Warning] = true;
+            _enableLogLevelColors[(int)LogLevel.Error] = true;
             _logEntries = _logHandler;
             LogSystem.AddHandler(_logHandler);
             _selectedLogEntryIndex = -1;

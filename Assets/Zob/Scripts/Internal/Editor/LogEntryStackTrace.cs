@@ -37,7 +37,14 @@ namespace Zob.Internal.Editor
                 style.alignment = TextAnchor.LowerLeft;
                 if (fileExist)
                 {
-                    EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + frame.fileName + " +" + frame.line + ")", style, GUILayout.Height(18));
+                    if (!string.IsNullOrEmpty(frame.className))
+                    {
+                        EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + frame.fileName + " +" + frame.line + ")", style, GUILayout.Height(18));
+                    }
+                    else
+                    {
+                        EditorGUILayout.LabelField(frame.fileName + " +" + frame.line, style, GUILayout.Height(18));
+                    }
                 }
                 else
                 {
