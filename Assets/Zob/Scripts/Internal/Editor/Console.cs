@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Zob.Internal.Editor
@@ -210,6 +212,11 @@ namespace Zob.Internal.Editor
         protected void OnGUILogEntryTable()
         {
             _selectedLogEntryIndex = _logEntryTableGUI.OnGUI(_selectedLogEntryIndex, _logEntryCounter, _searchFieldGUI.HasUpdatedLogEntryIndex);
+
+            if (_logEntryTableGUI.HasDoubleClickedEntry)
+            {
+                OpenIDE(_logEntries[_selectedLogEntryIndex]);
+            }
         }
 
         protected void OnGUILogEntryInformation()
@@ -226,7 +233,7 @@ namespace Zob.Internal.Editor
             }
             GUILayout.EndHorizontal();
 
-            bool logEntryUpdated = _logEntryTableGUI.HasUpdateSelectedEntry || _searchFieldGUI.HasUpdatedLogEntryIndex;
+            bool logEntryUpdated = _logEntryTableGUI.HasUpdatedSelectedEntry || _searchFieldGUI.HasUpdatedLogEntryIndex;
             // drawing stacktrace or content modifies the GUILayout. yet it can't be modified before a new layout event
             if (_selectedLogEntryIndex != -1 && !logEntryUpdated)
             {
@@ -253,6 +260,17 @@ namespace Zob.Internal.Editor
             OnGUISearchBar();
             OnGUILogEntryTable();
             OnGUILogEntryInformation();
+        }
+
+        protected void OpenIDE(LogEntry entry)
+        {
+            for (int i = 0; i < entry.stackTrace.Length; ++i)
+            {
+                if (File.Exists(entry.stackTrace[i].fileName))
+                {
+                    InternalEditorUtility.OpenFileAtLineExternal(entry.stackTrace[i].fileName, entry.stackTrace[i].line);
+                }
+            }
         }
     }
 }

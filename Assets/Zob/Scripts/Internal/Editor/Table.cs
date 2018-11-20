@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -24,12 +25,15 @@ namespace Zob.Internal.Editor
         private AutoScrollToSelected _autoScrollToSelected = new AutoScrollToSelected();
         private readonly ITableLineRenderer _renderer = null;
         private bool _onGUIInitialized = false;
+        private DateTime? _lastClick;
+        private int _lastClickIndex;
 
         // one scroll line is 10 unit in unity source ...
         private const float ScrollConstant = 10f;
         private const float RowHeight = 20f;
 
-        public bool HasUpdateSelectedEntry { get; protected set; }
+        public bool HasUpdatedSelectedEntry { get; protected set; }
+        public bool HasDoubleClickedEntry { get; protected set; }
 
         public Table(EditorWindow parent, ITableLineRenderer renderer)
         {
@@ -60,7 +64,8 @@ namespace Zob.Internal.Editor
         {
             OnGUIInitialize();
 
-            HasUpdateSelectedEntry = false;
+            HasUpdatedSelectedEntry = false;
+            HasDoubleClickedEntry = false;
 
             if (scrollToSelected && !_autoScrollToSelected.Enable)
             {
@@ -158,8 +163,20 @@ namespace Zob.Internal.Editor
                         if (newIndex >= 0 && newIndex < lines.Count)
                         {
                             _parent.Repaint();
-                            HasUpdateSelectedEntry = true;
+                            HasUpdatedSelectedEntry = true;
                             selectedEntry = newIndex;
+
+                            if (_lastClick.HasValue)
+                            {
+                                int deltaTime = (DateTime.Now - _lastClick.Value).Milliseconds;
+                                bool isDoubleClick = deltaTime < 500;
+                                if (selectedEntry == _lastClickIndex && isDoubleClick)
+                                {
+                                    HasDoubleClickedEntry = true;
+                                }
+                            }
+                            _lastClick = DateTime.Now;
+                            _lastClickIndex = selectedEntry;
                         }
                         break;
                     }
