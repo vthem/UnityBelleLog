@@ -79,6 +79,22 @@ namespace Zob.Internal.Editor
             LogSystem.Log(entry);
         }
 
+        /*
+Example of stacktrace:
+=======================
+
+UnityEngine.Debug:LogError(Object)
+
+UnityEditor.DockArea:OnGUI()
+
+System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at /Users/builduser/buildslave/mono/build/mcs/class/corlib/System.Reflection/MonoMethod.cs:222)
+
+UnityEngine.Debug:LogError(Object)
+
+Zob.Internal.Editor.DebugConsole:OnGUI() (at Assets/Editor/DebugConsole.cs:116)
+
+UnityEditor.DockArea:OnGUI()
+        */
         private static LogEntryStackFrame[] ConvertStackTrace(string stackTrace)
         {
             string[] strFrames = stackTrace.Split(splitStackTrace, System.StringSplitOptions.RemoveEmptyEntries);
@@ -101,7 +117,7 @@ namespace Zob.Internal.Editor
             }
             for (int i = start; i < strFrames.Length; ++i)
             {
-                Regex rx = new Regex(@"(?<class>^[a-zA-Z_\.0-9]*):(?<func>[.a-zA-Z_0-9]*)(.*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*))?");
+                Regex rx = new Regex(@"(((?<call>.*) \(\))|((?<class>^[a-zA-Z_\.0-9]*):(?<func>[.a-zA-Z_0-9]*)))(.*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*))?");
                 Match match = rx.Match(strFrames[i]);
                 result[i - start].className = match.Groups["class"].Value;
                 result[i - start].methodName = match.Groups["func"].Value;

@@ -115,6 +115,11 @@ namespace Zob.Internal.Editor
             {
                 Debug.LogError("error log from unity");
             }
+
+            if (GUILayout.Button("-- add unity exception --"))
+            {
+                throw new System.Exception("ahah!");
+            }
         }
 
         private void LoadLines()
