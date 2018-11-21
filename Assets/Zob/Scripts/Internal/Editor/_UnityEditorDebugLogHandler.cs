@@ -83,15 +83,14 @@ namespace Zob.Internal.Editor
 Example of stacktrace:
 =======================
 
+(?<class>^[^:]*):(?<method>[^(]*)\(([^)]*)\)( \(at (?<file>[^:]*):(?<line>[0-9]*)\)$)?
 UnityEngine.Debug:LogError(Object)
-
 UnityEditor.DockArea:OnGUI()
+Zob.Internal.Editor.DebugConsole:OnGUI() (at Assets/Editor/DebugConsole.cs:116)
 
+(?<func>^[^(]*) \(([^)]*)\) \(at (?<file>[^:]*):(?<line>[0-9]*)\)$
 System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at /Users/builduser/buildslave/mono/build/mcs/class/corlib/System.Reflection/MonoMethod.cs:222)
 
-UnityEngine.Debug:LogError(Object)
-
-Zob.Internal.Editor.DebugConsole:OnGUI() (at Assets/Editor/DebugConsole.cs:116)
 
 UnityEditor.DockArea:OnGUI()
         */
@@ -117,17 +116,37 @@ UnityEditor.DockArea:OnGUI()
             }
             for (int i = start; i < strFrames.Length; ++i)
             {
-                Regex rx = new Regex(@"(((?<call>.*) \(\))|((?<class>^[a-zA-Z_\.0-9]*):(?<func>[.a-zA-Z_0-9]*)))(.*at (?<file>[a-zA-Z\/]*.cs):(?<line>[0-9]*))?");
-                Match match = rx.Match(strFrames[i]);
-                result[i - start].className = match.Groups["class"].Value;
-                result[i - start].methodName = match.Groups["func"].Value;
-                result[i - start].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
-                result[i - start].line = 0;
-                var line = match.Groups["line"].Value;
-                if (!string.IsNullOrEmpty(line))
+                Match match = Regex.Match(strFrames[i], @"(?<class>^[^:]*):(?<method>[^(]*)\(([^)]*)\)( \(at (?<file>[^:]*):(?<line>[0-9]*)\)$)?");
+                if (match.Success)
                 {
-                    result[i - start].line = Convert.ToInt32(line);
+                    result[i - start].className = match.Groups["class"].Value;
+                    result[i - start].methodName = match.Groups["method"].Value;
+                    result[i - start].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
+                    result[i - start].line = 0;
+                    var line = match.Groups["line"].Value;
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        result[i - start].line = Convert.ToInt32(line);
+                    }
                 }
+                match = Regex.Match(strFrames[i], @"(?<func>^[^(]*) \(([^)]*)\) \(at (?<file>[^:]*):(?<line>[0-9]*)\)$");
+                if (match.Success)
+                {
+                    string[] funcTokens = match.Groups["func"].Value.Split(':');
+                    if (funcTokens.Length > 2)
+                    {
+                        result[i - start].className = funcTokens[0];
+                        result[i - start].methodName = funcTokens[1];
+                    }
+                    result[i - start].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
+                    result[i - start].line = 0;
+                    var line = match.Groups["line"].Value;
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        result[i - start].line = Convert.ToInt32(line);
+                    }
+                }
+
             }
             return result;
         }
