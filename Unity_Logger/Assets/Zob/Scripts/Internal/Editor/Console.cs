@@ -56,7 +56,10 @@ namespace Zob.Internal.Editor
         {
             _initialized = false;
             _onGUIInitialized = false;
-            _logEntries.Updated -= NewLogEntryHandler;
+            if (_logEntries != null)
+            {
+                _logEntries.Updated -= NewLogEntryHandler;
+            }
         }
 
         private void Initialize()
@@ -160,7 +163,6 @@ namespace Zob.Internal.Editor
             var newCollapseState = GUILayout.Toggle(_collapseFilter.Enable, "Collapse", EditorStyles.toolbarButton);
             if (newCollapseState != _collapseFilter.Enable)
             {
-                Debug.Log("set collapse filter state=" + newCollapseState);
                 _collapseFilter.Enable = newCollapseState;
                 _logHandler.ApplyFilters();
             }

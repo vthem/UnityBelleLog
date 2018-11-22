@@ -49,18 +49,19 @@ namespace Zob.Internal
 
         private string CreateDirectory()
         {
-            string absoluteDirectory;
-#if UNITY_EDITOR
-            absoluteDirectory = Path.GetDirectoryName(Application.dataPath);
-            absoluteDirectory = Path.Combine(absoluteDirectory, "Logs");
-#else
-            absoluteDirectory = Path.Combine(Application.persistentDataPath, LogSystem.TemporaryFolder);
-#endif
-            if (!Directory.Exists(absoluteDirectory))
-            {
-                Directory.CreateDirectory(absoluteDirectory);
-            }
-            return absoluteDirectory;
+            //            string absoluteDirectory;
+            //#if UNITY_EDITOR
+            //            absoluteDirectory = Path.GetDirectoryName(Application.dataPath);
+            //            absoluteDirectory = Path.Combine(absoluteDirectory, "Logs");
+            //#else
+            //            absoluteDirectory = Path.Combine(Application.persistentDataPath, LogSystem.TemporaryFolder);
+            //#endif
+            //            if (!Directory.Exists(absoluteDirectory))
+            //            {
+            //                Directory.CreateDirectory(absoluteDirectory);
+            //            }
+            //            return absoluteDirectory;
+            return string.Empty;
         }
 
         private void OpenLogFile(string absoluteDirectory)

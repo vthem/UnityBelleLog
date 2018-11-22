@@ -8,7 +8,6 @@ namespace Zob.Internal.Editor
     internal class LogEntryRenderer : ITableLineRenderer
     {
         private ILogEntryContainer _container;
-        private DateTime _startTimestamp;
         private const string _defaultTimestampLabel = "0m00s000";
         private GUIStyle _labelStyle;
         private readonly GUIStyle _oddBackgroundStyle;
@@ -33,6 +32,8 @@ namespace Zob.Internal.Editor
             _evenBackgroundStyle = new GUIStyle("CN EntryBackEven");
             _oddBackgroundStyle = new GUIStyle("CN EntryBackodd");
             _labelStyle.alignment = TextAnchor.MiddleLeft;
+            _labelStyle.font = (Font)Resources.Load("DroidSans");
+            _labelStyle.fontSize = 12;
             _collapseFilter = collapseFilter;
         }
 
@@ -97,7 +98,7 @@ namespace Zob.Internal.Editor
                 content = new GUIContent(string.Format("+++"));
             }
             float min, max;
-            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
+            _labelStyle.CalcMinMaxWidth(content, out min, out max);
             lpos.width = max;
             EditorGUI.LabelField(lpos, content, _labelStyle);
 
@@ -112,7 +113,7 @@ namespace Zob.Internal.Editor
 
             var content = new GUIContent(string.Format("{0:D5}", entry.frame));
             float min, max;
-            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
+            _labelStyle.CalcMinMaxWidth(content, out min, out max);
             lpos.width = max;
             EditorGUI.LabelField(lpos, content, _labelStyle);
 
@@ -128,7 +129,7 @@ namespace Zob.Internal.Editor
 
             var content = new GUIContent(string.Format("{0:D3}m{1:D2}s{2:D3}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
             float min, max;
-            GUI.skin.label.CalcMinMaxWidth(content, out min, out max);
+            _labelStyle.CalcMinMaxWidth(content, out min, out max);
             lpos.width = min;
             EditorGUI.LabelField(lpos, content, _labelStyle);
 

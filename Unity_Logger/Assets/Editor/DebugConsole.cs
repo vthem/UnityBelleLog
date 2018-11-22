@@ -16,6 +16,8 @@ namespace Zob.Internal.Editor
         private Logger _logger;
         private bool _initialized = false;
         private Texture2D _texture;
+        private string _text;
+        private GUIStyle _labelStyle;
 
         public static void SetValue(string key, string value)
         {
@@ -33,8 +35,8 @@ namespace Zob.Internal.Editor
             // Get existing open window or if none, make a new one:
             _instance = (DebugConsole)EditorWindow.GetWindow(typeof(DebugConsole));
             _instance.Show();
-            _instance.InitializeOnce();
             _instance.hideFlags = HideFlags.HideAndDontSave;
+
         }
 
         protected void OnEnable()
@@ -43,7 +45,6 @@ namespace Zob.Internal.Editor
             {
                 _instance = this;
             }
-            InitializeOnce();
         }
 
         protected void InitializeOnce()
@@ -61,10 +62,17 @@ namespace Zob.Internal.Editor
             _texture.Apply();
             _texture.hideFlags = HideFlags.HideAndDontSave;
             _initialized = true;
+
+            _labelStyle = new GUIStyle(GUI.skin.label);
+            _labelStyle.alignment = TextAnchor.MiddleLeft;
+            _labelStyle.font = (Font)Resources.Load("Inconsolata-Regular");
+            _labelStyle.fontSize = 12;
         }
 
         protected void OnGUI()
         {
+            InitializeOnce();
+
             foreach (var kv in _keyValue)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -120,6 +128,8 @@ namespace Zob.Internal.Editor
             {
                 throw new System.Exception("ahah!");
             }
+
+            _text = EditorGUILayout.TextArea(_text, _labelStyle);
         }
 
         private void LoadLines()
