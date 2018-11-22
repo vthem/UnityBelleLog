@@ -1,0 +1,1 @@
+mklink /J Scripts ..\..\Unity_Logger\Assets\Zob\Scripts

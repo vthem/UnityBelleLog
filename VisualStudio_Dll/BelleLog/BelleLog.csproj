@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{241EC46E-377C-45B2-AA06-83595499F41D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BelleLog</RootNamespace>
+    <AssemblyName>BelleLog</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Unity_562p3\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Unity_562p3\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripts\Internal\DefaultLogFormatter.cs" />
+    <Compile Include="Scripts\Internal\Editor\Console.cs" />
+    <Compile Include="Scripts\Internal\Editor\ConsoleLogHandler.cs" />
+    <Compile Include="Scripts\Internal\Editor\Filter\CollapseLogFilter.cs" />
+    <Compile Include="Scripts\Internal\Editor\Filter\LogFilterIndexer.cs" />
+    <Compile Include="Scripts\Internal\Editor\Filter\PredicateLogFilter.cs" />
+    <Compile Include="Scripts\Internal\Editor\ILogEntryContainer.cs" />
+    <Compile Include="Scripts\Internal\Editor\LogEntryContent.cs" />
+    <Compile Include="Scripts\Internal\Editor\LogEntryCounter.cs" />
+    <Compile Include="Scripts\Internal\Editor\LogEntryRenderer.cs" />
+    <Compile Include="Scripts\Internal\Editor\LogEntryStackTrace.cs" />
+    <Compile Include="Scripts\Internal\Editor\SearchTab.cs" />
+    <Compile Include="Scripts\Internal\Editor\Table.cs" />
+    <Compile Include="Scripts\Internal\Editor\UnityEditorDebugLogHandler.cs" />
+    <Compile Include="Scripts\Internal\Editor\UnityEditorInternal.cs" />
+    <Compile Include="Scripts\Internal\Editor\VerticalSplit.cs" />
+    <Compile Include="Scripts\Internal\FileLogWriter.cs" />
+    <Compile Include="Scripts\Internal\ILogFilter.cs" />
+    <Compile Include="Scripts\Internal\ILogFormatter.cs" />
+    <Compile Include="Scripts\Internal\ILogHandler.cs" />
+    <Compile Include="Scripts\Internal\ILogWriter.cs" />
+    <Compile Include="Scripts\Internal\LogConfig.cs" />
+    <Compile Include="Scripts\Internal\LogEntry.cs" />
+    <Compile Include="Scripts\Internal\LogFilterAction.cs" />
+    <Compile Include="Scripts\Internal\LogFilterTermination.cs" />
+    <Compile Include="Scripts\Internal\Logger.cs" />
+    <Compile Include="Scripts\Internal\LogHandler.cs" />
+    <Compile Include="Scripts\Internal\LogLevel.cs" />
+    <Compile Include="Scripts\Internal\LogSingleton.cs" />
+    <Compile Include="Scripts\Internal\LogSystem.cs" />
+    <Compile Include="Scripts\Internal\ZobFatalException.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
