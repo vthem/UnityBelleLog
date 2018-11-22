@@ -105,7 +105,7 @@ namespace Zob.Internal.Editor
                 }
                 int mode = (int)_logEntryModeFieldInfo.GetValue(_logEntry);
 
-                _UnityEditorDebugLogHandler.AddUnityInternalLog(condition, stackTrace, LogTypeFromMode(mode));
+                UnityEditorDebugLogHandler.AddUnityInternalLog(condition, stackTrace, LogTypeFromMode(mode));
             }
         }
 

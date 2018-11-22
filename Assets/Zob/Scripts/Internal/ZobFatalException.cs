@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Zob.Internal.Editor
+namespace Zob.Internal
 {
     [Serializable]
     internal class ZobFatalException : Exception

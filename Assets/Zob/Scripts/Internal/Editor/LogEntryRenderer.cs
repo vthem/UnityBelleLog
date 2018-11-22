@@ -1,16 +1,18 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
+using Zob.Internal.Editor.Filter;
 
 namespace Zob.Internal.Editor
 {
     internal class LogEntryRenderer : ITableLineRenderer
     {
         private ILogEntryContainer _container;
-        private GUIStyles _styles;
         private DateTime _startTimestamp;
         private const string _defaultTimestampLabel = "0m00s000";
         private GUIStyle _labelStyle;
+        private readonly GUIStyle _oddBackgroundStyle;
+        private readonly GUIStyle _evenBackgroundStyle;
         private Color32[] _levelColors = new Color32[]
         {
             new Color32(181, 230, 29, 0xff),
@@ -24,11 +26,12 @@ namespace Zob.Internal.Editor
 
         public bool[] EnableLevelColors { get; set; }
 
-        public LogEntryRenderer(ILogEntryContainer container, GUIStyles styles, CollapseLogFilter collapseFilter)
+        public LogEntryRenderer(ILogEntryContainer container, CollapseLogFilter collapseFilter)
         {
             _container = container;
-            _styles = styles;
             _labelStyle = new GUIStyle(GUI.skin.label);
+            _evenBackgroundStyle = new GUIStyle("CN EntryBackEven");
+            _oddBackgroundStyle = new GUIStyle("CN EntryBackodd");
             _labelStyle.alignment = TextAnchor.MiddleLeft;
             _collapseFilter = collapseFilter;
         }
@@ -48,7 +51,7 @@ namespace Zob.Internal.Editor
             bool entrySelected = index == selectedIndex;
             if (Event.current.type == EventType.Repaint)
             {
-                GUIStyle s = index % 2 == 0 ? _styles.OddBackground : _styles.EvenBackground;
+                GUIStyle s = index % 2 == 0 ? _oddBackgroundStyle : _evenBackgroundStyle;
                 s.Draw(position, false, false, entrySelected, false);
             }
 

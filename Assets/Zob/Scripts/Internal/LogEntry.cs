@@ -1,4 +1,4 @@
-﻿namespace Zob
+﻿namespace Zob.Internal
 {
     public struct LogEntryStackFrame
     {

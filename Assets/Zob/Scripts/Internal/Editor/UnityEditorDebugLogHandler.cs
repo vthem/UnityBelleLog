@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal static class _UnityEditorDebugLogHandler
+    internal static class UnityEditorDebugLogHandler
     {
         private static System.TimeSpan defaultDuration = new System.TimeSpan(0);
         private static object[] defaultArgs = new object[0];

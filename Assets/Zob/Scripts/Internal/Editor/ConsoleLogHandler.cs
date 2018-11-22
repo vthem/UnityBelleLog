@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Zob.Internal.Editor.Filter;
 
 namespace Zob.Internal.Editor
 {
@@ -10,7 +11,7 @@ namespace Zob.Internal.Editor
         private readonly StringBuilder _stringBuilder = new StringBuilder();
         private event Action<ILogEntryContainer, LogEntry> Updated;
         private List<int> _filteredLogEntries = new List<int>();
-        private readonly LogFilterEngine _filterEngine = new LogFilterEngine();
+        private readonly LogFilterIndexer _filterEngine = new LogFilterIndexer();
         private readonly uint[] _logEntryCountByLevel = new uint[]
         {
             0, // Trace

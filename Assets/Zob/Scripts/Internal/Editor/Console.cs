@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using Zob.Internal.Editor.Filter;
 
 namespace Zob.Internal.Editor
 {
@@ -20,7 +21,6 @@ namespace Zob.Internal.Editor
 
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
-        private GUIStyles _guiStyles;
         private BottomMode _bottomMode = BottomMode.LogContent;
 
         private ILogFilter[] _logLevelFilters;
@@ -123,11 +123,10 @@ namespace Zob.Internal.Editor
             _selectedLogEntryIndex = -1;
 
             // Initialize things that need to be initialize in OnGUI
-            _guiStyles = new GUIStyles();
-            _logEntryContentGUI = new LogEntryContent(this, _guiStyles);
+            _logEntryContentGUI = new LogEntryContent(this);
             _logEntryStackTraceGUI = new LogEntryStackTrace();
             _logEntryCounter = new LogEntryCounter(_logEntries);
-            _logEntryRenderer = new LogEntryRenderer(_logEntries, _guiStyles, _collapseFilter);
+            _logEntryRenderer = new LogEntryRenderer(_logEntries, _collapseFilter);
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
             _logEntryTableGUI = new Table(this, _logEntryRenderer);
             _searchFieldGUI = new SearchTab(this);

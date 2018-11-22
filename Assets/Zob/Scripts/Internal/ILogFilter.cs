@@ -1,5 +1,5 @@
 ﻿
-namespace Zob
+namespace Zob.Internal
 {
     public interface ILogFilter
     {

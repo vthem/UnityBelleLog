@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Zob
+namespace Zob.Internal
 {
     public sealed class Logger
     {
@@ -19,8 +19,6 @@ namespace Zob
 
         public void Trace()
         {
-            int a;
-            int b;
             var stackTrace = new System.Diagnostics.StackTrace(1, true);
             if (stackTrace.FrameCount == 0)
             {
