@@ -13,6 +13,7 @@ namespace Zob.Internal.Editor
         {
             _parent = parent;
             _selectableLabel  = new GUIStyle("CN Message");
+            CustomGUIStyle.SetConsoleFont(_selectableLabel);
         }
 
         public void OnGUI(string content)

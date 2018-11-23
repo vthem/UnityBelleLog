@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using Zob.Internal.Editor.Filter;
 
@@ -32,8 +31,7 @@ namespace Zob.Internal.Editor
             _evenBackgroundStyle = new GUIStyle("CN EntryBackEven");
             _oddBackgroundStyle = new GUIStyle("CN EntryBackodd");
             _labelStyle.alignment = TextAnchor.MiddleLeft;
-            _labelStyle.font = (Font)Resources.Load("DroidSans");
-            _labelStyle.fontSize = 12;
+            CustomGUIStyle.SetConsoleFont(_labelStyle);
             _collapseFilter = collapseFilter;
         }
 
