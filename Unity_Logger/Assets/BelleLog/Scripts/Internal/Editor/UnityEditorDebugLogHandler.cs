@@ -8,7 +8,6 @@ namespace BelleLog.Internal.Editor
 {
     internal static class UnityEditorDebugLogHandler
     {
-        private static System.TimeSpan defaultDuration = new System.TimeSpan(0);
         private static object[] defaultArgs = new object[0];
         private static string[] splitStackTrace = new string[] { "\n" };
         private static string projectPath = string.Empty;
@@ -36,9 +35,17 @@ namespace BelleLog.Internal.Editor
             entry.args = defaultArgs;
             entry.content = string.Empty;
             entry.domain = "UnityEngine";
-            entry.duration = defaultDuration;
+            if (EditorApplication.isPlaying)
+            {
+                entry.duration = TimeSpan.FromSeconds(Time.realtimeSinceStartup);
+                entry.frame = Time.frameCount;
+            }
+            else
+            {
+                entry.duration = TimeSpan.FromSeconds(0.0);
+                entry.frame = 0;
+            }
             entry.format = condition;
-            entry.frame = 0;
             switch (type)
             {
                 case LogType.Error:
