@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Zob.Internal.Editor
+namespace BelleLog.Internal.Editor
 {
     public class DebugConsole : EditorWindow
     {
