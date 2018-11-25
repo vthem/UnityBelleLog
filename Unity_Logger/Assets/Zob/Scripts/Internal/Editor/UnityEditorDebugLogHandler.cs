@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
@@ -79,76 +80,61 @@ namespace Zob.Internal.Editor
             LogSystem.Log(entry);
         }
 
-        /*
-Example of stacktrace:
-=======================
-
-(?<class>^[^:]*):(?<method>[^(]*)\(([^)]*)\)( \(at (?<file>[^:]*):(?<line>[0-9]*)\)$)?
-UnityEngine.Debug:LogError(Object)
-UnityEditor.DockArea:OnGUI()
-Zob.Internal.Editor.DebugConsole:OnGUI() (at Assets/Editor/DebugConsole.cs:116)
-
-(?<func>^[^(]*) \(([^)]*)\) \(at (?<file>[^:]*):(?<line>[0-9]*)\)$
-System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at /Users/builduser/buildslave/mono/build/mcs/class/corlib/System.Reflection/MonoMethod.cs:222)
-
-
-UnityEditor.DockArea:OnGUI()
-        */
         private static LogEntryStackFrame[] ConvertStackTrace(string stackTrace)
         {
             string[] strFrames = stackTrace.Split(splitStackTrace, System.StringSplitOptions.RemoveEmptyEntries);
-            int length = strFrames.Length;
-            if (length == 0)
-            {
-                return new LogEntryStackFrame[0];
-            }
-            int start = 0;
-            if (strFrames[0] == "UnityEngine.Debug:Log(Object)")
-            {
-                start = 1;
-                length -= 1;
-            }
 
-            LogEntryStackFrame[] result = new LogEntryStackFrame[length];
-            if (result.Length == 0)
+            List<LogEntryStackFrame> result = new List<LogEntryStackFrame>();
+            for (int i = 0; i < strFrames.Length; ++i)
             {
-                return result;
-            }
-            for (int i = start; i < strFrames.Length; ++i)
-            {
+                // UnityEngine.Debug:LogError(Object)
+                // UnityEditor.DockArea:OnGUI()
+                // Zob.Internal.Editor.DebugConsole:OnGUI()(at Assets / Editor / DebugConsole.cs:116)
                 Match match = Regex.Match(strFrames[i], @"(?<class>^[^:]*):(?<method>[^(]*)\(([^)]*)\)( \(at (?<file>[^:]*):(?<line>[0-9]*)\)$)?");
                 if (match.Success)
                 {
-                    result[i - start].className = match.Groups["class"].Value;
-                    result[i - start].methodName = match.Groups["method"].Value;
-                    result[i - start].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
-                    result[i - start].line = 0;
+                    LogEntryStackFrame stackFrame;
+                    stackFrame.className = match.Groups["class"].Value;
+                    stackFrame.methodName = match.Groups["method"].Value;
+                    stackFrame.fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
+                    stackFrame.line = 0;
                     var line = match.Groups["line"].Value;
                     if (!string.IsNullOrEmpty(line))
                     {
-                        result[i - start].line = Convert.ToInt32(line);
+                        stackFrame.line = Convert.ToInt32(line);
                     }
+                    result.Add(stackFrame);
                 }
-                match = Regex.Match(strFrames[i], @"(?<func>^[^(]*) \(([^)]*)\) \(at (?<file>[^:]*):(?<line>[0-9]*)\)$");
+                // System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at /Users/builduser/buildslave/mono/build/mcs/class/corlib/System.Reflection/MonoMethod.cs:222)
+                // UnityEngine.GUILayoutGroup.GetNext () (at C:/buildslave/unity/build/Runtime/IMGUI/Managed/LayoutGroup.cs:115)
+                match = Regex.Match(strFrames[i], @"(?<func>^[^(]*) \(([^)]*)\) \(at (?<file>([a-zA-Z]:)?[^:]*):(?<line>[0-9]*)\)$");
                 if (match.Success)
                 {
-                    string[] funcTokens = match.Groups["func"].Value.Split(':');
-                    if (funcTokens.Length > 2)
+                    LogEntryStackFrame stackFrame;
+                    var funcGroup = match.Groups["func"].Value;
+                    int dotPos = funcGroup.LastIndexOf('.');
+                    if (dotPos > 0 && dotPos < funcGroup.Length - 1)
                     {
-                        result[i - start].className = funcTokens[0];
-                        result[i - start].methodName = funcTokens[1];
+                        stackFrame.className = funcGroup.Substring(0, dotPos);
+                        stackFrame.methodName = funcGroup.Substring(dotPos + 1);
                     }
-                    result[i - start].fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
-                    result[i - start].line = 0;
+                    else
+                    {
+                        stackFrame.className = "unknown";
+                        stackFrame.methodName = "unknown";
+                    }
+
+                    stackFrame.fileName = new Uri(projectPath + "/" + match.Groups["file"].Value).LocalPath;
+                    stackFrame.line = 0;
                     var line = match.Groups["line"].Value;
                     if (!string.IsNullOrEmpty(line))
                     {
-                        result[i - start].line = Convert.ToInt32(line);
+                        stackFrame.line = Convert.ToInt32(line);
                     }
+                    result.Add(stackFrame);
                 }
-
             }
-            return result;
+            return result.ToArray();
         }
     }
 }

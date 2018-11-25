@@ -125,7 +125,7 @@ namespace Zob.Internal.Editor
             lpos.x = position.x + 3;
 
 
-            var content = new GUIContent(string.Format("{0:D3}m{1:D2}s{2:D3}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
+            var content = new GUIContent(string.Format("{0:D3}:{1:D2}:{2:D3}", entry.duration.Minutes, entry.duration.Seconds, entry.duration.Milliseconds));
             float min, max;
             _labelStyle.CalcMinMaxWidth(content, out min, out max);
             lpos.width = min;

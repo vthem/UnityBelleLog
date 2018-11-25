@@ -7,7 +7,7 @@ namespace Zob.Internal.Editor
         public static void SetConsoleFont(GUIStyle style)
         {
             style.font = (Font)Resources.Load("DroidSans");
-            style.fontSize = 12;
+            style.fontSize = 13;
         }
     }
 }

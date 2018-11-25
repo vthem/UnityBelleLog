@@ -44,13 +44,20 @@ namespace Zob.Internal.Editor
 
                 if (fileExist)
                 {
+                    int assetPos = frame.fileName.LastIndexOf("Assets");
+                    string shortFilename = frame.fileName;
+                    if (assetPos > 0)
+                    {
+                        shortFilename = shortFilename.Substring(assetPos);
+                    }
+
                     if (!string.IsNullOrEmpty(frame.className))
                     {
-                        EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + frame.fileName + " +" + frame.line + ")", _labelStyle, GUILayout.Height(18));
+                        EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + shortFilename + " +" + frame.line + ")", _labelStyle, GUILayout.Height(18));
                     }
                     else
                     {
-                        EditorGUILayout.LabelField(frame.fileName + " +" + frame.line, _labelStyle, GUILayout.Height(18));
+                        EditorGUILayout.LabelField(shortFilename + " +" + frame.line, _labelStyle, GUILayout.Height(18));
                     }
                 }
                 else
