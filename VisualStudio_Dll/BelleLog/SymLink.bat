@@ -1,1 +1,1 @@
-mklink /J Scripts ..\..\Unity_Logger\Assets\Zob\Scripts
+mklink /J Scripts ..\..\Unity_Logger\Assets\BelleLog\Scripts
