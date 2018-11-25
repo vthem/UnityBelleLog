@@ -12,10 +12,10 @@ namespace Zob.Internal.Editor
         private ILogEntryContainer _logEntries;
 
         private int _selectedLogEntryIndex = -1;
-        private SearchTab _searchFieldGUI;
-        private Table _logEntryTableGUI;
-        private LogEntryContent _logEntryContentGUI;
-        private LogEntryStackTrace _logEntryStackTraceGUI;
+        private SearchTabRenderer _searchFieldGUI;
+        private TableRenderer _logEntryTableGUI;
+        private LogEntryContentRenderer _logEntryContentGUI;
+        private LogEntryStackTraceRenderer _logEntryStackTraceGUI;
         private LogEntryCounter _logEntryCounter;
         private LogEntryRenderer _logEntryRenderer;
 
@@ -126,13 +126,13 @@ namespace Zob.Internal.Editor
             _selectedLogEntryIndex = -1;
 
             // Initialize things that need to be initialize in OnGUI
-            _logEntryContentGUI = new LogEntryContent(this);
-            _logEntryStackTraceGUI = new LogEntryStackTrace();
+            _logEntryContentGUI = new LogEntryContentRenderer(this);
+            _logEntryStackTraceGUI = new LogEntryStackTraceRenderer();
             _logEntryCounter = new LogEntryCounter(_logEntries);
             _logEntryRenderer = new LogEntryRenderer(_logEntries, _collapseFilter);
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
-            _logEntryTableGUI = new Table(this, _logEntryRenderer);
-            _searchFieldGUI = new SearchTab(this);
+            _logEntryTableGUI = new TableRenderer(this, _logEntryRenderer);
+            _searchFieldGUI = new SearchTabRenderer(this);
 
             _logEntries.Updated += NewLogEntryHandler;
 

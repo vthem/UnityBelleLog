@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal class LogEntryContent
+    internal class LogEntryContentRenderer
     {
         private Vector2 _scrollValue;
         private EditorWindow _parent;
         private readonly GUIStyle _selectableLabel;
 
-        public LogEntryContent(EditorWindow parent)
+        public LogEntryContentRenderer(EditorWindow parent)
         {
             _parent = parent;
             _selectableLabel  = new GUIStyle("CN Message");

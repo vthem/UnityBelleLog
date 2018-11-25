@@ -15,7 +15,7 @@ namespace Zob.Internal.Editor
         void OnGUI(Rect position, int index, int selectedIndex);
     }
 
-    internal class Table
+    internal class TableRenderer
     {
         private EditorWindow _parent;
         private float _scrollValue;
@@ -35,7 +35,7 @@ namespace Zob.Internal.Editor
         public bool HasUpdatedSelectedEntry { get; protected set; }
         public bool HasDoubleClickedEntry { get; protected set; }
 
-        public Table(EditorWindow parent, ITableLineRenderer renderer)
+        public TableRenderer(EditorWindow parent, ITableLineRenderer renderer)
         {
             _parent = parent;
 

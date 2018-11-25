@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal class SearchTab
+    internal class SearchTabRenderer
     {
         public bool HasUpdatedLogEntryIndex { get; protected set; }
 
@@ -22,7 +22,7 @@ namespace Zob.Internal.Editor
             Forward = 1
         }
 
-        public SearchTab(EditorWindow parent)
+        public SearchTabRenderer(EditorWindow parent)
         {
             _parent = parent;
             _searchField = new UnityEditor.IMGUI.Controls.SearchField

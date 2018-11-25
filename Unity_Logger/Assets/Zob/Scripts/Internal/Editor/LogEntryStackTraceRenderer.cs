@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Zob.Internal.Editor
 {
-    internal class LogEntryStackTrace
+    internal class LogEntryStackTraceRenderer
     {
         private Vector2 _scrollValue;
         private GUIStyle _labelStyle;
 
-        public LogEntryStackTrace()
+        public LogEntryStackTraceRenderer()
         {
             _labelStyle = new GUIStyle(GUI.skin.label);
             _labelStyle.alignment = TextAnchor.LowerLeft;

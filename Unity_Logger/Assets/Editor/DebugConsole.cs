@@ -129,6 +129,11 @@ namespace Zob.Internal.Editor
                 throw new System.Exception("ahah!");
             }
 
+            if (GUILayout.Button("-- cr --"))
+            {
+                throw new System.Exception("ahah!");
+            }
+
             _text = EditorGUILayout.TextArea(_text, _labelStyle);
         }
 
