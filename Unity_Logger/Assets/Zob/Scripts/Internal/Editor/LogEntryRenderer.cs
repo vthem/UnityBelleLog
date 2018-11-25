@@ -138,7 +138,7 @@ namespace Zob.Internal.Editor
         private Rect RenderTextLabel(Rect position, LogEntry entry)
         {
             Rect lpos = position;
-            position.x = position.x + 15;
+            lpos.width = lpos.width - lpos.x;
             EditorGUI.LabelField(lpos, entry.content, _labelStyle);
 
             position.x = lpos.x + lpos.width;
