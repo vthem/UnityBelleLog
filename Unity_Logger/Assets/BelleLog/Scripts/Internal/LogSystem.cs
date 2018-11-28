@@ -11,15 +11,15 @@ namespace BelleLog.Internal
 
         public static void Log(LogEntry entry)
         {
-            LogSingleton<LogSystem>.Instance.DoLog(entry);
+            LogSingleton<LogSystem>.Instance.InnerLog(entry);
         }
 
         public static void AddHandler(ILogHandler handler)
         {
-            LogSingleton<LogSystem>.Instance.DoAddHandler(handler);
+            LogSingleton<LogSystem>.Instance.InnerAddHandler(handler);
         }
 
-        private void DoLog(LogEntry entry)
+        private void InnerLog(LogEntry entry)
         {
             for (int i = 0; i < _handlers.Count; ++i)
             {
@@ -27,7 +27,7 @@ namespace BelleLog.Internal
             }
         }
 
-        private void DoAddHandler(ILogHandler handler)
+        private void InnerAddHandler(ILogHandler handler)
         {
             _handlers.Add(handler);
         }

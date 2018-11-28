@@ -140,12 +140,17 @@ namespace BelleLog.Internal.Editor
             Rect lpos = position;
             lpos.width = lpos.width - lpos.x;
             string content = entry.content;
-            int crPos = content.IndexOf('\n');
-            if (crPos > 0)
+            int crPos = content.IndexOf("\r\n");
+            if (crPos < 0)
+            {
+                crPos = content.IndexOf('\n');
+            }
+            if (crPos >= 0)
             {
                 content = content.Substring(0, crPos);
             }
-            EditorGUI.LabelField(lpos, entry.content, _labelStyle);
+
+            EditorGUI.LabelField(lpos, content, _labelStyle);
 
             position.x = lpos.x + lpos.width;
             return position;

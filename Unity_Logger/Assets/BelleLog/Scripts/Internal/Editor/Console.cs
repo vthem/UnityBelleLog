@@ -255,12 +255,31 @@ namespace BelleLog.Internal.Editor
 
         protected void OnGUI()
         {
-            OnGUIInitialize();
-            OnGUIWarningNotProperlyInitialized();
-            OnGUIToolbar();
-            OnGUISearchBar();
-            OnGUILogEntryTable();
-            OnGUILogEntryInformation();
+            if (FatalContext.Instance.IsSet)
+            {
+                if (FatalContext.Instance.CurrentEvent != null)
+                {
+                    EditorGUILayout.LabelField("event type=" + FatalContext.Instance.CurrentEvent.type);
+                }
+                if (FatalContext.Instance.CurrentException != null)
+                {
+                    EditorGUILayout.LabelField("exception message=" + FatalContext.Instance.CurrentException.Message);
+                }
+                return;
+            }
+            try
+            {
+                OnGUIInitialize();
+                OnGUIWarningNotProperlyInitialized();
+                OnGUIToolbar();
+                OnGUISearchBar();
+                OnGUILogEntryTable();
+                OnGUILogEntryInformation();
+            }
+            catch (System.Exception ex)
+            {
+                FatalContext.Instance.Add(Event.current, ex);
+            }
         }
 
         protected void OpenIDE(LogEntry entry)
