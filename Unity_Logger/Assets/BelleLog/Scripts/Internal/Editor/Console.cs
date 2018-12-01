@@ -222,7 +222,7 @@ namespace BelleLog.Internal.Editor
 
         protected void OnGUILogEntryInformation()
         {
-            GUILayout.BeginHorizontal(new GUIStyle("Toolbar"));
+            GUILayout.BeginHorizontal(CustomGUIStyle.ToolbarStyle);
 
             if (GUILayout.Toggle(_bottomMode == BottomMode.LogContent, "Content", EditorStyles.toolbarButton))
             {
@@ -233,6 +233,9 @@ namespace BelleLog.Internal.Editor
                 _bottomMode = BottomMode.StackTrace;
             }
             GUILayout.EndHorizontal();
+
+            // to match editor's colors
+            GUILayout.Box("", CustomGUIStyle.BoxStyle);
 
             bool logEntryUpdated = _logEntryTableGUI.HasUpdatedSelectedEntry || _searchFieldGUI.HasUpdatedLogEntryIndex;
             // drawing stacktrace or content modifies the GUILayout. yet it can't be modified before a new layout event

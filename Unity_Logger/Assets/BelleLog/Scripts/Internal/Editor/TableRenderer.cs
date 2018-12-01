@@ -76,10 +76,14 @@ namespace BelleLog.Internal.Editor
                 return selectedEntry;
             }
 
+
             _split.OnGUI();
 
             // get the position from the vertical split
             Rect position = _split.Position;
+
+            // to match editor's colors
+            GUI.Box(position, "", CustomGUIStyle.BoxStyle);
 
             // we don't use GUILayout in the following part :
             // compute each row position
@@ -184,7 +188,7 @@ namespace BelleLog.Internal.Editor
             }
 
             // draw the bottom bar
-            var bottomBarPosition = GUILayoutUtility.GetRect(0, 2);
+            var bottomBarPosition = GUILayoutUtility.GetRect(0, 1);
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.DrawTexture(bottomBarPosition, _bottomBarTexture);

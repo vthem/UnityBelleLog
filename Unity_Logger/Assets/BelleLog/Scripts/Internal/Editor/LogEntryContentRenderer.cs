@@ -8,19 +8,17 @@ namespace BelleLog.Internal.Editor
         private Vector2 _scrollValue;
         private EditorWindow _parent;
         private readonly GUIStyle _selectableLabelStyle;
-        private readonly GUIStyle _boxStyle;
 
         public LogEntryContentRenderer(EditorWindow parent)
         {
             _parent = parent;
-            _selectableLabelStyle = new GUIStyle("CN Message");
-            _boxStyle = new GUIStyle("CN Box");
+            _selectableLabelStyle = new GUIStyle(CustomGUIStyle.LabelStyle);
             CustomGUIStyle.SetConsoleFont(_selectableLabelStyle);
         }
 
         public void OnGUI(string content)
         {
-            _scrollValue = GUILayout.BeginScrollView(_scrollValue, _boxStyle);
+            _scrollValue = GUILayout.BeginScrollView(_scrollValue, CustomGUIStyle.BoxStyle);
             var height = _selectableLabelStyle.CalcHeight(new GUIContent(content), _parent.position.width);
             EditorGUILayout.SelectableLabel(
                 content,
