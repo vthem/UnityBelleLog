@@ -172,8 +172,8 @@ namespace BelleLog.Internal.Editor
 
                             if (_lastClick.HasValue)
                             {
-                                int deltaTime = (DateTime.Now - _lastClick.Value).Milliseconds;
-                                bool isDoubleClick = deltaTime < 500;
+                                double deltaTime = (DateTime.Now - _lastClick.Value).TotalMilliseconds;
+                                bool isDoubleClick = deltaTime < 500.0;
                                 if (selectedEntry == _lastClickIndex && isDoubleClick)
                                 {
                                     HasDoubleClickedEntry = true;
