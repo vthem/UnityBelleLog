@@ -58,19 +58,28 @@ namespace BelleLog.Internal.Editor
             }
 
             bool entrySelected = index == selectedIndex;
+            var entry = _container[index];
             if (Event.current.type == EventType.Repaint)
             {
-                GUIStyle s = index % 2 == 0 ? _oddBackgroundStyle : _evenBackgroundStyle;
-                s.Draw(position, false, false, entrySelected, false);
+                if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
+                {
+                    if (index % 2 == 0)
+                    {
+                        GUI.DrawTexture(position, CustomGUIStyle.TextureFromLogLevel(entry.level));
+                    }
+                    else
+                    {
+                        GUI.DrawTexture(position, CustomGUIStyle.DarkTextureFromLogLevel(entry.level));
+                    }
+                }
+                else
+                {
+                    GUIStyle s = index % 2 == 0 ? _oddBackgroundStyle : _evenBackgroundStyle;
+                    s.Draw(position, false, false, entrySelected, false);
+                }
             }
-
-            var entry = _container[index];
 
             var normalColor = _labelStyle.normal.textColor;
-            if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
-            {
-                _labelStyle.normal.textColor = _levelColors[(int)entry.level];
-            }
             if (_collapseFilter.Enable)
             {
                 position = RenderCollapseCount(position, index);

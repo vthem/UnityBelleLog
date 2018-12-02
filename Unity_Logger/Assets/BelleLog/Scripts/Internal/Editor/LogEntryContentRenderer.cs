@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace BelleLog.Internal.Editor
@@ -8,6 +9,7 @@ namespace BelleLog.Internal.Editor
         private Vector2 _scrollValue;
         private EditorWindow _parent;
         private readonly GUIStyle _selectableLabelStyle;
+        private StringBuilder _contentStr = new StringBuilder();
 
         public LogEntryContentRenderer(EditorWindow parent)
         {
@@ -16,12 +18,17 @@ namespace BelleLog.Internal.Editor
             CustomGUIStyle.SetConsoleFont(_selectableLabelStyle);
         }
 
-        public void OnGUI(string content)
+        public void OnGUI(LogEntry entry)
         {
+            _contentStr.Length = 0;
+            _contentStr.AppendLine("Level:" + entry.level);
+            _contentStr.AppendLine("Content:");
+            _contentStr.AppendLine(entry.content);
             _scrollValue = GUILayout.BeginScrollView(_scrollValue, CustomGUIStyle.BoxStyle);
-            var height = _selectableLabelStyle.CalcHeight(new GUIContent(content), _parent.position.width);
+            var content = new GUIContent(_contentStr.ToString());
+            var height = _selectableLabelStyle.CalcHeight(content, _parent.position.width);
             EditorGUILayout.SelectableLabel(
-                content,
+                _contentStr.ToString(),
                 _selectableLabelStyle,
                 GUILayout.ExpandWidth(true),
                 GUILayout.ExpandHeight(true),

@@ -241,16 +241,14 @@ namespace BelleLog.Internal.Editor
             // drawing stacktrace or content modifies the GUILayout. yet it can't be modified before a new layout event
             if (_selectedLogEntryIndex != -1 && !logEntryUpdated)
             {
+                LogEntry logEntry;
+                logEntry = _logEntries[_selectedLogEntryIndex];
                 if (_bottomMode == BottomMode.LogContent)
                 {
-                    string label = string.Empty;
-                    label = _logEntries[_selectedLogEntryIndex].content;
-                    _logEntryContentGUI.OnGUI(label);
+                    _logEntryContentGUI.OnGUI(logEntry);
                 }
                 else if (_bottomMode == BottomMode.StackTrace)
                 {
-                    LogEntry logEntry;
-                    logEntry = _logEntries[_selectedLogEntryIndex];
                     _logEntryStackTraceGUI.OnGUI(logEntry);
                 }
             }
