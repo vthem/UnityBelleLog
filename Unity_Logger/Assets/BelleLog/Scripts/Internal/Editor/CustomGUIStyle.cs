@@ -45,7 +45,7 @@ namespace BelleLog.Internal.Editor
 
         public static void SetConsoleFont(GUIStyle style)
         {
-            style.font = (Font)Resources.Load("DroidSans");
+            style.font = (Font)Resources.Load("Consola");
             style.fontSize = 13;
         }
     }

@@ -20,6 +20,16 @@ namespace BelleLog.Internal.Editor
             new Color32(237, 28, 36, 0xff),
             new Color32(206, 0, 190, 0xff),
         };
+        private string[] _logLevelLabel = new string[]
+        {
+            "TRC",
+            "DBG",
+            "NFO",
+            "WRN",
+            "ERR",
+            "FTL"
+        };
+
         private CollapseLogFilter _collapseFilter;
 
         public bool[] EnableLevelColors { get; set; }
@@ -65,8 +75,9 @@ namespace BelleLog.Internal.Editor
             {
                 position = RenderCollapseCount(position, index);
             }
-            position = RenderFrameCount(position, entry);
             position = RenderTimestampLabel(position, entry);
+            position = RenderFrameCount(position, entry);
+            position = RenderLogLevel(position, entry);
             position = RenderTextLabel(position, entry);
             _labelStyle.normal.textColor = normalColor;
         }
@@ -95,6 +106,21 @@ namespace BelleLog.Internal.Editor
             {
                 content = new GUIContent(string.Format("+++"));
             }
+            float min, max;
+            _labelStyle.CalcMinMaxWidth(content, out min, out max);
+            lpos.width = max;
+            EditorGUI.LabelField(lpos, content, _labelStyle);
+
+            position.x = lpos.x + lpos.width;
+            return position;
+        }
+
+        private Rect RenderLogLevel(Rect position, LogEntry entry)
+        {
+            Rect lpos = position;
+            lpos.x = position.x + 3;
+
+            var content = new GUIContent(_logLevelLabel[(int)entry.level]);
             float min, max;
             _labelStyle.CalcMinMaxWidth(content, out min, out max);
             lpos.width = max;
