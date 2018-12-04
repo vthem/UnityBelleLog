@@ -175,8 +175,8 @@ namespace BelleLog.Internal.Editor
                 Color onNormalColor = EditorStyles.toolbarButton.onNormal.textColor;
                 if (_enableLogLevelColors[i])
                 {
-                    EditorStyles.toolbarButton.normal.textColor = _logEntryRenderer.GetLevelColor((LogLevel)i);
-                    EditorStyles.toolbarButton.onNormal.textColor = _logEntryRenderer.GetLevelColor((LogLevel)i);
+                    EditorStyles.toolbarButton.normal.textColor = CustomGUIStyle.LogLevelColors[i];
+                    EditorStyles.toolbarButton.onNormal.textColor = CustomGUIStyle.LogLevelColors[i];
                 }
                 bool newState = !GUILayout.Toggle(
                     !_logLevelFilters[i].Enable,

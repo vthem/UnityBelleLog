@@ -11,15 +11,7 @@ namespace BelleLog.Internal.Editor
         private GUIStyle _labelStyle;
         private readonly GUIStyle _oddBackgroundStyle;
         private readonly GUIStyle _evenBackgroundStyle;
-        private Color32[] _levelColors = new Color32[]
-        {
-            new Color32(181, 230, 29, 0xff),
-            new Color32(153, 217, 234, 0xff),
-            new Color32(255, 255, 255, 0xff),
-            new Color32(255, 201, 14, 0xff),
-            new Color32(237, 28, 36, 0xff),
-            new Color32(206, 0, 190, 0xff),
-        };
+
         private string[] _logLevelLabel = new string[]
         {
             "TRC",
@@ -43,11 +35,6 @@ namespace BelleLog.Internal.Editor
             _labelStyle.alignment = TextAnchor.MiddleLeft;
             CustomGUIStyle.SetConsoleFont(_labelStyle);
             _collapseFilter = collapseFilter;
-        }
-
-        public Color32 GetLevelColor(LogLevel level)
-        {
-            return _levelColors[(int)level];
         }
 
         public void OnGUI(Rect position, int index, int selectedIndex)
@@ -75,11 +62,16 @@ namespace BelleLog.Internal.Editor
                 else
                 {
                     GUIStyle s = index % 2 == 0 ? _oddBackgroundStyle : _evenBackgroundStyle;
-                    s.Draw(position, false, false, entrySelected, false);
+                    s.Draw(position, false, false, false, false);
                 }
             }
 
-            var normalColor = _labelStyle.normal.textColor;
+            var fontSize = _labelStyle.fontSize;
+            if (entrySelected)
+            {
+                _labelStyle.fontSize += 1;
+                _labelStyle.fontStyle = FontStyle.Bold;
+            }
             if (_collapseFilter.Enable)
             {
                 position = RenderCollapseCount(position, index);
@@ -88,7 +80,8 @@ namespace BelleLog.Internal.Editor
             position = RenderFrameCount(position, entry);
             position = RenderLogLevel(position, entry);
             position = RenderTextLabel(position, entry);
-            _labelStyle.normal.textColor = normalColor;
+            _labelStyle.fontSize = fontSize;
+            _labelStyle.fontStyle = FontStyle.Normal;
         }
 
         private bool IndexValid(int index)

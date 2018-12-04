@@ -103,6 +103,10 @@ namespace BelleLog.Internal.Editor
                     _scrollValue = _autoScrollToSelected.Scroll(selectedEntry, _scrollValue, rowCount);
                     _scrollValue = GUI.VerticalScrollbar(scrollbarPosition, _scrollValue, 1f, 0f, (lines.Count - rowCount + 1) * ScrollConstant);
                 }
+                else
+                {
+                    _scrollValue = 0f;
+                }
 
                 _entriesRect.Clear();
                 float delta = 0f;
