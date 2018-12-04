@@ -19,6 +19,7 @@ namespace BelleLog.Internal.Editor
         private string _text;
         private GUIStyle _labelStyle;
 
+
         public static void SetValue(string key, string value)
         {
             if (_instance != null)
@@ -132,6 +133,14 @@ namespace BelleLog.Internal.Editor
             if (GUILayout.Button("-- cr --"))
             {
                 throw new System.Exception("ahah!");
+            }
+
+            if (GUILayout.Button("-- add 5x --"))
+            {
+                for (int i = 0; i < 5; ++i)
+                {
+                    Debug.Log(_text);
+                }
             }
 
             _text = EditorGUILayout.TextArea(_text, _labelStyle);

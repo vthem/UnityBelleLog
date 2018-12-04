@@ -11,6 +11,7 @@ namespace BelleLog.Internal.Editor
         private GUIStyle _labelStyle;
         private readonly Texture2D _oddBackgroundTexture;
         private readonly Texture2D _evenBackgroundTexture;
+        private readonly GUIStyle _collapseCountStyle = new GUIStyle("CN CountBadge");
 
         private string[] _logLevelLabel = new string[]
         {
@@ -101,28 +102,16 @@ namespace BelleLog.Internal.Editor
         private Rect RenderCollapseCount(Rect position, int index)
         {
             Rect lpos = position;
-            lpos.x = position.x + 3;
 
             var count = _collapseFilter.CollapseCount(index);
-            GUIContent content = null;
-            if (count == 0)
-            {
-                content = new GUIContent(string.Format(" - "));
-            }
-            else if (count < 999)
-            {
-                content = new GUIContent(string.Format("{0:D3}", _collapseFilter.CollapseCount(index)));
-            }
-            else
-            {
-                content = new GUIContent(string.Format("+++"));
-            }
-            float min, max;
-            _labelStyle.CalcMinMaxWidth(content, out min, out max);
-            lpos.width = max;
-            EditorGUI.LabelField(lpos, content, _labelStyle);
+            var content = new GUIContent(count.ToString());
 
-            position.x = lpos.x + lpos.width;
+            Vector2 badgeSize = _collapseCountStyle.CalcSize(content);
+            lpos.xMin = lpos.xMax - badgeSize.x;
+            lpos.yMin += ((lpos.yMax - lpos.yMin) - badgeSize.y) * 0.5f;
+            lpos.x -= 5f;
+            EditorGUI.LabelField(lpos, content, _collapseCountStyle);
+
             return position;
         }
 
