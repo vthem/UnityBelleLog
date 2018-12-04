@@ -9,8 +9,8 @@ namespace BelleLog.Internal.Editor
         private ILogEntryContainer _container;
         private const string _defaultTimestampLabel = "0m00s000";
         private GUIStyle _labelStyle;
-        private readonly GUIStyle _oddBackgroundStyle;
-        private readonly GUIStyle _evenBackgroundStyle;
+        private readonly Texture2D _oddBackgroundTexture;
+        private readonly Texture2D _evenBackgroundTexture;
 
         private string[] _logLevelLabel = new string[]
         {
@@ -30,8 +30,8 @@ namespace BelleLog.Internal.Editor
         {
             _container = container;
             _labelStyle = new GUIStyle(GUI.skin.label);
-            _evenBackgroundStyle = new GUIStyle("CN EntryBackEven");
-            _oddBackgroundStyle = new GUIStyle("CN EntryBackodd");
+            _evenBackgroundTexture = new GUIStyle("CN EntryBackEven").normal.background;
+            _oddBackgroundTexture = new GUIStyle("CN EntryBackodd").normal.background;
             _labelStyle.alignment = TextAnchor.MiddleLeft;
             CustomGUIStyle.SetConsoleFont(_labelStyle);
             _collapseFilter = collapseFilter;
@@ -44,29 +44,38 @@ namespace BelleLog.Internal.Editor
                 return;
             }
 
-            bool entrySelected = index == selectedIndex;
             var entry = _container[index];
+            Texture2D backgroundTexture = null;
             if (Event.current.type == EventType.Repaint)
             {
                 if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
                 {
                     if (index % 2 == 0)
                     {
-                        GUI.DrawTexture(position, CustomGUIStyle.TextureFromLogLevel(entry.level));
+                        backgroundTexture = CustomGUIStyle.TextureFromLogLevel(entry.level);
                     }
                     else
                     {
-                        GUI.DrawTexture(position, CustomGUIStyle.DarkTextureFromLogLevel(entry.level));
+                        backgroundTexture = CustomGUIStyle.DarkTextureFromLogLevel(entry.level);
                     }
                 }
                 else
                 {
-                    GUIStyle s = index % 2 == 0 ? _oddBackgroundStyle : _evenBackgroundStyle;
-                    s.Draw(position, false, false, false, false);
+                    if (index % 2 == 0)
+                    {
+                        backgroundTexture = _oddBackgroundTexture;
+                    }
+                    else
+                    {
+                        backgroundTexture = _evenBackgroundTexture;
+                    }
                 }
             }
+            GUI.DrawTexture(position, backgroundTexture);
 
             var fontSize = _labelStyle.fontSize;
+            var fontStyle = _labelStyle.fontStyle;
+            bool entrySelected = index == selectedIndex;
             if (entrySelected)
             {
                 _labelStyle.fontSize += 1;
@@ -81,7 +90,7 @@ namespace BelleLog.Internal.Editor
             position = RenderLogLevel(position, entry);
             position = RenderTextLabel(position, entry);
             _labelStyle.fontSize = fontSize;
-            _labelStyle.fontStyle = FontStyle.Normal;
+            _labelStyle.fontStyle = fontStyle;
         }
 
         private bool IndexValid(int index)
