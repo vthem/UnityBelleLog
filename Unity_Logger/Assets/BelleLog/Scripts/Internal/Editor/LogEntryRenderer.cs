@@ -23,7 +23,10 @@ namespace BelleLog.Internal.Editor
             "FTL"
         };
 
-        private Color32[] _textColor;
+        private static Texture2D[] _logLevelTextures = null;
+        private const int ColorWidth = 35;
+
+        private static Texture2D[] _logLevelDarkTextures = null;
 
         private CollapseLogFilter _collapseFilter;
 
@@ -38,17 +41,6 @@ namespace BelleLog.Internal.Editor
             _labelStyle.alignment = TextAnchor.MiddleLeft;
             CustomGUIStyle.SetConsoleFont(_labelStyle);
             _collapseFilter = collapseFilter;
-
-            _textColor = new Color32[]
-            {
-                _labelStyle.normal.textColor,
-                _labelStyle.normal.textColor,
-                Color.black,
-                _labelStyle.normal.textColor,
-                _labelStyle.normal.textColor,
-                _labelStyle.normal.textColor
-            };
-
         }
 
         public void OnGUI(Rect position, int index, int selectedIndex)
@@ -60,49 +52,35 @@ namespace BelleLog.Internal.Editor
 
             var entry = _container[index];
             Texture2D backgroundTexture = null;
+            if (index % 2 == 0)
+            {
+                backgroundTexture = _oddBackgroundTexture;
+            }
+            else
+            {
+                backgroundTexture = _evenBackgroundTexture;
+            }
             if (Event.current.type == EventType.Repaint)
             {
-                if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
-                {
-                    if (index % 2 == 0)
-                    {
-                        backgroundTexture = CustomGUIStyle.TextureFromLogLevel(entry.level);
-                    }
-                    else
-                    {
-                        backgroundTexture = CustomGUIStyle.DarkTextureFromLogLevel(entry.level);
-                    }
-                }
-                else
-                {
-                    if (index % 2 == 0)
-                    {
-                        backgroundTexture = _oddBackgroundTexture;
-                    }
-                    else
-                    {
-                        backgroundTexture = _evenBackgroundTexture;
-                    }
-                }
                 GUI.DrawTexture(position, backgroundTexture);
             }
 
             var fontSize = _labelStyle.fontSize;
             var fontStyle = _labelStyle.fontStyle;
             bool entrySelected = index == selectedIndex;
-            _labelStyle.normal.textColor = _textColor[(int)entry.level];
             if (entrySelected)
             {
                 _labelStyle.fontSize += 1;
                 _labelStyle.fontStyle = FontStyle.Bold;
             }
+            position = RenderColor(position, entry, index);
             if (_collapseFilter.Enable)
             {
                 position = RenderCollapseCount(position, index);
             }
+            position = RenderLogLevel(position, entry);
             position = RenderTimestampLabel(position, entry);
             position = RenderFrameCount(position, entry);
-            position = RenderLogLevel(position, entry);
             position = RenderTextLabel(position, entry);
             _labelStyle.fontSize = fontSize;
             _labelStyle.fontStyle = fontStyle;
@@ -159,6 +137,42 @@ namespace BelleLog.Internal.Editor
             return position;
         }
 
+        private Rect RenderColor(Rect position, LogEntry entry, int index)
+        {
+            Rect lpos = position;
+            lpos.width = ColorWidth;
+
+            Texture2D backgroundTexture = null;
+            if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
+            {
+                if (index % 2 == 0)
+                {
+                    backgroundTexture = TextureFromLogLevel(entry.level);
+                }
+                else
+                {
+                    backgroundTexture = DarkTextureFromLogLevel(entry.level);
+                }
+            }
+            else
+            {
+                if (index % 2 == 0)
+                {
+                    backgroundTexture = _oddBackgroundTexture;
+                }
+                else
+                {
+                    backgroundTexture = _evenBackgroundTexture;
+                }
+            }
+            if (Event.current.type == EventType.Repaint)
+            {
+                GUI.DrawTexture(lpos, backgroundTexture);
+            }
+
+            return position;
+        }
+
         private Rect RenderTimestampLabel(Rect position, LogEntry entry)
         {
             Rect lpos = position;
@@ -194,6 +208,52 @@ namespace BelleLog.Internal.Editor
 
             position.x = lpos.x + lpos.width;
             return position;
+        }
+
+        private static Texture2D TextureFromLogLevel(LogLevel level)
+        {
+            if (_logLevelTextures == null)
+            {
+                _logLevelTextures = new Texture2D[CustomGUIStyle.LogLevelColors.Length];
+                for (int i = 0; i < CustomGUIStyle.LogLevelColors.Length; ++i)
+                {
+                    _logLevelTextures[i] = new Texture2D(ColorWidth, 1);
+                    SetTexturePixels(_logLevelTextures[i], CustomGUIStyle.LogLevelColors[i]);
+                    _logLevelTextures[i].Apply();
+                }
+            }
+            return _logLevelTextures[(int)level];
+        }
+
+        private static Texture2D DarkTextureFromLogLevel(LogLevel level)
+        {
+            if (_logLevelDarkTextures == null)
+            {
+                _logLevelDarkTextures = new Texture2D[CustomGUIStyle.LogLevelColors.Length];
+                for (int i = 0; i < CustomGUIStyle.LogLevelColors.Length; ++i)
+                {
+                    _logLevelDarkTextures[i] = new Texture2D(ColorWidth, 1);
+                    Color32 c = CustomGUIStyle.LogLevelColors[i];
+                    c.r = (byte)Mathf.Clamp(c.r - 10, 0, 255);
+                    c.g = (byte)Mathf.Clamp(c.g - 10, 0, 255); ;
+                    c.b = (byte)Mathf.Clamp(c.b - 10, 0, 255); ;
+
+                    SetTexturePixels(_logLevelDarkTextures[i], CustomGUIStyle.LogLevelColors[i]);
+                    _logLevelDarkTextures[i].Apply();
+                }
+            }
+            return _logLevelDarkTextures[(int)level];
+        }
+
+        private static void SetTexturePixels(Texture2D texture, Color32 color)
+        {
+            var start = color;
+            var end = color;
+            end.a = 0x0;
+            for (int k = 0; k < ColorWidth; ++k)
+            {
+                texture.SetPixel(k, 0, Color32.Lerp(start, end, k / (float)ColorWidth));
+            }
         }
     }
 }

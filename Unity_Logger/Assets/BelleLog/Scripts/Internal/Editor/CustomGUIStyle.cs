@@ -66,40 +66,6 @@ namespace BelleLog.Internal.Editor
             FatalColor,
         };
 
-        private static Texture2D[] _logLevelTextures = null;
-        public static Texture2D TextureFromLogLevel(LogLevel level)
-        {
-            if (_logLevelTextures == null)
-            {
-                _logLevelTextures = new Texture2D[LogLevelColors.Length];
-                for (int i = 0; i < LogLevelColors.Length; ++i)
-                {
-                    _logLevelTextures[i] = new Texture2D(1, 1);
-                    _logLevelTextures[i].SetPixel(0, 0, LogLevelColors[i]);
-                    _logLevelTextures[i].Apply();
-                }
-            }
-            return _logLevelTextures[(int)level];
-        }
 
-        private static Texture2D[] _logLevelDarkTextures = null;
-        public static Texture2D DarkTextureFromLogLevel(LogLevel level)
-        {
-            if (_logLevelDarkTextures == null)
-            {
-                _logLevelDarkTextures = new Texture2D[LogLevelColors.Length];
-                for (int i = 0; i < LogLevelColors.Length; ++i)
-                {
-                    _logLevelDarkTextures[i] = new Texture2D(1, 1);
-                    Color32 c = LogLevelColors[i];
-                    c.r = (byte)Mathf.Clamp(c.r - 10, 0, 255);
-                    c.g = (byte)Mathf.Clamp(c.g - 10, 0, 255); ;
-                    c.b = (byte)Mathf.Clamp(c.b - 10, 0, 255); ;
-                    _logLevelDarkTextures[i].SetPixel(0, 0, c);
-                    _logLevelDarkTextures[i].Apply();
-                }
-            }
-            return _logLevelDarkTextures[(int)level];
-        }
     }
 }
