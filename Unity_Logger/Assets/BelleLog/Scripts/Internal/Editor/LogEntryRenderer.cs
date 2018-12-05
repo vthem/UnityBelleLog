@@ -25,7 +25,7 @@ namespace BelleLog.Internal.Editor
 
         private Texture2D[] _logLevelTextures = null;
         private Texture2D[] _logLevelDarkTextures = null;
-        private const int ColorWidth = 35;
+        private const int ColorWidth = 5;
 
         private CollapseLogFilter _collapseFilter;
 
@@ -138,10 +138,11 @@ namespace BelleLog.Internal.Editor
 
         private Rect RenderColor(Rect position, LogEntry entry, int index)
         {
+            Rect lpos = position;
+            lpos.width = ColorWidth;
+
             if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
             {
-                Rect lpos = position;
-                lpos.width = ColorWidth;
                 Texture2D backgroundTexture = null;
                 if (index % 2 == 0)
                 {
@@ -157,6 +158,7 @@ namespace BelleLog.Internal.Editor
                 }
             }
 
+            position.x = lpos.x + lpos.width;
             return position;
         }
 
