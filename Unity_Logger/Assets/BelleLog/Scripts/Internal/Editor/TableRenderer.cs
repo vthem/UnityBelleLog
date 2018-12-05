@@ -181,6 +181,7 @@ namespace BelleLog.Internal.Editor
                                 if (selectedEntry == _lastClickIndex && isDoubleClick)
                                 {
                                     HasDoubleClickedEntry = true;
+                                    Event.current.Use();
                                 }
                             }
                             _lastClick = DateTime.Now;

@@ -23,10 +23,9 @@ namespace BelleLog.Internal.Editor
             "FTL"
         };
 
-        private static Texture2D[] _logLevelTextures = null;
+        private Texture2D[] _logLevelTextures = null;
+        private Texture2D[] _logLevelDarkTextures = null;
         private const int ColorWidth = 35;
-
-        private static Texture2D[] _logLevelDarkTextures = null;
 
         private CollapseLogFilter _collapseFilter;
 
@@ -139,12 +138,11 @@ namespace BelleLog.Internal.Editor
 
         private Rect RenderColor(Rect position, LogEntry entry, int index)
         {
-            Rect lpos = position;
-            lpos.width = ColorWidth;
-
-            Texture2D backgroundTexture = null;
             if (EnableLevelColors != null && EnableLevelColors[(int)entry.level])
             {
+                Rect lpos = position;
+                lpos.width = ColorWidth;
+                Texture2D backgroundTexture = null;
                 if (index % 2 == 0)
                 {
                     backgroundTexture = TextureFromLogLevel(entry.level);
@@ -153,21 +151,10 @@ namespace BelleLog.Internal.Editor
                 {
                     backgroundTexture = DarkTextureFromLogLevel(entry.level);
                 }
-            }
-            else
-            {
-                if (index % 2 == 0)
+                if (Event.current.type == EventType.Repaint)
                 {
-                    backgroundTexture = _oddBackgroundTexture;
+                    GUI.DrawTexture(lpos, backgroundTexture);
                 }
-                else
-                {
-                    backgroundTexture = _evenBackgroundTexture;
-                }
-            }
-            if (Event.current.type == EventType.Repaint)
-            {
-                GUI.DrawTexture(lpos, backgroundTexture);
             }
 
             return position;
@@ -210,7 +197,7 @@ namespace BelleLog.Internal.Editor
             return position;
         }
 
-        private static Texture2D TextureFromLogLevel(LogLevel level)
+        private Texture2D TextureFromLogLevel(LogLevel level)
         {
             if (_logLevelTextures == null)
             {
@@ -220,12 +207,13 @@ namespace BelleLog.Internal.Editor
                     _logLevelTextures[i] = new Texture2D(ColorWidth, 1);
                     SetTexturePixels(_logLevelTextures[i], CustomGUIStyle.LogLevelColors[i]);
                     _logLevelTextures[i].Apply();
+                    _logLevelTextures[i].hideFlags = HideFlags.HideAndDontSave;
                 }
             }
             return _logLevelTextures[(int)level];
         }
 
-        private static Texture2D DarkTextureFromLogLevel(LogLevel level)
+        private Texture2D DarkTextureFromLogLevel(LogLevel level)
         {
             if (_logLevelDarkTextures == null)
             {
@@ -240,6 +228,7 @@ namespace BelleLog.Internal.Editor
 
                     SetTexturePixels(_logLevelDarkTextures[i], CustomGUIStyle.LogLevelColors[i]);
                     _logLevelDarkTextures[i].Apply();
+                    _logLevelDarkTextures[i].hideFlags = HideFlags.HideAndDontSave;
                 }
             }
             return _logLevelDarkTextures[(int)level];
