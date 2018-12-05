@@ -82,9 +82,6 @@ namespace BelleLog.Internal.Editor
             // get the position from the vertical split
             Rect position = _split.Position;
 
-            // to match editor's colors
-            GUI.Box(position, "", CustomGUIStyle.BoxStyle);
-
             // we don't use GUILayout in the following part :
             // compute each row position
             int rowCount = GetRowCount();

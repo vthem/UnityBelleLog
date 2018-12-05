@@ -234,9 +234,6 @@ namespace BelleLog.Internal.Editor
             }
             GUILayout.EndHorizontal();
 
-            // to match editor's colors
-            GUILayout.Box("", CustomGUIStyle.BoxStyle);
-
             bool logEntryUpdated = _logEntryTableGUI.HasUpdatedSelectedEntry || _searchFieldGUI.HasUpdatedLogEntryIndex;
             // drawing stacktrace or content modifies the GUILayout. yet it can't be modified before a new layout event
             if (_selectedLogEntryIndex != -1 && !logEntryUpdated)
@@ -275,6 +272,11 @@ namespace BelleLog.Internal.Editor
             }
             try
             {
+                // to match editor's colors
+                Rect boxPosition = position;
+                boxPosition.x = boxPosition.y = 0;
+                GUI.Box(boxPosition, "", CustomGUIStyle.BoxStyle);
+
                 OnGUIInitialize();
                 OnGUIWarningNotProperlyInitialized();
                 OnGUIToolbar();
