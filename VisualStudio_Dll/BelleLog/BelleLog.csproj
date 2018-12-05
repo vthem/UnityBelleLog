@@ -50,6 +50,7 @@
     <Compile Include="Scripts\Internal\Editor\Console.cs" />
     <Compile Include="Scripts\Internal\Editor\ConsoleLogHandler.cs" />
     <Compile Include="Scripts\Internal\Editor\CustomGUIStyle.cs" />
+    <Compile Include="Scripts\Internal\Editor\FatalContext.cs" />
     <Compile Include="Scripts\Internal\Editor\Filter\CollapseLogFilter.cs" />
     <Compile Include="Scripts\Internal\Editor\Filter\LogFilterIndexer.cs" />
     <Compile Include="Scripts\Internal\Editor\Filter\PredicateLogFilter.cs" />
