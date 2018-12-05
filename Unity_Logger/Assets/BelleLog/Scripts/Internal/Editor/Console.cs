@@ -265,6 +265,11 @@ namespace BelleLog.Internal.Editor
                 if (FatalContext.Instance.CurrentException != null)
                 {
                     EditorGUILayout.LabelField("exception message=" + FatalContext.Instance.CurrentException.Message);
+                    EditorGUILayout.TextField(FatalContext.Instance.CurrentException.StackTrace);
+                }
+                if (GUILayout.Button("Clear"))
+                {
+                    FatalContext.Instance.Reset();
                 }
                 return;
             }

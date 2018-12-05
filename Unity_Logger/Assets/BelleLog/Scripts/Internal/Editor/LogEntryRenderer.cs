@@ -23,6 +23,8 @@ namespace BelleLog.Internal.Editor
             "FTL"
         };
 
+        private Color32[] _textColor;
+
         private CollapseLogFilter _collapseFilter;
 
         public bool[] EnableLevelColors { get; set; }
@@ -36,6 +38,17 @@ namespace BelleLog.Internal.Editor
             _labelStyle.alignment = TextAnchor.MiddleLeft;
             CustomGUIStyle.SetConsoleFont(_labelStyle);
             _collapseFilter = collapseFilter;
+
+            _textColor = new Color32[]
+            {
+                _labelStyle.normal.textColor,
+                _labelStyle.normal.textColor,
+                Color.black,
+                _labelStyle.normal.textColor,
+                _labelStyle.normal.textColor,
+                _labelStyle.normal.textColor
+            };
+
         }
 
         public void OnGUI(Rect position, int index, int selectedIndex)
@@ -71,12 +84,13 @@ namespace BelleLog.Internal.Editor
                         backgroundTexture = _evenBackgroundTexture;
                     }
                 }
+                GUI.DrawTexture(position, backgroundTexture);
             }
-            GUI.DrawTexture(position, backgroundTexture);
 
             var fontSize = _labelStyle.fontSize;
             var fontStyle = _labelStyle.fontStyle;
             bool entrySelected = index == selectedIndex;
+            _labelStyle.normal.textColor = _textColor[(int)entry.level];
             if (entrySelected)
             {
                 _labelStyle.fontSize += 1;
