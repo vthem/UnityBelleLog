@@ -69,7 +69,6 @@ namespace BelleLog.Internal.Editor
             bool entrySelected = index == selectedIndex;
             if (entrySelected)
             {
-                _labelStyle.fontSize += 1;
                 _labelStyle.fontStyle = FontStyle.Bold;
             }
             position = RenderColor(position, entry, index);
@@ -81,7 +80,6 @@ namespace BelleLog.Internal.Editor
             position = RenderTimestampLabel(position, entry);
             position = RenderFrameCount(position, entry);
             position = RenderTextLabel(position, entry);
-            _labelStyle.fontSize = fontSize;
             _labelStyle.fontStyle = fontStyle;
         }
 

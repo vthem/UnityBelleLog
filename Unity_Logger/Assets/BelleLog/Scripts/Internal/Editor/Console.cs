@@ -273,9 +273,9 @@ namespace BelleLog.Internal.Editor
             try
             {
                 // to match editor's colors
-                Rect boxPosition = position;
-                boxPosition.x = boxPosition.y = 0;
-                GUI.Box(boxPosition, "", CustomGUIStyle.BoxStyle);
+                //Rect boxPosition = position;
+                //boxPosition.x = boxPosition.y = 0;
+                //GUI.Box(boxPosition, "", CustomGUIStyle.BoxStyle);
 
                 OnGUIInitialize();
                 OnGUIWarningNotProperlyInitialized();

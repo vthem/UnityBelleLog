@@ -21,7 +21,10 @@ namespace BelleLog.Internal.Editor
         public void OnGUI(LogEntry entry)
         {
             _contentStr.Length = 0;
-            _contentStr.AppendLine("Level:" + entry.level);
+            _contentStr.AppendLine("Level: " + entry.level);
+            _contentStr.AppendLine("Time: " + entry.time.ToString());
+            _contentStr.AppendLine("Frame: " + entry.frame);
+            _contentStr.AppendLine("Domain: " + entry.domain);
             _contentStr.AppendLine("Content:");
             _contentStr.AppendLine(entry.content);
             _scrollValue = GUILayout.BeginScrollView(_scrollValue, CustomGUIStyle.BoxStyle);
