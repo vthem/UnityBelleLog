@@ -9,11 +9,18 @@ namespace BelleLog.Internal.Editor
     {
         private Vector2 _scrollValue;
         private GUIStyle _labelStyle;
+        private GUIStyle _buttonStyle;
+        private int _height = 18;
 
         public LogEntryStackTraceRenderer()
         {
             _labelStyle = new GUIStyle(CustomGUIStyle.LabelStyle);
-            _labelStyle.alignment = TextAnchor.MiddleLeft;
+            _labelStyle.alignment = TextAnchor.UpperLeft;
+            _labelStyle.contentOffset = new Vector2(0, 1);
+            _labelStyle.fixedHeight = _height;
+
+            _buttonStyle = new GUIStyle(EditorStyles.miniButton);
+
             CustomGUIStyle.SetConsoleFont(_labelStyle);
         }
 
@@ -37,13 +44,10 @@ namespace BelleLog.Internal.Editor
             {
                 var frame = logEntry.stackTrace[i];
                 var fileExist = File.Exists(frame.fileName);
-                var style = new GUIStyle(GUI.skin.box);
-                style.margin = new RectOffset(0, 0, 1, 1);
-                EditorGUILayout.BeginHorizontal(style);
+                EditorGUILayout.BeginHorizontal();
                 GUI.enabled = fileExist;
 
-                int h = 18;
-                if (GUILayout.Button(">", GUILayout.Height(h), GUILayout.Width(30)))
+                if (GUILayout.Button(">", _buttonStyle, GUILayout.Width(18)))
                 {
                     InternalEditorUtility.OpenFileAtLineExternal(frame.fileName, frame.line);
                 }
@@ -60,16 +64,16 @@ namespace BelleLog.Internal.Editor
 
                     if (!string.IsNullOrEmpty(frame.className))
                     {
-                        EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + shortFilename + " +" + frame.line + ")", _labelStyle, GUILayout.Height(h));
+                        EditorGUILayout.LabelField(frame.className + "::" + frame.methodName + " (at " + shortFilename + " +" + frame.line + ")", _labelStyle, GUILayout.Height(_height));
                     }
                     else
                     {
-                        EditorGUILayout.LabelField(shortFilename + " +" + frame.line, _labelStyle, GUILayout.Height(h));
+                        EditorGUILayout.LabelField(shortFilename + " +" + frame.line, _labelStyle, GUILayout.Height(_height));
                     }
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(frame.className + "::" + frame.methodName, _labelStyle, GUILayout.Height(h));
+                    EditorGUILayout.LabelField(frame.className + "::" + frame.methodName, _labelStyle, GUILayout.Height(_height));
                 }
                 EditorGUILayout.EndHorizontal();
             }

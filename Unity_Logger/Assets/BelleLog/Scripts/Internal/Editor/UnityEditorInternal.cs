@@ -46,12 +46,14 @@ namespace BelleLog.Internal.Editor
         {
             try
             {
-                string ns = "UnityEditorInternal";
-#if UNITY_2017_1_OR_NEWER
-                ns = "UnityEditor";
-#endif
                 var unityEditor = Assembly.Load("UnityEditor.dll");
+                string ns = "UnityEditorInternal";
                 var logEntriesType = unityEditor.GetType(ns + ".LogEntries");
+                if (logEntriesType == null)
+                {
+                    ns = "UnityEditor";
+                    logEntriesType = unityEditor.GetType(ns + ".LogEntries");
+                }
                 _startGettingEntriesMethod = logEntriesType.GetMethod("StartGettingEntries");
                 _endGettingEntriesMethod = logEntriesType.GetMethod("EndGettingEntries");
                 _getEntryMethod = logEntriesType.GetMethod("GetEntryInternal");
