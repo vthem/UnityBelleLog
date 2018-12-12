@@ -33,7 +33,7 @@ namespace BelleLog.Internal.Editor
             }
             LogEntry entry;
             entry.args = defaultArgs;
-            entry.content = string.Empty;
+            entry.content = condition;
             entry.domain = "UnityEngine";
             if (EditorApplication.isPlaying)
             {
@@ -45,7 +45,7 @@ namespace BelleLog.Internal.Editor
                 entry.duration = TimeSpan.FromSeconds(0.0);
                 entry.frame = 0;
             }
-            entry.format = condition;
+            entry.format = null;
             switch (type)
             {
                 case LogType.Error:

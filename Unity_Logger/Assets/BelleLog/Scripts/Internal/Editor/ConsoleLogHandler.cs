@@ -84,13 +84,13 @@ namespace BelleLog.Internal.Editor
         #region ILogHandler
         void ILogHandler.Enqueue(LogEntry entry)
         {
-            if (entry.args != null)
+            if (entry.args != null && entry.format != null)
             {
                 _stringBuilder.Length = 0;
                 _stringBuilder.AppendFormat(entry.format, entry.args);
                 entry.content = _stringBuilder.ToString();
             }
-            else
+            else if (string.IsNullOrEmpty(entry.content))
             {
                 entry.content = entry.format;
             }
