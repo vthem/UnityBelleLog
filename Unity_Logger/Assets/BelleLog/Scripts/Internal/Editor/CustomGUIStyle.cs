@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace BelleLog.Internal.Editor
 {
@@ -31,7 +32,7 @@ namespace BelleLog.Internal.Editor
             {
                 if (_labelStyle == null)
                 {
-                    _labelStyle = new GUIStyle("CN Message");
+                    _labelStyle = EditorStyles.label;
                 }
                 return _labelStyle;
             }

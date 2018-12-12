@@ -16,7 +16,7 @@ namespace BelleLog.Internal.Editor
         {
             _labelStyle = new GUIStyle(CustomGUIStyle.LabelStyle);
             _labelStyle.alignment = TextAnchor.UpperLeft;
-            _labelStyle.contentOffset = new Vector2(0, -1);
+            _labelStyle.contentOffset = new Vector2(0, 1);
             _labelStyle.fixedHeight = _height;
 
             _buttonStyle = new GUIStyle(EditorStyles.miniButton);
