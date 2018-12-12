@@ -18,6 +18,7 @@ namespace BelleLog.Internal.Editor
         private LogEntryStackTraceRenderer _logEntryStackTraceGUI;
         private LogEntryCounter _logEntryCounter;
         private LogEntryRenderer _logEntryRenderer;
+        private LogFilterInputRenderer _logFilterInputRenderer;
 
         private bool _initialized = false;
         private bool _onGUIInitialized = false;
@@ -133,6 +134,7 @@ namespace BelleLog.Internal.Editor
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
             _logEntryTableGUI = new TableRenderer(this, _logEntryRenderer);
             _searchFieldGUI = new SearchTabRenderer(this);
+            _logFilterInputRenderer = new LogFilterInputRenderer(_logHandler);
 
             _logEntries.Updated += NewLogEntryHandler;
 
@@ -281,6 +283,7 @@ namespace BelleLog.Internal.Editor
                 OnGUIWarningNotProperlyInitialized();
                 OnGUIToolbar();
                 OnGUISearchBar();
+                _logFilterInputRenderer.OnGUI();
                 OnGUILogEntryTable();
                 OnGUILogEntryInformation();
             }
