@@ -4,56 +4,41 @@ namespace BelleLog.Internal.Editor.Filter
 {
     internal class LogFilterIndexer
     {
-        private List<ILogFilter> _filters = new List<ILogFilter>();
+        private List<int> _filteredLogEntries = new List<int>();
 
-        public void AddFilter(ILogFilter filter)
+        public int Count { get { return _filteredLogEntries.Count; } }
+
+        public void Clear()
         {
-            if (!_filters.Contains(filter))
+            _filteredLogEntries.Clear();
+        }
+
+        public int this[int index]
+        {
+            get
             {
-                _filters.Add(filter);
+                return _filteredLogEntries[index];
             }
         }
 
-        public void RemoveFilter(ILogFilter filter)
+        public void AddEntry(LogFilterChain filters, LogEntry entry, int index)
         {
-            _filters.Remove(filter);
+            if (filters.Apply(entry) == LogFilterAction.Accept)
+            {
+                _filteredLogEntries.Add(index);
+            }
         }
 
-        public LogFilterAction Apply(LogEntry entry)
+        public void Apply(LogFilterChain filters, List<LogEntry> entries)
         {
-            LogFilterTermination termination;
-            LogFilterAction action = LogFilterAction.Accept;
-            for (int f = 0; f < _filters.Count; ++f)
-            {
-                if (!_filters[f].Enable)
-                {
-                    continue;
-                }
-                _filters[f].Apply(entry, ref action, out termination);
-                if (termination == LogFilterTermination.Stop)
-                {
-                    break;
-                }
-            }
-            return action;
-        }
-
-        public List<int> Apply(List<LogEntry> entries)
-        {
-            for (int f = 0; f < _filters.Count; ++f)
-            {
-                _filters[f].Reset();
-            }
-
-            List<int> result = new List<int>();
+            _filteredLogEntries = new List<int>();
             for (int i = 0; i < entries.Count; ++i)
             {
-                if (Apply(entries[i]) == LogFilterAction.Accept)
+                if (filters.Apply(entries[i]) == LogFilterAction.Accept)
                 {
-                    result.Add(i);
+                    _filteredLogEntries.Add(i);
                 }
             }
-            return result;
         }
     }
 }

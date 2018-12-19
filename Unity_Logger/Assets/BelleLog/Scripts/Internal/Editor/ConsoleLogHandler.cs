@@ -10,8 +10,9 @@ namespace BelleLog.Internal.Editor
         private readonly List<LogEntry> _logEntries = new List<LogEntry>();
         private readonly StringBuilder _stringBuilder = new StringBuilder();
         private event Action<ILogEntryContainer, LogEntry> Updated;
-        private List<int> _filteredLogEntries = new List<int>();
-        private readonly LogFilterIndexer _filterEngine = new LogFilterIndexer();
+
+        private readonly LogFilterChain _filterChain = new LogFilterChain();
+        private readonly LogFilterIndexer _filterIndexer = new LogFilterIndexer();
         private readonly uint[] _logEntryCountByLevel = new uint[]
         {
             0, // Trace
@@ -24,31 +25,31 @@ namespace BelleLog.Internal.Editor
 
         public void AddFilter(ILogFilter filter)
         {
-            _filterEngine.AddFilter(filter);
+            _filterChain.AddFilter(filter);
         }
 
         public void RemoveFilter(ILogFilter filter)
         {
-            _filterEngine.RemoveFilter(filter);
+            _filterChain.RemoveFilter(filter);
         }
 
         public void ApplyFilters()
         {
-            _filteredLogEntries = _filterEngine.Apply(_logEntries);
+            _filterIndexer.Apply(_filterChain, _logEntries);
         }
 
         #region ILogEntryContainer
-        int ILogEntryContainer.Count { get { return _filteredLogEntries.Count; } }
+        int ILogEntryContainer.Count { get { return _filterIndexer.Count; } }
 
         LogEntry ILogEntryContainer.this[int index]
         {
             get
             {
-                if (index < 0 || index >= _filteredLogEntries.Count)
+                if (index < 0 || index >= _filterIndexer.Count)
                 {
-                    throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _filteredLogEntries.Count);
+                    throw new System.IndexOutOfRangeException("ConsoleLogHandler > requested index=" + index + " count=" + _filterIndexer.Count);
                 }
-                return _logEntries[_filteredLogEntries[index]];
+                return _logEntries[_filterIndexer[index]];
             }
         }
 
@@ -68,7 +69,7 @@ namespace BelleLog.Internal.Editor
         void ILogEntryContainer.Clear()
         {
             _logEntries.Clear();
-            _filteredLogEntries.Clear();
+            _filterIndexer.Clear();
             for (int i = 0; i < _logEntryCountByLevel.Length; ++i)
             {
                 _logEntryCountByLevel[i] = 0;
@@ -95,10 +96,7 @@ namespace BelleLog.Internal.Editor
                 entry.content = entry.format;
             }
             _logEntries.Add(entry);
-            if (_filterEngine.Apply(entry) == LogFilterAction.Accept)
-            {
-                _filteredLogEntries.Add(_logEntries.Count - 1);
-            }
+            _filterIndexer.AddEntry(_filterChain, entry, _logEntries.Count - 1);
 
             _logEntryCountByLevel[(int)entry.level] += 1;
 
