@@ -27,6 +27,11 @@ namespace BelleLog.Internal.Editor.Filter
             }
         }
 
+        public void RemoveAll()
+        {
+            _filters.Clear();
+        }
+
         public LogFilterAction Apply(LogEntry entry)
         {
             LogFilterTermination termination;

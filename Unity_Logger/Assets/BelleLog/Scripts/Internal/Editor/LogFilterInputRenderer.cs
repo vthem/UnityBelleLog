@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BelleLog.Internal.Editor
 {
-    internal class LogFilterInputRenderer : ILogFilter
+    internal class LogFilterInputRenderer : ILogFilter, ILogFilterEnableChangedEvent
     {
         enum Opt
         {
@@ -18,16 +18,18 @@ namespace BelleLog.Internal.Editor
         }
 
         private string _filterInputText;
-        private ConsoleLogHandler _logHandler;
+        private LogFilterChain _filterChain = new LogFilterChain();
 
-        Dictionary<string, Opt> strToOpt = new Dictionary<string, Opt>
-                {
-                    {"st", Opt.StackTrace },
-                    {"d", Opt.Domain },
-                    {"stf", Opt.StackTraceFile }
-                };
+        private readonly Dictionary<string, Opt> _strToOpt = new Dictionary<string, Opt>
+        {
+            {"st", Opt.StackTrace },
+            {"d", Opt.Domain },
+            {"stf", Opt.StackTraceFile }
+        };
 
-        public LogFilterInputRenderer(ConsoleLogHandler logHandler)
+        public event Action FilterEnableChanged;
+
+        public LogFilterInputRenderer()
         {
             Enable = false;
         }
@@ -36,7 +38,8 @@ namespace BelleLog.Internal.Editor
 
         public void Apply(LogEntry logEntry, ref LogFilterAction action, out LogFilterTermination termination)
         {
-            throw new System.NotImplementedException();
+            action = _filterChain.Apply(logEntry);
+            termination = LogFilterTermination.Continue;
         }
 
         public void OnGUI()
@@ -55,13 +58,13 @@ namespace BelleLog.Internal.Editor
             {
                 ParseInputText();
             }
-
         }
 
         public void ParseInputText()
         {
-            var matches = Regex.Matches(_filterInputText, @"(?<cmd>-[xi]):?(?<opt>[a-z]*) (('(?<v1>(.*))')|(?<v2>([^ ]*)))");
+            Enable = false;
 
+            var matches = Regex.Matches(_filterInputText, @"(?<cmd>-[ei]):?(?<opt>[a-z]*) (('(?<v1>(.*))')|(?<v2>([^ ]*)))");
 
             List<ILogFilter> filters = new List<ILogFilter>();
             Debug.Log("count=" + matches.Count);
@@ -69,30 +72,90 @@ namespace BelleLog.Internal.Editor
             {
                 GroupCollection groups = match.Groups;
                 Debug.Log("cmd=" + groups["cmd"] + " opt=" + groups["opt"] + " v1=" + groups["v1"] + " v2=" + groups["v2"]);
-                var opt = groups["opt"].Value;
                 var v1 = groups["v1"].Value;
                 var v2 = groups["v2"].Value;
-                var v = v1;
+                var val = v1;
                 if (string.IsNullOrEmpty(v1))
                 {
-                    v = v2;
+                    val = v2;
                 }
 
-                // opt list:
-                // no opt: log content
-                // st: stacktrace
-                // d: domain
-                // l: level
-                // stf: stacktrace file
+                bool exclude = groups["cmd"].Value == "-e";
+                Opt opt;
+                if (!_strToOpt.TryGetValue(groups["opt"].Value, out opt))
+                {
+                    opt = Opt.Content;
+                }
 
-                Func<LogEntry, bool> predicate;
-                bool exclude = groups["cmd"].Value == "-x";
-                string optStr = groups["opt "].Value;
-                string[] opts = new string[] { "st", "d", "l", "stf" };
-
-
-
+                filters.Add(CreateFilter(exclude, opt, val));
             }
+
+            _filterChain.ResetAll();
+            for (int i = 0; i < filters.Count; ++i)
+            {
+                _filterChain.AddFilter(filters[i]);
+            }
+            Enable = true;
+            if (FilterEnableChanged != null)
+            {
+                FilterEnableChanged.Invoke();
+            }
+
+        }
+
+        private ILogFilter CreateFilter(bool exclude, Opt opt, string value)
+        {
+            PredicateLogFilter filter = new PredicateLogFilter
+            {
+                TrueTermination = LogFilterTermination.Continue,
+                FalseTermination = LogFilterTermination.Continue,
+                TrueAction = exclude ? LogFilterAction.Reject : LogFilterAction.Accept,
+                FalseAction = LogFilterAction.Reject,
+                Enable = true
+            };
+            switch (opt)
+            {
+                case Opt.StackTrace:
+                    filter.Predicate = (entry) =>
+                    {
+                        for (int i = 0; i < entry.stackTrace.Length; ++i)
+                        {
+                            if (entry.stackTrace[i].className.Contains(value) || entry.stackTrace[i].methodName.Contains(value))
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                    break;
+                case Opt.StackTraceFile:
+                    filter.Predicate = (entry) =>
+                    {
+                        for (int i = 0; i < entry.stackTrace.Length; ++i)
+                        {
+                            if (entry.stackTrace[i].fileName.Contains(value))
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                    break;
+                case Opt.Domain:
+                    filter.Predicate = (entry) =>
+                    {
+                        return entry.domain.Contains(value);
+                    };
+                    break;
+                case Opt.Content:
+                default:
+                    filter.Predicate = (entry) =>
+                    {
+                        return entry.content.Contains(value);
+                    };
+                    break;
+            }
+            return filter;
         }
 
         public void Reset()

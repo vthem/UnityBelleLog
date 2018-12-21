@@ -3,10 +3,11 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using BelleLog.Internal.Editor.Filter;
+using System;
 
 namespace BelleLog.Internal.Editor
 {
-    internal class Console : EditorWindow
+    internal class Console : EditorWindow, ILogFilterEnableChangedEvent
     {
         private readonly ConsoleLogHandler _logHandler = new ConsoleLogHandler();
         private ILogEntryContainer _logEntries;
@@ -47,6 +48,8 @@ namespace BelleLog.Internal.Editor
         public Console()
         {
         }
+
+        public event Action FilterEnableChanged;
 
         void OnEnable()
         {
@@ -93,7 +96,7 @@ namespace BelleLog.Internal.Editor
             _onGUIInitialized = true;
 
             _collapseFilter = new CollapseLogFilter();
-            _logHandler.AddFilter(_collapseFilter);
+            _logHandler.AddFilter(_collapseFilter, this);
 
             _logFilterToggleLabel = new string[]
             {
@@ -106,19 +109,19 @@ namespace BelleLog.Internal.Editor
             };
             _logLevelFilters = new PredicateLogFilter[]
             {
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Trace),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Debug),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Info),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Warning),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Error),
-                new PredicateLogFilter((entry) => entry.level == LogLevel.Fatal),
+                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Trace },
+                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Debug },
+                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Info },
+                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Warning },
+                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Error },
+                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Fatal },
             };
             _enableLogLevelColors = new bool[_logLevelFilters.Length];
             for (int i = 0; i < _logLevelFilters.Length; ++i)
             {
                 _logLevelFilters[i].Enable = false;
                 _enableLogLevelColors[i] = false;
-                _logHandler.AddFilter(_logLevelFilters[i]);
+                _logHandler.AddFilter(_logLevelFilters[i], this);
             }
             _enableLogLevelColors[(int)LogLevel.Warning] = true;
             _enableLogLevelColors[(int)LogLevel.Error] = true;
@@ -134,7 +137,8 @@ namespace BelleLog.Internal.Editor
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
             _logEntryTableGUI = new TableRenderer(this, _logEntryRenderer);
             _searchFieldGUI = new SearchTabRenderer(this);
-            _logFilterInputRenderer = new LogFilterInputRenderer(_logHandler);
+            _logFilterInputRenderer = new LogFilterInputRenderer();
+            _logHandler.AddFilter(_logFilterInputRenderer, _logFilterInputRenderer);
 
             _logEntries.Updated += NewLogEntryHandler;
 
@@ -166,7 +170,10 @@ namespace BelleLog.Internal.Editor
             if (newCollapseState != _collapseFilter.Enable)
             {
                 _collapseFilter.Enable = newCollapseState;
-                _logHandler.ApplyFilters();
+                if (FilterEnableChanged != null)
+                {
+                    FilterEnableChanged.Invoke();
+                }
             }
             GUILayout.FlexibleSpace();
 
@@ -194,7 +201,10 @@ namespace BelleLog.Internal.Editor
                     {
                         _selectedLogEntryIndex = -1;
                         _logLevelFilters[i].Enable = newState;
-                        _logHandler.ApplyFilters();
+                        if (FilterEnableChanged != null)
+                        {
+                            FilterEnableChanged.Invoke();
+                        }
                         Repaint();
                     }
                     else

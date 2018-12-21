@@ -23,19 +23,20 @@ namespace BelleLog.Internal.Editor
             0 // Fatal
         };
 
-        public void AddFilter(ILogFilter filter)
+        public void AddFilter(ILogFilter filter, ILogFilterEnableChangedEvent enableChangedEvent)
         {
             _filterChain.AddFilter(filter);
+            enableChangedEvent.FilterEnableChanged += LogFilterEnabledChangedHandler;
+        }
+
+        private void LogFilterEnabledChangedHandler()
+        {
+            _filterIndexer.Apply(_filterChain, _logEntries);
         }
 
         public void RemoveFilter(ILogFilter filter)
         {
             _filterChain.RemoveFilter(filter);
-        }
-
-        public void ApplyFilters()
-        {
-            _filterIndexer.Apply(_filterChain, _logEntries);
         }
 
         #region ILogEntryContainer
