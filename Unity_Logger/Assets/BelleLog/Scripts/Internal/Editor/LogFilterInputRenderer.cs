@@ -19,7 +19,13 @@ namespace BelleLog.Internal.Editor
 
         private string _filterInputText;
         private ConsoleLogHandler _logHandler;
-        private LogFilterChain _filterChain = new LogFilterChain();
+
+        Dictionary<string, Opt> strToOpt = new Dictionary<string, Opt>
+                {
+                    {"st", Opt.StackTrace },
+                    {"d", Opt.Domain },
+                    {"stf", Opt.StackTraceFile }
+                };
 
         public LogFilterInputRenderer(ConsoleLogHandler logHandler)
         {
@@ -82,11 +88,9 @@ namespace BelleLog.Internal.Editor
                 Func<LogEntry, bool> predicate;
                 bool exclude = groups["cmd"].Value == "-x";
                 string optStr = groups["opt "].Value;
-                Opt opt = Opt.Content;
-                if (optStr == "st")
-                {
-                    opt = Opt.StackTrace;
-                }
+                string[] opts = new string[] { "st", "d", "l", "stf" };
+
+
 
             }
         }
