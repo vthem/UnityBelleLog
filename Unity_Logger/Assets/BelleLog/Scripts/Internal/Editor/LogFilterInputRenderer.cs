@@ -64,33 +64,34 @@ namespace BelleLog.Internal.Editor
         {
             Enable = false;
 
-            var matches = Regex.Matches(_filterInputText, @"(?<cmd>-[ei]):?(?<opt>[a-z]*) (('(?<v1>(.*))')|(?<v2>([^ ]*)))");
-
             List<ILogFilter> filters = new List<ILogFilter>();
-            Debug.Log("count=" + matches.Count);
-            foreach (Match match in matches)
+
+            if (!string.IsNullOrEmpty(_filterInputText))
             {
-                GroupCollection groups = match.Groups;
-                Debug.Log("cmd=" + groups["cmd"] + " opt=" + groups["opt"] + " v1=" + groups["v1"] + " v2=" + groups["v2"]);
-                var v1 = groups["v1"].Value;
-                var v2 = groups["v2"].Value;
-                var val = v1;
-                if (string.IsNullOrEmpty(v1))
+                var matches = Regex.Matches(_filterInputText, @"(?<cmd>-[ei]):?(?<opt>[a-z]*) (('(?<v1>(.*))')|(?<v2>([^ ]*)))");
+                foreach (Match match in matches)
                 {
-                    val = v2;
-                }
+                    GroupCollection groups = match.Groups;
+                    var v1 = groups["v1"].Value;
+                    var v2 = groups["v2"].Value;
+                    var val = v1;
+                    if (string.IsNullOrEmpty(v1))
+                    {
+                        val = v2;
+                    }
 
-                bool exclude = groups["cmd"].Value == "-e";
-                Opt opt;
-                if (!_strToOpt.TryGetValue(groups["opt"].Value, out opt))
-                {
-                    opt = Opt.Content;
-                }
+                    bool exclude = groups["cmd"].Value == "-e";
+                    Opt opt;
+                    if (!_strToOpt.TryGetValue(groups["opt"].Value, out opt))
+                    {
+                        opt = Opt.Content;
+                    }
 
-                filters.Add(CreateFilter(exclude, opt, val));
+                    filters.Add(CreateFilter(exclude, opt, val));
+                }
             }
 
-            _filterChain.ResetAll();
+            _filterChain.RemoveAll();
             for (int i = 0; i < filters.Count; ++i)
             {
                 _filterChain.AddFilter(filters[i]);
@@ -100,17 +101,16 @@ namespace BelleLog.Internal.Editor
             {
                 FilterEnableChanged.Invoke();
             }
-
         }
 
         private ILogFilter CreateFilter(bool exclude, Opt opt, string value)
         {
             PredicateLogFilter filter = new PredicateLogFilter
             {
-                TrueTermination = LogFilterTermination.Continue,
+                TrueTermination = LogFilterTermination.Stop,
                 FalseTermination = LogFilterTermination.Continue,
                 TrueAction = exclude ? LogFilterAction.Reject : LogFilterAction.Accept,
-                FalseAction = LogFilterAction.Reject,
+                FalseAction = LogFilterAction.Keep,
                 Enable = true
             };
             switch (opt)
