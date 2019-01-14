@@ -44,20 +44,18 @@ namespace BelleLog.Internal.Editor
 
         public void OnGUI()
         {
-            //GUI.SetNextControlName("foobar");
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Filter:", GUILayout.Width(40));
             _filterInputText = EditorGUILayout.TextArea(_filterInputText);
-            //if (GUI.GetNameOfFocusedControl() == "foobar")
-            //{
-            //    if (Event.current.control && Event.current.type == EventType.KeyDown && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter))
-            //    {
-            //        Debug.Log("parse it!");
-            //        ParseInputText();
-            //    }
-            //}
-            if (GUILayout.Button("Apply"))
+            if (GUILayout.Button("V", EditorStyles.miniButton, GUILayout.Width(20)))
             {
                 ParseInputText();
             }
+            if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(20)))
+            {
+                ParseInputText();
+            }
+            EditorGUILayout.EndHorizontal();
         }
 
         public void ParseInputText()
@@ -105,14 +103,30 @@ namespace BelleLog.Internal.Editor
 
         private ILogFilter CreateFilter(bool exclude, Opt opt, string value)
         {
-            PredicateLogFilter filter = new PredicateLogFilter
+            PredicateLogFilter filter;
+            if (exclude)
             {
-                TrueTermination = LogFilterTermination.Stop,
-                FalseTermination = LogFilterTermination.Continue,
-                TrueAction = exclude ? LogFilterAction.Reject : LogFilterAction.Accept,
-                FalseAction = LogFilterAction.Keep,
-                Enable = true
-            };
+                filter = new PredicateLogFilter
+                {
+                    TrueTermination = LogFilterTermination.Stop,
+                    FalseTermination = LogFilterTermination.Continue,
+                    TrueAction = LogFilterAction.Reject,
+                    FalseAction = LogFilterAction.Accept,
+                    Enable = true
+                };
+            }
+            else
+            {
+                filter = new PredicateLogFilter
+                {
+                    TrueTermination = LogFilterTermination.Stop,
+                    FalseTermination = LogFilterTermination.Continue,
+                    TrueAction = LogFilterAction.Accept,
+                    FalseAction = LogFilterAction.Reject,
+                    Enable = true
+                };
+            }
+
             switch (opt)
             {
                 case Opt.StackTrace:
