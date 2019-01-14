@@ -44,15 +44,18 @@ namespace BelleLog.Internal.Editor
 
         public void OnGUI()
         {
+            bool returnKeyDown = Event.current.control && Event.current.type == EventType.KeyDown && (Event.current.keyCode == KeyCode.KeypadEnter || Event.current.keyCode == KeyCode.Return);
+
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Filter:", GUILayout.Width(40));
+            EditorGUILayout.LabelField("Filter: ", GUILayout.Width(40));
             _filterInputText = EditorGUILayout.TextArea(_filterInputText);
-            if (GUILayout.Button("V", EditorStyles.miniButton, GUILayout.Width(20)))
+            if (returnKeyDown || GUILayout.Button("V", EditorStyles.miniButton, GUILayout.Width(20)))
             {
                 ParseInputText();
             }
             if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(20)))
             {
+                _filterInputText = string.Empty;
                 ParseInputText();
             }
             EditorGUILayout.EndHorizontal();

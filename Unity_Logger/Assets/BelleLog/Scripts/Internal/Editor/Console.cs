@@ -13,7 +13,7 @@ namespace BelleLog.Internal.Editor
         private ILogEntryContainer _logEntries;
 
         private int _selectedLogEntryIndex = -1;
-        private SearchTabRenderer _searchFieldGUI;
+        private SearchRenderer _searchFieldGUI;
         private TableRenderer _logEntryTableGUI;
         private LogEntryContentRenderer _logEntryContentGUI;
         private LogEntryStackTraceRenderer _logEntryStackTraceGUI;
@@ -136,7 +136,7 @@ namespace BelleLog.Internal.Editor
             _logEntryRenderer = new LogEntryRenderer(_logEntries, _collapseFilter);
             _logEntryRenderer.EnableLevelColors = _enableLogLevelColors;
             _logEntryTableGUI = new TableRenderer(this, _logEntryRenderer);
-            _searchFieldGUI = new SearchTabRenderer(this);
+            _searchFieldGUI = new SearchRenderer(this);
             _logFilterInputRenderer = new LogFilterInputRenderer();
             _logHandler.AddFilter(_logFilterInputRenderer, _logFilterInputRenderer);
 
