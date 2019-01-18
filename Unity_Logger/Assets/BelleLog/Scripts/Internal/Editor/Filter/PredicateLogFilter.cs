@@ -1,4 +1,4 @@
-﻿
+﻿#if UNITY_EDITOR
 using System;
 
 namespace BelleLog.Internal.Editor.Filter
@@ -33,3 +33,4 @@ namespace BelleLog.Internal.Editor.Filter
         }
     }
 }
+#endif

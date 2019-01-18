@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+#if UNITY_EDITOR
 namespace BelleLog.Internal
 {
     public sealed class Logger
@@ -109,3 +110,4 @@ namespace BelleLog.Internal
         }
     }
 }
+#endif

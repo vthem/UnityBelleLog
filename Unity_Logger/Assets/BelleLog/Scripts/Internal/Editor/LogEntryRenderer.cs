@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 using BelleLog.Internal.Editor.Filter;
 
@@ -25,7 +26,7 @@ namespace BelleLog.Internal.Editor
 
         private Texture2D[] _logLevelTextures = null;
         private Texture2D[] _logLevelDarkTextures = null;
-        private const int ColorWidth = 5;
+        private const int ColorWidth = 10;
 
         private CollapseLogFilter _collapseFilter;
 
@@ -246,3 +247,4 @@ namespace BelleLog.Internal.Editor
         }
     }
 }
+#endif

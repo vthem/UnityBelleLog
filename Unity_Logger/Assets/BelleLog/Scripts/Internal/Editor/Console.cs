@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -110,11 +111,36 @@ namespace BelleLog.Internal.Editor
             _logLevelFilters = new PredicateLogFilter[]
             {
                 new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Trace },
-                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Debug },
-                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Info },
-                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Warning },
-                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Error },
-                new PredicateLogFilter{ Predicate = (entry) => entry.level == LogLevel.Fatal },
+                new PredicateLogFilter
+                {
+                    Predicate = (entry) => entry.level == LogLevel.Debug,
+                    TrueAction = LogFilterAction.Reject,
+                    TrueTermination = LogFilterTermination.Stop
+                },
+                new PredicateLogFilter
+                {
+                    Predicate = (entry) => entry.level == LogLevel.Info,
+                    TrueAction = LogFilterAction.Reject,
+                    TrueTermination = LogFilterTermination.Stop
+                },
+                new PredicateLogFilter
+                {
+                    Predicate = (entry) => entry.level == LogLevel.Warning,
+                    TrueAction = LogFilterAction.Reject,
+                    TrueTermination = LogFilterTermination.Stop
+                },
+                new PredicateLogFilter
+                {
+                    Predicate = (entry) => entry.level == LogLevel.Error,
+                    TrueAction = LogFilterAction.Reject,
+                    TrueTermination = LogFilterTermination.Stop
+                },
+                new PredicateLogFilter
+                {
+                    Predicate = (entry) => entry.level == LogLevel.Fatal,
+                    TrueAction = LogFilterAction.Reject,
+                    TrueTermination = LogFilterTermination.Stop
+                },
             };
             _enableLogLevelColors = new bool[_logLevelFilters.Length];
             for (int i = 0; i < _logLevelFilters.Length; ++i)
@@ -315,3 +341,4 @@ namespace BelleLog.Internal.Editor
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Text;
 using BelleLog.Internal.Editor.Filter;
@@ -109,3 +110,4 @@ namespace BelleLog.Internal.Editor
         #endregion ILogHandler
     }
 }
+#endif

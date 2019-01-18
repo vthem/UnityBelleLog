@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -81,3 +82,4 @@ namespace BelleLog.Internal.Editor
         }
     }
 }
+#endif

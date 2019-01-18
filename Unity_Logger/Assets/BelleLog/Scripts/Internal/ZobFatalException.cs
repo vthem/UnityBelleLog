@@ -17,9 +17,5 @@ namespace BelleLog.Internal
         public BelleLogFatalException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        protected BelleLogFatalException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }

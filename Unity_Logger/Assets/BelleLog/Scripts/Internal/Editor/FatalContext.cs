@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using UnityEngine;
 
 namespace BelleLog.Internal.Editor
@@ -34,3 +35,4 @@ namespace BelleLog.Internal.Editor
         }
     }
 }
+#endif

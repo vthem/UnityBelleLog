@@ -1,4 +1,5 @@
-﻿using BelleLog.Internal.Editor;
+﻿#if UNITY_EDITOR
+using BelleLog.Internal.Editor;
 
 namespace BelleLog.Internal
 {
@@ -20,3 +21,4 @@ namespace BelleLog.Internal
         }
     }
 }
+#endif

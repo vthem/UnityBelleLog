@@ -1,4 +1,5 @@
-﻿using BelleLog.Internal.Editor.Filter;
+﻿#if UNITY_EDITOR
+using BelleLog.Internal.Editor.Filter;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -180,3 +181,4 @@ namespace BelleLog.Internal.Editor
         }
     }
 }
+#endif

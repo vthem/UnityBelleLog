@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 
 namespace BelleLog.Internal.Editor.Filter
 {
@@ -42,3 +43,4 @@ namespace BelleLog.Internal.Editor.Filter
         }
     }
 }
+#endif

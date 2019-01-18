@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 
 namespace BelleLog.Internal.Editor
 {
@@ -13,3 +14,4 @@ namespace BelleLog.Internal.Editor
         uint CountByLevel(LogLevel level);
     }
 }
+#endif

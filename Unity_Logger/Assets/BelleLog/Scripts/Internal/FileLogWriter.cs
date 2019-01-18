@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if !UNITY_WSA
+using System.IO;
 using System.Text;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace BelleLog.Internal
 {
     public sealed class FileLogWriter : ILogWriter
     {
+
         private FileStream _fileStream;
         private string _logFilename;
 
@@ -71,3 +73,4 @@ namespace BelleLog.Internal
         }
     }
 }
+#endif
